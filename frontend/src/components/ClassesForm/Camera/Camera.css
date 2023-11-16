@@ -1,0 +1,100 @@
+.card {
+    border-radius: 15px ;
+    padding: 10px;
+    width: 500px;
+    height: auto;
+    min-height: 174px;
+    margin-left: 5%;
+    margin-top: 3%;
+    background: #7258e9;
+}
+
+ .horizontal-line {
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    margin-top: 6%;
+    margin-bottom: 3%;
+ }
+
+.photo-container {
+    border-radius: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.photo-item {
+    margin: 10px;
+    padding: 5px;
+    width: 60px;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+.photo-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+.photo-item button {
+    display: block;
+    margin-top: 5px;
+}
+
+.webcam {
+    max-width: 300px;
+    max-height: 200px;
+    border-collapse: separate;
+    border-radius: 10px;
+}
+
+.btn {
+    display: block;
+    margin-top: 5px;
+    border-radius: 6px;
+    background: #7258e9;
+    border: 2px solid #ffffff;
+    white-space: nowrap;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.icon-btn {
+    display: block;
+    margin-left: 5px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    white-space: nowrap;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    grid-auto-rows: auto;
+}
+
+.more-btn {
+    background: rgba(255, 255, 255, 0);
+    border-style: outset;
+    border: none;
+    color: #fff;
+    float: right;
+}
+
+.class-text {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom:  -20px;
+}

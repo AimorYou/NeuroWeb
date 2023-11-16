@@ -1,0 +1,16 @@
+.add-form-btn {
+    border-radius: 15px ;
+    padding: 10px;
+    width: 500px;
+    height: auto;
+    min-height: 95px;
+    margin-left: 5%;
+    margin-top: 2%;
+    border-color: #7258e9;
+    color: #fff;
+    font-size: 16px;
+    background: #101021;
+    align-items: center;
+    text-align: center;
+    border-style: dashed;
+}
