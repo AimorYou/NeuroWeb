@@ -1,49 +1,91 @@
+from fastapi_users import FastAPIUsers
+
 from fastapi import FastAPI, Depends
-from starlette.requests import Request
-import uvicorn
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import ValidationException
+from fastapi.responses import JSONResponse
 
-from app.api.api_v1.routers.users import users_router
-from app.api.api_v1.routers.auth import auth_router
-from app.core import config
-from app.db.session import SessionLocal
-from app.core.auth import get_current_active_user
-from app.core.celery_app import celery_app
-from app import tasks
+from backend.app.core.auth.auth import auth_backend
+from core.auth.database import User
+from core.auth.manager import get_user_manager
+from core.auth.schemas import UserRead, UserCreate
 
+from classes import RequestCVModel, RequestMLModel, RequestNLPModel
 
 app = FastAPI(
-    title=config.PROJECT_NAME, docs_url="/api/docs", openapi_url="/api"
+    title="Neuro Web"
 )
 
+fastapi_users = FastAPIUsers[User, int](
+    get_user_manager,
+    [auth_backend],
+)
 
-@app.middleware("http")
-async def db_session_middleware(request: Request, call_next):
-    request.state.db = SessionLocal()
-    response = await call_next(request)
-    request.state.db.close()
-    return response
-
-
-@app.get("/api/v1")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/api/v1/task")
-async def example_task():
-    celery_app.send_task("app.tasks.example_task", args=["Hello World"])
-
-    return {"message": "success"}
-
-
-# Routers
 app.include_router(
-    users_router,
-    prefix="/api/v1",
-    tags=["users"],
-    dependencies=[Depends(get_current_active_user)],
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/auth/jwt",
+    tags=["auth"],
 )
-app.include_router(auth_router, prefix="/api", tags=["auth"])
+
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+current_user = fastapi_users.current_user()
+
+
+@app.get("/protected-route")
+def protected_route(user: User = Depends(current_user)):
+    return f"Hello, {user.username}"
+
+
+@app.get("/unprotected-route")
+def unprotected_route():
+    return {"msg": f"Hello, anonym"}
+
+
+@app.post("/api/v1/cv/train/{model_name}")
+def cv_train_model(model_name: str, request_train_model: RequestCVModel) -> bytes:
+    ...
+
+
+@app.post("/api/v1/ml/train/{model_name}")
+def ml_train_model(model_name: str, request_train_model: RequestMLModel) -> bytes:
+    ...
+
+
+@app.post("/api/v1/nlp/train/{model_name}")
+def nlp_train_model(model_name: str, request_train_model: RequestNLPModel) -> bytes:
+    ...
+
+
+@app.get("/api/v1/cv/test/{model_name}")
+def cv_train_model(model_name: str) -> bytes:
+    ...
+
+
+@app.get("/api/v1/ml/test/{model_name}")
+def ml_train_model(model_name: str) -> bytes:
+    ...
+
+
+@app.get("/api/v1/nlp/test/{model_name}")
+def nlp_train_model(model_name: str) -> bytes:
+    ...
+
+
+@app.get("/api/v1/check-alive")
+def check_alive():
+    return {"msg": "I'm alive"}
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)
