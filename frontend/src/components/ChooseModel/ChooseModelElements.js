@@ -48,19 +48,19 @@ export const PricingContainer = styled.div`
   }
 `;
 
-export const PricingCard = styled.div`
+export const PricingCard = styled(Link)`
   background: #242424;
   box-shadow: 0 6px 20px rgba(56, 125, 255, 0.2);
-  width: 280px;
-  height: 400px;
+  width: 400px;
+  height: 500px;
   text-decoration: none;
   border-radius: 10px;
-
-  
-    margin: 24px;
+  margin: 24px;
+  text-align: center;
   
 
   &:hover {
+    transform: scale(1.06);
     transition: all 0.3s ease-out;
     color: #1c2237;
   }
@@ -86,7 +86,7 @@ export const PricingCardInfo = styled.div`
 export const PricingCardIcon = styled.img`
   height: 200px;
   width: 200px;
-  border-radius: 30px;
+  border-radius: 300px;
   border: 2px solid #7258E9;
   margin: 24px 0;
 `;
@@ -116,4 +116,5 @@ export const PricingCardFeatures = styled.ul`
 
 export const PricingCardFeature = styled.li`
   margin-bottom: 10px;
+  text-align: center;
 `;

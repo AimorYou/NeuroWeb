@@ -17,7 +17,6 @@ const SigninPage = () => {
 
   return (
     <div className='App'>
-      <Sidebar isOpen={isOpen} toggle={toggle} />
       <Navbar toggle={toggle} />
       <Register />
       <Footer />

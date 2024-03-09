@@ -1,138 +1,136 @@
-import styled from "styled-components"
-import { Link as LinkR } from "react-router-dom"
-import { Link as LinkS } from "react-scroll"
-
+import styled from 'styled-components';
+import { FaMagento } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { Container } from '../globalStyles';
 
 export const Nav = styled.nav`
-  background: ${({scrollNav}) => (scrollNav ? '#101021': '#101021')};
+  background: #101021;
   height: 80px;
-  /* margin-top: -80px; */
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
   position: sticky;
   top: 0;
-  z-index: 10;
-  
-  @media screen and (max-width: 960px) {
-    transition: 0.8s all ease;
-  }
-`
+  z-index: 999;
+`;
 
-export const NavbarContainer = styled.div`
+export const NavbarContainer = styled(Container)`
   display: flex;
   justify-content: space-between;
   height: 80px;
-  z-index: 1;
-  width: 100%;
-  max-width: 1300px;
-`
 
-export const NavLogo = styled(LinkR)`
+  ${Container}
+`;
+
+export const NavLogo = styled(Link)`
   color: #666AED;
   justify-self: flex-start;
   cursor: pointer;
-  font-size: 1.5em;
+  text-decoration: none;
+  font-size: 2rem;
   display: flex;
   align-items: center;
-
-  font-weight: bold;
-  text-decoration: none;
 `;
 
+export const NavIcon = styled.img`
+  margin-right: 0.5rem;
+`;
 
 export const MobileIcon = styled.div`
   display: none;
-  @media screen and (max-width: 768px) {
+
+  @media screen and (max-width: 991px) {
     display: block;
     position: absolute;
     top: 0;
     right: 0;
+    color: #666AED;
     transform: translate(-100%, 60%);
-    font-size: 1.8 rem;
+    font-size: 1.8rem;
     cursor: pointer;
-    color: #fff;
   }
-  
-`
-
+`;
 
 export const NavMenu = styled.ul`
-  border-radius: 30px; 
-  /* background-color: #D9D9D9; */
-  background-color: rgba(217, 217, 217, 0.2);
-  height: 60%;
-  font-weight: bold;
-  margin-top: auto;
-  margin-bottom: auto;
   display: flex;
-  border: none;
   align-items: center;
   list-style: none;
   text-align: center;
 
-  @media screen and (max-width: 768px) {
-    display: none;
+  @media screen and (max-width: 960px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+    top: 80px;
+    left: ${({ click }) => (click ? 0 : '-100%')};
+    opacity: 1;
+    transition: all 0.5s ease;
+    background: #101021;
   }
-`
+`;
+
 export const NavItem = styled.li`
-  height: 100%;
-  transition: background 0.2s ease-in-out;
+  height: 80px;
+  border-bottom: 2px solid transparent;
+
 
   &:hover {
-    border-radius: 30px; 
-    background: linear-gradient(#5D48B9, #666AED);
+    border-bottom: 2px solid #666AED;
   }
-`
-export const NavLinks = styled(LinkR)`
+
+  @media screen and (max-width: 960px) {
+    width: 100%;
+
+    &:hover {
+      border: none;
+    }
+  }
+`;
+
+export const NavItemBtn = styled.li`
+  @media screen and (max-width: 960px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 120px;
+  }
+`;
+
+export const NavLinks = styled(Link)`
   color: #fff;
   display: flex;
   align-items: center;
   text-decoration: none;
-  padding: 0 2.8rem;
+  padding: 0.5rem 1rem;
   height: 100%;
-  cursor: pointer;
 
-  &.active {
-    border-bottom: 3px solid #01bf71;
-  }
-`
+  @media screen and (max-width: 960px) {
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    display: table;
 
-export const NavBtn = styled.nav`
-  display: flex;
-  align-items: center;
-  margin-top: auto;
-  margin-bottom: auto;
-  border-radius: 1200px;
-  height: 60%;
-  background: linear-gradient(#5D48B9, #666AED);
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+    &:hover {
+      color: #4b59f7;
+      transition: all 0.3s ease;
+    }
   
-`
-
-export const NavBtnLink = styled(LinkR) `
-  padding: 11px 14px;
-  color: #010606;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  text-decoration: none;
-
-  &:hover {
-    transition: all 0.2s ease-in-out;
-    background: #666AED;
-    color: #010606;
-    border-radius: 1200px;
   }
-`
-export const LogoImg = styled.img`
-  height: 50px;
-  padding-right: 10px;
-`
-export const UserImg = styled.img`
-  height: 25px;
-`
+
+`;
+
+export const NavBtnLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 8px 16px;
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+`;

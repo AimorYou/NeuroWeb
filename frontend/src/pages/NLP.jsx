@@ -15,10 +15,8 @@ const NLP = () => {
       };
   return (
     <div>
-      <Sidebar isOpen={isOpen} toggle={toggle} />
-      <MenuBar />
       <Navbar toggle={toggle} />
-      <InfoSection {...homeNLP} />
+      <InfoSection {...homeObjTwo} />
       <NLPCardSection />
       <NLPSliderSection />
       <Footer />

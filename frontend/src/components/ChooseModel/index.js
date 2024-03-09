@@ -1,14 +1,11 @@
 import React from 'react';
-import { Card } from '../globalStyles';
+import { Button } from '../globalStyles';
 import { AiFillThunderbolt } from 'react-icons/ai';
 import { GiCrystalBars } from 'react-icons/gi';
 import { GiCutDiamond, GiRock } from 'react-icons/gi';
 import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
 import CatBoost from '../../assets/images/CatBoost.jpg'
-import Member1 from '../../assets/images/Arseny.svg'
-import Member2 from '../../assets/images/Nikita.svg'
-import Member3 from '../../assets/images/Dmitry.svg'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -22,40 +19,49 @@ import {
   PricingCardLength,
   PricingCardFeatures,
   PricingCardFeature
-} from './TeamElements';
+} from './ChooseModelElements';
 
 function Pricing() {
   return (
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Команда NeuroWeb</PricingHeading>
+          <PricingHeading>Выберите область</PricingHeading>
           <PricingContainer>
-          <PricingCard to='/sign-up'>
+            <PricingCard to='/classes'>
               <PricingCardInfo>
-                <PricingCardIcon src={Member3} />
-                <PricingCardPlan>Дмитрий Королев</PricingCardPlan>
+              <PricingCardIcon src={CatBoost} />
+                <PricingCardPlan>Компьютерное зрение</PricingCardPlan>
                 <PricingCardFeatures>
-                  <PricingCardFeature>Frontend разработчик</PricingCardFeature>
+                  <PricingCardFeature>100 New Users</PricingCardFeature>
+                  <PricingCardFeature>$10,000 Budget</PricingCardFeature>
+                  <PricingCardFeature>Retargeting analytics</PricingCardFeature>
                 </PricingCardFeatures>
+                <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={Member1} />
-                <PricingCardPlan>Арсений Пивоваров</PricingCardPlan>
+              <PricingCardIcon src={CatBoost} />
+                <PricingCardPlan>Обработка естественного языка</PricingCardPlan>
                 <PricingCardFeatures>
-                  <PricingCardFeature>ML разработчик</PricingCardFeature>
+                  <PricingCardFeature>1000 New Users</PricingCardFeature>
+                  <PricingCardFeature>$50,000 Budget</PricingCardFeature>
+                  <PricingCardFeature>Lead Gen Analytics</PricingCardFeature>
                 </PricingCardFeatures>
+                <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={Member2} />
-                <PricingCardPlan>Никита Рыбаковский</PricingCardPlan>
+              <PricingCardIcon src={CatBoost} />
+                <PricingCardPlan>Классчическое ML</PricingCardPlan>
                 <PricingCardFeatures>
-                  <PricingCardFeature>Backend разработчик</PricingCardFeature>
+                  <PricingCardFeature>Unlimited Users</PricingCardFeature>
+                  <PricingCardFeature>Unlimited Budget</PricingCardFeature>
+                  <PricingCardFeature>24/7 Support</PricingCardFeature>
                 </PricingCardFeatures>
+                <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
           </PricingContainer>

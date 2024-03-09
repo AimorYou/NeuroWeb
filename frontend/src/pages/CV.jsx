@@ -15,10 +15,8 @@ const CV = () => {
       };
   return (
     <div>
-      <Sidebar isOpen={isOpen} toggle={toggle} />
-      <MenuBar />
       <Navbar toggle={toggle} />
-      <InfoSection {...homeCV} />
+      <InfoSection {...homeObjThree} />
       <CVCardSection />
       <CVSliderSection />
       <Footer />

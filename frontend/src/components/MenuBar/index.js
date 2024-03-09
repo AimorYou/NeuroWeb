@@ -42,7 +42,6 @@ const MenuBar = () => {
           Личный кабинет
         </Dropdown.Item>
         </a>
-        <a href='/getstarted'>
         <Dropdown.Item>
           Выбрать модель
           <Dropdown.Submenu position='right'>
@@ -99,7 +98,6 @@ const MenuBar = () => {
             </a>
           </Dropdown.Submenu>
         </Dropdown.Item>
-        </a>
       </Dropdown>
       </div>
     </div>

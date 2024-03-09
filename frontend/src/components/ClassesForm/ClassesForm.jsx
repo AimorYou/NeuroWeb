@@ -3,11 +3,16 @@ import React, { useRef, useState } from 'react';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './ClassesForm.css';
+import Webcam from 'react-webcam';
+import { Preview } from './Preview';
 
 
 const ClassesForm = () => {
+  const webcamRef = useRef(null);
   const [forms, setForms] = useState([]);
   const [formIdCounter, setFormIdCounter] = useState(1);
+  const [showCamera, setShowCamera] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const addForm = () => {
     const newForm = { id: formIdCounter, photos: [] };
@@ -46,6 +51,8 @@ const ClassesForm = () => {
 
   return (
     <React.Fragment>
+      <div className='horizontal'>
+      <div>
       {forms.map(form => (
         <div key={form.id}>
           <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} />
@@ -53,6 +60,29 @@ const ClassesForm = () => {
         </div>
       ))}
       <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
+      </div>
+      <div className='train-model-card'>
+        <div className='heading'>Обучение</div>
+        <button className='train-model-btn' onClick={() => setShowCamera(!showCamera) }>Обучить модель</button>
+      </div>
+          <div className='preview-model-card'>
+              <div className='heading'>Превью</div>
+                <div className='horizontal-line' />
+                      <label className="toggle">
+                        <span className="toggle-label">Input</span>
+                        <input class="toggle-checkbox" type="checkbox" onClick={()=>setChecked(!checked)}/>
+                        <div className="toggle-switch"></div>
+                      </label>
+                {showCamera && (
+                  <div>
+                    <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
+                  </div>
+                )}
+                {!showCamera && (
+                <div className='class-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь</div>
+                )}
+          </div>
+      </div>
     </React.Fragment>
   );
 };

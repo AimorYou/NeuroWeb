@@ -15,10 +15,8 @@ const CLML = () => {
       };
   return (
     <div>
-      <Sidebar isOpen={isOpen} toggle={toggle} />
-      <MenuBar />
       <Navbar toggle={toggle} />
-      <InfoSection {...homeCLML} />
+      <InfoSection {...homeObjOne} />
       <CLMLCardSection />
       <CLMLSliderSection />
       <Footer />

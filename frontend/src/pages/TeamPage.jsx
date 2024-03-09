@@ -13,8 +13,6 @@ const TeamPage = () => {
         };
   return (
     <div>
-        <Sidebar isOpen={isOpen} toggle={toggle} />
-        <MenuBar />
         <Navbar toggle={toggle} />
         <TeamCards />
         <Footer />

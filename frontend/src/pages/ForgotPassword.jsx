@@ -18,7 +18,6 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className='App'>
-      <Sidebar isOpen={isOpen} toggle={toggle} />
       <Navbar toggle={toggle} />
       <ForgotPassword />
       <Footer />

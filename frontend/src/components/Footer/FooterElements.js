@@ -1,112 +1,107 @@
-import styled from 'styled-components'
-import {Link} from 'react-router-dom'
+import styled from 'styled-components';
+import { Link as LinkR } from "react-router-dom"
 
-export const FooterContainer = styled.footer`
-    background-color: #101021;
+export const Container = styled.div`
+  padding: 80px 60px;
+  background: #101021;
+  align-items: center;
+
+  @media (max-width: 1000px) {
+    padding: 70px 30px;
+  }
+`;
+
+export const NavLogo = styled(LinkR)`
+  color: #666AED;
+  justify-self: flex-start;
+  cursor: pointer;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+
+  font-weight: bold;
+  text-decoration: none;
+`;
+
+export const LogoImg = styled.img`
+  height: 50px;
+  padding-right: 10px;
 `
 
-export const FooterWrap = styled.div`
-    padding: 48px 24px;
+export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
+    /* background: red; */
 `
 
-export const FooterLinksContainer = styled.div`
-    display: flex;
-    justify-content: center;
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-left: 60px;
+`;
 
-    @media screen and (max-width: 820px) {
-        padding-top: 32px;
-    }
-`
+export const Row = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(230px, 1fr));
+  grid-gap: 20px;
 
-export const FooterLinksWrapper = styled.div`
-    display: flex;
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+`;
 
-    @media screen and (max-width: 820px) {
-        flex-direction: column;
-}
-`
+export const Row2 = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-gap: 30px;
+  padding-top: 40px;
 
-export const FooterLinkItems = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 16px;
-    text-align: left;
-    width: 180px;
-    box-sizing: border-box;
-    color: #fff;
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+  }
+`;
 
-    @media screen and (max-width: 420px) {
-        margin: 0;
-        padding: 10px;
-        width: 100%;
-    }
-`
+export const Link = styled.a`
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 18px;
+  text-decoration: none;
 
-export const FooterLinkTitle = styled.h1`
-    font-size: 14px;
-    margin-bottom: 16px;
-`
+  &:hover {
+      color: #666AED;
+      transition: 200ms ease-in;
+  }
+`;
 
-export const FooterLink = styled(Link)`
-    color: #fff;
-    text-decoration: none;
-    margin-bottom: 0.5 rem;
-    font-size: 14px;
+export const Link2 = styled.a`
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 30px;
+  text-decoration: none;
 
-    &:hover {
-        color: #612DCA;
-        transition: 0.3s ease-out
-    }
-`
+  &:hover {
+      color: #666AED;
+      transition: 200ms ease-in;
+  }
+`;
 
-export const SocialMedia = styled.section`
-    max-width: 1000px;
-    width: 100%;
-`
+export const Title = styled.p`
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 40px;
+  font-weight: bold;
+`;
 
-export const SocialMediaWrap = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1100px;
-    margin: 40px auto 0 auto;
-    
-    @media screen and (max-width: 820px) {
-        flex-direction: column;
-    }
-`
-
-export const SocialLogo = styled (Link)`
-    color: #fff;
-    justify-self: start;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    font-weight: bold;
-`
-
-export const WebsiteRights = styled.small`
-    color: #fff;
-    margin-bottom: 16px;
-`
-export const SocialIcons = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: cener;
-    width: 240px;
-`
-
-export const SocialIconLink = styled.a`
-    color: #fff;
-    font-size: 24px;
-`
+export const Text = styled.p`
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 40px;
+  font-weight: lighter;
+  justify-content: center;
+  text-align: center;
+  padding-top: 40px;
+`;

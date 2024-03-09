@@ -9,8 +9,8 @@ const Sidebar = ({isOpen, toggle}) => {
       </Icon>
       <SidebarWrapper>
         <SidebarMenu>
-          <SidebarLink to='/'>Главная</SidebarLink>
-          <SidebarLink to='/getstarted'>Начать</SidebarLink>
+          <SidebarLink to='/'>Начало</SidebarLink>
+          <SidebarLink to='/'>Блог</SidebarLink>
           <SidebarLink to='/faq'>FAQ</SidebarLink>
         </SidebarMenu>
         <SideBtnWrap>

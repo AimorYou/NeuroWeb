@@ -6,9 +6,6 @@ import { GiCutDiamond, GiRock } from 'react-icons/gi';
 import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
 import CatBoost from '../../assets/images/CatBoost.jpg'
-import Member1 from '../../assets/images/Arseny.svg'
-import Member2 from '../../assets/images/Nikita.svg'
-import Member3 from '../../assets/images/Dmitry.svg'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -22,39 +19,39 @@ import {
   PricingCardLength,
   PricingCardFeatures,
   PricingCardFeature
-} from './TeamElements';
+} from './TypesOfDataElements';
 
 function Pricing() {
   return (
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Команда NeuroWeb</PricingHeading>
+          <PricingHeading>На каких данных можно обучать?</PricingHeading>
           <PricingContainer>
           <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={Member3} />
-                <PricingCardPlan>Дмитрий Королев</PricingCardPlan>
+                <PricingCardIcon src={CatBoost} />
+                <Card primary>1. Изображения</Card>
                 <PricingCardFeatures>
-                  <PricingCardFeature>Frontend разработчик</PricingCardFeature>
+                  <PricingCardFeature>Соберите и сгруппируйте примеры в классы, или категории, которые вы хотите, чтобы компьютер изучил.</PricingCardFeature>
                 </PricingCardFeatures>
               </PricingCardInfo>
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={Member1} />
-                <PricingCardPlan>Арсений Пивоваров</PricingCardPlan>
+                <PricingCardIcon src={CatBoost} />
+                <Card primary>2. Аудио</Card>
                 <PricingCardFeatures>
-                  <PricingCardFeature>ML разработчик</PricingCardFeature>
+                  <PricingCardFeature>Обучите свою модель, а затем сразу же протестируйте ее, чтобы проверить, может ли она правильно классифицировать новые примеры.</PricingCardFeature>
                 </PricingCardFeatures>
               </PricingCardInfo>
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={Member2} />
-                <PricingCardPlan>Никита Рыбаковский</PricingCardPlan>
+                <PricingCardIcon src={CatBoost} />
+                <Card primary>3. Таблицы</Card>
                 <PricingCardFeatures>
-                  <PricingCardFeature>Backend разработчик</PricingCardFeature>
+                  <PricingCardFeature>Экспортируйте модель для своих проектов: сайтов, приложений и других. Вы можете загрузить свою модель или разместить ее в Интернете.</PricingCardFeature>
                 </PricingCardFeatures>
               </PricingCardInfo>
             </PricingCard>

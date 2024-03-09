@@ -20,8 +20,7 @@ import {
   ArrowRight,
   NameRectangleCard,
   ServicesAd,
-  RectangleCardWrapper,
-  Button
+  RectangleCardWrapper
 } from './CLMLCardSectionElements';
 
 const CLMLCardSection = () => {
@@ -65,12 +64,10 @@ const CLMLCardSection = () => {
         </ServicesCard>
       </ServicesWrapper>
       <ServicesBtnWrapper>
-        <Button to='clml-slider' onMouseEnter={onHover} onMouseLeave={onHover} smooth={true}
-                                    duration={500}
-                                    spy={true}>
+        <Button1 to='/signup' onMouseEnter={onHover} onMouseLeave={onHover}>
           Попробовать {hover ? <ArrowForward /> : <ArrowRight
           />}
-        </Button>
+        </Button1>
       </ServicesBtnWrapper>
 
 

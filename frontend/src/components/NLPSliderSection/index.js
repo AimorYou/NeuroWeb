@@ -77,7 +77,7 @@ const NLPSliderSection = ({ lightBg, id, imgStart, topLine, lightText, heading, 
 
   return (
     <div>
-      <SliderSectionContainer id={"nlp-slider"}>
+      <SliderSectionContainer>
         <RectangleCard>
           <SliderH1>Модели NLP</SliderH1>
           <SliderWrapper>
@@ -92,7 +92,7 @@ const NLPSliderSection = ({ lightBg, id, imgStart, topLine, lightText, heading, 
                     <CardText>Модель принимает на вход векторные представления n предыдущих слов и может «понимать» семантику предложения. </CardText>
                   </TextWrapper>
                   <BtnWrap>
-                    <Button2 to='/classes'
+                    <Button2 to='/getstarted'
                       onMouseEnter={onHover} onMouseLeave={onHover}
                       smooth={true}
                       duration={500}
@@ -120,7 +120,7 @@ const NLPSliderSection = ({ lightBg, id, imgStart, topLine, lightText, heading, 
                     <CardText>Исследуй мир через глаза искусственного интеллекта с помощью компьютерного зрения. </CardText>
                   </TextWrapper>
                   <BtnWrap>
-                    <Button2 to='/classes'
+                    <Button2 to='/getstarted'
                       onMouseEnter={onHover} onMouseLeave={onHover}
                       smooth={true}
                       duration={500}

@@ -8,6 +8,7 @@ import InfoSection from '../components/InfoSection'
 import CustomCardsSection from '../components/CustomCardsSection'
 import { homeObjOne, homeObjTwo, homeObjThree } from '../components/InfoSection/Data';
 import GetStartedSliderSection from '../components/GetStartedSliderSection';
+import ChooseModel from '../components/ChooseModel'
 
 const GetStartedPage = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -16,12 +17,8 @@ const GetStartedPage = () => {
         };
   return (
     <div>
-        <Sidebar isOpen={isOpen} toggle={toggle} />
-        <MenuBar />
         <Navbar toggle={toggle} />
-        <InfoSection {...homeObjTwo}/>
-        <CustomCardsSection />
-        <GetStartedSliderSection />
+        <ChooseModel />
         <Footer />
     </div>
   )

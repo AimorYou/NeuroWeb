@@ -1,6 +1,6 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import UploadAltIcon from '@mui/icons-material/Upload';
 import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './Camera.css';
@@ -62,20 +62,22 @@ const CameraForm = ({formId, delForm}) => {
 
   return (
     <React.Fragment>
+      <div className="horizontal">
       <div className="card">
         <div className="class-text">
           Класс {formId}
         </div>
         <MenuBar/>
         <div class="horizontal-line"></div>
-        <button className='icon-btn' onClick={() => setShowCamera(!showCamera)}>
-          <CameraAltIcon/>
-        </button>
+        <div class="horizontal-btns">
+          <button className='camera-upload-photo' onClick={() => setShowCamera(!showCamera) }><CameraAltIcon/></button>
+          <button className='camera-upload-photo' onClick={handleSavePhotos}><UploadAltIcon/></button>
+        </div>
         {showCamera && (
           <div>
             <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
             <button className={'btn'} onMouseDown={startCapture} onMouseUp={stopCapture}>
-              Сфотографировать (удерживание)
+              Сфотографировать
             </button>
           </div>
         )}
@@ -83,11 +85,11 @@ const CameraForm = ({formId, delForm}) => {
           {capturedPhotos.map((photo, index) => (
             <div key={photo.id} className="photo-item">
               <img src={photo.photo} alt={`Photo ${index}`} />
-              <button className='btn' onClick={() => deletePhoto(index)}>Delete</button>
+              {/* <button className='btn' onClick={() => deletePhoto(index)}>Delete</button> */}
             </div>
           ))}
-          <button className='icon-btn' onClick={handleSavePhotos}><SaveAltIcon/></button>
         </div>
+      </div>
       </div>
     </React.Fragment>
   );

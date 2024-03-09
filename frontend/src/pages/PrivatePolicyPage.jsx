@@ -13,8 +13,6 @@ const FAQPage = () => {
         };
   return (
     <div>
-        <Sidebar isOpen={isOpen} toggle={toggle} />
-        <MenuBar />
         <Navbar toggle={toggle} />
         <PrivatePolicy />
         <Footer />

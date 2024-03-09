@@ -17,7 +17,6 @@ import CLML from './pages/CLML';
 
 import { Classes } from './pages/Classes';
 
-
 function App() {
   return (
     <div className="App">
@@ -26,7 +25,7 @@ function App() {
           <Route index element={<MainPage/>} />
           <Route path='/signin' element={<SigninPage/>} />
           <Route path='/register' element={<Register/>} />
-          <Route path='/getstarted' element={<GetStartedPage/>} />
+          <Route path='/get-started' element={<GetStartedPage/>} />
 
           <Route path='/faq' element={<FAQPage/>} />
           <Route path='/team' element={<TeamPage/>} />

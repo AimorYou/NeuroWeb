@@ -84,16 +84,16 @@ export const PricingCardInfo = styled.div`
 `;
 
 export const PricingCardIcon = styled.img`
-  height: 200px;
-  width: 200px;
-  border-radius: 30px;
+  height: 150px;
+  width: 150px;
+  border-radius: 12px;
   border: 2px solid #7258E9;
   margin: 24px 0;
 `;
 
 export const PricingCardPlan = styled.h3`
   margin-bottom: 5px;
-  font-size: 20px;
+  font-size: 24px;
 `;
 
 export const PricingCardCost = styled.h4`

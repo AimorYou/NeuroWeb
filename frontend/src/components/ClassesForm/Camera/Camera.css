@@ -9,9 +9,22 @@
     background: #7258e9;
 }
 
+.train_model {
+    border-radius: 15px ;
+    padding: 10px;
+    width: 250px;
+    height: auto;
+    min-height: 124px;
+    align-items: center;
+    text-align: center;
+    margin-left: 5%;
+    margin-top: 3%;
+    background: #7258e9;
+}
+
  .horizontal-line {
     width: 100%;
-    height: 3px;
+    height: 2px;
     background-color: #fff;
     margin-top: 6%;
     margin-bottom: 3%;
@@ -43,27 +56,82 @@
 }
 
 .webcam {
-    max-width: 300px;
-    max-height: 200px;
-    border-collapse: separate;
+    max-width: 250px;
+    max-height: 250px;
+    
     border-radius: 10px;
 }
 
 .btn {
-    display: block;
-    margin-top: 5px;
-    border-radius: 6px;
-    background: #7258e9;
-    border: 2px solid #ffffff;
-    white-space: nowrap;
-    color: #fff;
-    font-size: 16px;
-    outline: none;
-    cursor: pointer;
+  background-color: #6C58E9;
+  border: 0.8px solid #fff;
+  border-radius: 8px;
+  border-style: 0.8px solid #fff;
+  
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  width: 170px;
+  height: 30px;
+  list-style: none;
+  margin: 5px;
+  padding: 10px 16px;
+  text-align: center;
+  align-items: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+    
+}
+
+.horizontal-btns {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: left;
     align-items: center;
-    transition: all 0.2s ease-in-out;
+}
+
+.horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.camera-upload-photo {
+  background-color: #6C58E9;
+  border: 0.8px solid #fff;
+  border-radius: 8px;
+  border-style: 0.8px solid #fff;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  width: 60px;
+  height: 60px;
+  list-style: none;
+  margin: 5px;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.camera-upload-photo:hover,
+.btn:hover,
+.train-model-btn:hover
+{
+  opacity: 0.8;
 }
 
 .icon-btn {
@@ -78,11 +146,8 @@
     font-size: 16px;
     outline: none;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     transition: all 0.2s ease-in-out;
-    grid-auto-rows: auto;
+    grid-auto-columns: auto;
 }
 
 .more-btn {
@@ -97,4 +162,30 @@
     color: #fff;
     font-size: 16px;
     margin-bottom:  -20px;
+}
+
+.train-model-btn {
+  background-color: #6C58E9;
+  border: 0.8px solid #fff;
+  border-radius: 8px;
+  border-style: 0.8px solid #fff;
+  
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  width: 150px;
+  height: 30px;
+  list-style: none;
+  margin: 5px;
+  padding: 10px 16px;
+  text-align: center;
+  align-items: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
