@@ -15,6 +15,15 @@ uvicorn==0.12.1
 passlib==1.7.2
 bcrypt==3.2.0
 sqlalchemy-utils==0.36.8
-python-multipart==0.0.5
-pyjwt==1.7.1
+pyjwt[crypto]==2.8.0
+python-multipart==0.0.9
 asyncpg==0.29.0
+pandas==2.2.1
+numpy==1.25
+# torch==2.1
+# torchvision==0.16
+matplotlib==3.8
+seaborn==0.13.2
+pillow==9.3.0
+# pytorch-lightning==2.2.1
+python-dotenv==1.0.1

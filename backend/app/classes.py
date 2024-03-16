@@ -1,19 +1,19 @@
 from pydantic import Field, BaseModel
-from typing import Any
+from typing import Any, Dict, List
 
 
 class RequestCVModel(BaseModel):
-    classes_names: dict[str, list[bytes]]
-    hyperparameters: dict[str, int]
+    classes_names: Dict[str, List[bytes]]
+    hyperparameters: Dict[str, int]
 
 
 class RequestNLPModel(BaseModel):
-    classes_names: dict[str, list[bytes]]
-    hyperparameters: dict[str, int]
+    classes_names: Dict[str, List[bytes]]
+    hyperparameters: Dict[str, int]
 
 
 class RequestMLModel(BaseModel):
-    data: dict[str, dict[str, Any]]  # str - название столбца, dict[str, Any] - столбец: значение
+    data: Dict[str, Dict[str, Any]]  # str - название столбца, Dict[str, Any] - столбец: значение
 
     model_config = {
         "json_schema_extra": {
