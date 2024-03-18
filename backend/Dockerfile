@@ -8,6 +8,6 @@ RUN apt update && \
     apt install -y postgresql-client
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --default-timeout=900 -r requirements.txt
 
 COPY . .
