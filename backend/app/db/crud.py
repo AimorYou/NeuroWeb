@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import typing as t
 
 from . import models, schemas
-from app.core.security import get_password_hash
+from core.security import get_password_hash
 
 
 def get_user(db: Session, user_id: int):
