@@ -4,6 +4,7 @@ import uvicorn
 
 from api.api_v1.routers.users import users_router
 from api.api_v1.routers.auth import auth_router
+from api.api_v1.routers.pre_trained import cv_router
 from core import config
 from db.session import SessionLocal
 from core.auth import get_current_active_user
@@ -35,6 +36,7 @@ app.include_router(
     dependencies=[Depends(get_current_active_user)],
 )
 app.include_router(auth_router, prefix="/api", tags=["auth"])
+app.include_router(cv_router, prefix="/api/cv", tags=["cv"])
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)
