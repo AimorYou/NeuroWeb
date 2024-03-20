@@ -15,6 +15,7 @@ const CV = () => {
       };
   return (
     <div>
+      <MenuBar />
       <Navbar toggle={toggle} />
       <InfoSection {...homeObjThree} />
       <CVCardSection />

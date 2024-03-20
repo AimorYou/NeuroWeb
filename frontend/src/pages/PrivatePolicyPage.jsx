@@ -13,6 +13,7 @@ const FAQPage = () => {
         };
   return (
     <div>
+        <MenuBar />
         <Navbar toggle={toggle} />
         <PrivatePolicy />
         <Footer />

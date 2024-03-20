@@ -15,7 +15,12 @@ import NLP from './pages/NLP';
 import CV from './pages/CV';
 import CLML from './pages/CLML';
 
+import Classification from './components/Classification/Classification';
+import Emotions from './pages/Emotions';
+import Detection from './pages/Detection';
+
 import { Classes } from './pages/Classes';
+import { Audio } from './pages/Audio';
 
 function App() {
   return (
@@ -36,7 +41,13 @@ function App() {
           <Route path='/cv' element={<CV/>} />
           <Route path='/clml' element={<CLML/>} />
 
+          <Route path='/classification' element={<Classification/>} />
+          <Route path='/emotions' element={<Emotions/>} />
+          <Route path='/detection' element={<Detection/>} />
+
           <Route path="/classes" element={<Classes />} />
+          <Route path="/audio" element={<Audio />} />
+          
 
         </Routes>
       </BrowserRouter>

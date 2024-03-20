@@ -28,7 +28,7 @@ function Pricing() {
         <PricingWrapper>
           <PricingHeading>Выберите область</PricingHeading>
           <PricingContainer>
-            <PricingCard to='/classes'>
+            <PricingCard to='/classification'>
               <PricingCardInfo>
               <PricingCardIcon src={CatBoost} />
                 <PricingCardPlan>Компьютерное зрение</PricingCardPlan>
@@ -40,7 +40,7 @@ function Pricing() {
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/sign-up'>
+            <PricingCard to='/emotions'>
               <PricingCardInfo>
               <PricingCardIcon src={CatBoost} />
                 <PricingCardPlan>Обработка естественного языка</PricingCardPlan>
@@ -52,7 +52,7 @@ function Pricing() {
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/sign-up'>
+            <PricingCard to='/detection'>
               <PricingCardInfo>
               <PricingCardIcon src={CatBoost} />
                 <PricingCardPlan>Классчическое ML</PricingCardPlan>

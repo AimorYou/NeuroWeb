@@ -63,7 +63,7 @@ const ClassesForm = () => {
       </div>
       <div className='train-model-card'>
         <div className='heading'>Обучение</div>
-        <button className='train-model-btn' onClick={() => setShowCamera(!showCamera) }>Обучить модель</button>
+        <button className='train-model-btn' onClick={() => setShowCamera(!showCamera)}>Обучить модель</button>
       </div>
           <div className='preview-model-card'>
               <div className='heading'>Превью</div>

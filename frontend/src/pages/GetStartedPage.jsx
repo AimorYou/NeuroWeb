@@ -17,6 +17,7 @@ const GetStartedPage = () => {
         };
   return (
     <div>
+        <MenuBar />
         <Navbar toggle={toggle} />
         <ChooseModel />
         <Footer />

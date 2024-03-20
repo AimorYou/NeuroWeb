@@ -8,7 +8,7 @@ import Advantages from '../components/Advantages';
 import Steps from '../components/Steps';
 import TypesOfData from '../components/TypesOfData';
 import Footer from '../components/Footer';
-import SliderSection from '../components/SliderSection';
+import GetStartedSliderSection from '../components/GetStartedSliderSection';
 
 const MainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,11 +19,13 @@ const MainPage = () => {
     
   return (
     <div className='App'>
+      <MenuBar />
       <Navbar toggle={toggle} />
       <InfoSection {...homeObjOne}/>
       <Advantages />
       <Steps />
       <TypesOfData />
+      <GetStartedSliderSection />
       <Footer />
     </div>
   )

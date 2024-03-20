@@ -30,15 +30,23 @@ const CameraForm = ({formId, delForm}) => {
     }
   };
 
+
   const deletePhoto = (index) => {
     const updatedPhotos = [...capturedPhotos];
     updatedPhotos.splice(index, 1);
     setCapturedPhotos(updatedPhotos);
   };
+  
+  const jsonArray = []
+  const forms = {formId : [capturedPhotos]}
+  const jsonObj = {
+    classes: [forms]
+  }
+  jsonArray.push(jsonObj)
 //TODO HandleSavePhotos можно добавить отправку на сервер
   const handleSavePhotos = () => {
     if (capturedPhotos.length > 0) {
-      console.log('Сохранение фотографий:', capturedPhotos);
+      console.log('Сохранение фотографий:', jsonArray);
     } else {
       console.log('Фотографии не были захвачены');
     }

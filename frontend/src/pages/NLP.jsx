@@ -15,6 +15,7 @@ const NLP = () => {
       };
   return (
     <div>
+      <MenuBar />
       <Navbar toggle={toggle} />
       <InfoSection {...homeObjTwo} />
       <NLPCardSection />

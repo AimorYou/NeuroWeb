@@ -94,20 +94,6 @@ const GetStartedSliderSection = ({lightBg, id, imgStart, topLine, lightText, hea
                     <CardText>Наша платформа позволяет тебе распознавать звуки, а также создавать синтезированную речь.</CardText>
                     <CardText>Загрузи аудиофайлы для анализа и обработки, обучи модель и проверь ее работоспособность в режиме предпросмотра.</CardText>
                   </TextWrapper>
-                  <BtnWrap>
-                  <Button2 to='/nlp'
-                        onMouseEnter={onHover} onMouseLeave={onHover}
-                        smooth={true}
-                        duration={500}
-                        spy={true}
-                        exact="true"
-                        offset={-80}
-                        primary={primary ? 1 : 0}
-                        dark={dark ? 1 : 0}
-                        dark2={dark2 ? 1 : 0}
-                        >
-                        Попробовать{buttonLabel}{<ArrowForward />}</Button2>
-                  </BtnWrap>
                 </Wrapper>
 
 
@@ -124,20 +110,6 @@ const GetStartedSliderSection = ({lightBg, id, imgStart, topLine, lightText, hea
                     <CardText>От классификации изображений до распознавания лиц и поз — NeuroWeb дает тебе возможность проводить сложные анализы визуальных данных.</CardText>
                     <CardText>Загрузи свои изображения, обучи модель и проверь ее работоспособность в режиме предпросмотра.</CardText>
                   </TextWrapper>
-                  <BtnWrap>
-                    <Button2 to='/CV'
-                        onMouseEnter={onHover} onMouseLeave={onHover}
-                        smooth={true}
-                        duration={500}
-                        spy={true}
-                        exact="true"
-                        offset={-80}
-                        primary={primary ? 1 : 0}
-                        dark={dark ? 1 : 0}
-                        dark2={dark2 ? 1 : 0}
-                        >
-                        Попробовать{buttonLabel}{<ArrowForward />}</Button2>
-                  </BtnWrap>
                 </Wrapper>
 
 
@@ -154,20 +126,6 @@ const GetStartedSliderSection = ({lightBg, id, imgStart, topLine, lightText, hea
                     <CardText>Проводи продвинутый анализ данных и визуализацию метрик для более глубокого понимания ваших данных. </CardText>
                     <CardText>Загрузи свои данные, обучи модель и проверь ее работоспособность в режиме предпросмотра.</CardText>
                   </TextWrapper>
-                  <BtnWrap>
-                  <Button2 to='/clml'
-                        onMouseEnter={onHover} onMouseLeave={onHover}
-                        smooth={true}
-                        duration={500}
-                        spy={true}
-                        exact="true"
-                        offset={-80}
-                        primary={primary ? 1 : 0}
-                        dark={dark ? 1 : 0}
-                        dark2={dark2 ? 1 : 0}
-                        >
-                        Попробовать{buttonLabel}{<ArrowForward />}</Button2>
-                  </BtnWrap>
                 </Wrapper>
 
 
