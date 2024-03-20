@@ -2,13 +2,12 @@ from fastapi import FastAPI, Depends
 from starlette.requests import Request
 import uvicorn
 
-from app.api.api_v1.routers.users import users_router
-from app.api.api_v1.routers.auth import auth_router
-from app.core import config
-from app.db.session import SessionLocal
-from app.core.auth import get_current_active_user
-from app.core.celery_app import celery_app
-from app import tasks
+from api.api_v1.routers.users import users_router
+from api.api_v1.routers.auth import auth_router
+from api.api_v1.routers.pre_trained import cv_router
+from core import config
+from db.session import SessionLocal
+from core.auth import get_current_active_user
 
 
 app = FastAPI(
@@ -29,13 +28,6 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/api/v1/task")
-async def example_task():
-    celery_app.send_task("app.tasks.example_task", args=["Hello World"])
-
-    return {"message": "success"}
-
-
 # Routers
 app.include_router(
     users_router,
@@ -44,6 +36,7 @@ app.include_router(
     dependencies=[Depends(get_current_active_user)],
 )
 app.include_router(auth_router, prefix="/api", tags=["auth"])
+app.include_router(cv_router, prefix="/api/cv", tags=["cv"])
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)

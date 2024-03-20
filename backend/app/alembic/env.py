@@ -5,7 +5,10 @@ from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from app.db.models import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+# from db.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -28,7 +31,7 @@ target_metadata = Base.metadata
 
 
 def get_url():
-    return os.getenv("DATABASE_URL")
+    return os.getenv("DATABASE_URL") or "postgresql://postgres:password@localhost:5432/postgres"
 
 
 def run_migrations_offline():
