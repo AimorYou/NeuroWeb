@@ -54,7 +54,7 @@ function Emotion() {
       //console.log(face);
 
       // Websocket
-      var socket = new WebSocket('ws://127.0.0.1:8000/ws/1')
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/ws/emotions')
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
