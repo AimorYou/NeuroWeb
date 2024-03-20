@@ -33,3 +33,4 @@ opencv-python==4.9.0.80
 ultralytics==8.1.29
 fer==22.5.1
 tensorflow==2.15.0
+websockets==12.0
