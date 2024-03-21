@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
 import MenuBar from '../components/MenuBar'
-import InfoSection from '../components/InfoSection'
-import { homeObjOne, homeObjTwo, homeObjThree, homeObjFour } from '../components/InfoSection/Data';
+import JobSection from '../components/JobSection'
+import { homeObjOne, homeObjTwo, homeObjThree, homeObjFour } from '../components/JobSection/Data';
 import Advantages from '../components/Advantages';
 import Steps from '../components/Steps';
 import TypesOfData from '../components/TypesOfData';
 import Footer from '../components/Footer';
 import GetStartedSliderSection from '../components/GetStartedSliderSection';
-import Classification from '../components/Classification/Classification';
 
-const ClassificationPage = () => {
+const MainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
@@ -22,10 +21,12 @@ const ClassificationPage = () => {
     <div className='App'>
       <MenuBar />
       <Navbar toggle={toggle} />
-      <Classification />
+      <JobSection {...homeObjOne}/>
+      <JobSection {...homeObjTwo}/>
+      <JobSection {...homeObjThree}/>
       <Footer />
     </div>
   )
 };
 
-export default ClassificationPage;
+export default MainPage;

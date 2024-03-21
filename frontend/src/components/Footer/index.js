@@ -36,12 +36,12 @@ export function FooterContainer() {
                 <Column>
                 <Title>О нас</Title>
                     <Link href="/team">Команда</Link>
-                    <Link href="#">Работа</Link>
+                    <Link href="/job">Работа</Link>
                 </Column>
                 <Column>
                 <Title>Поддержка</Title>
-                    <Link href="#">Связь с нами</Link>
-                    <Link href="/private_policy">Политика приватности</Link>
+                    <Link href='mailto:help@neuroweb.com'>Поддержка</Link>
+                    <Link href="/private_policy"> Политика приватности</Link>
                     <Link href="/faq">Вопросы и ответы</Link>
                 </Column>
             </Row>

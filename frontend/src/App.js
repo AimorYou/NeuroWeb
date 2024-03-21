@@ -10,12 +10,14 @@ import TeamPage from './pages/TeamPage'
 import PrivatePolicy from './pages/PrivatePolicyPage'
 import Register from './pages/RegisterPage'
 import ForgotPassword from './pages/ForgotPassword'
+import About from './pages/AboutPage';
+import Job from './pages/Job';
 
 import NLP from './pages/NLP';
 import CV from './pages/CV';
 import CLML from './pages/CLML';
 
-import Classification from './components/Classification/Classification';
+import Classification from './pages/Classification';
 import Emotions from './pages/Emotions';
 import Detection from './pages/Detection';
 
@@ -36,6 +38,8 @@ function App() {
           <Route path='/team' element={<TeamPage/>} />
           <Route path='/private_policy' element={<PrivatePolicy/>} />
           <Route path='/restore_password' element={<ForgotPassword/>} />
+          <Route path='/about' element={<About/>} />
+          <Route path='/job' element={<Job/>} />
 
           <Route path='/nlp' element={<NLP/>} />
           <Route path='/cv' element={<CV/>} />

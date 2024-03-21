@@ -61,7 +61,7 @@ function Navbar() {
                 </NavLinks>
               </NavItem>
               <NavItem>
-                <NavLinks to='/products' onClick={closeMobileMenu}>
+                <NavLinks to='/about' onClick={closeMobileMenu}>
                   О нас
                 </NavLinks>
               </NavItem>

@@ -33,7 +33,7 @@ function WebcamCapture () {
   const [messageHistory, setMessageHistory] = useState([]);
 
   // const [socketUrl, setSocketUrl] = useState('wss://echo.websocket.org');
-  const [socketUrl, setSocketUrl] = useState('ws://127.0.0.1:8080/ws/1');
+  const [socketUrl, setSocketUrl] = useState('ws://0.0.0.0:8888/api/cv/ws/classification');
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
 
@@ -59,31 +59,17 @@ function WebcamCapture () {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <h1>Webcam Data to Server</h1>
-      <div style={{ margin: 'auto' }}>
+    <div className='classification-wrapper'>
+      <div >
         <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
         <canvas
           ref={canvasRef}
-  
         />
       </div>
-
-      {
-        imgSrc !== "" &&
-        <div style={{ marginTop: '20px' }}>
-          <h2>Captured Image</h2>
-          <img src={imgSrc} alt="Captured" style={{ marginTop: '10px' }} />
-        </div>
-      }
       <button className="train-model-btn"
         onClick={handleClickSendMessage}
-        disabled={readyState !== ReadyState.OPEN}
-      >
-      Classify!
-      </button>
-      <span>The WebSocket is currently {connectionStatus}</span>
-      {lastMessage ? <span>Object is {lastMessage.data}</span> : null}
+        disabled={readyState !== ReadyState.OPEN}>Классифицировать</button>
+      {lastMessage ? <span className='object-is'>Объект - {lastMessage.data}</span> : null}
       <ul>
         {messageHistory.map((message, idx) => (
           <span key={idx}>{message ? message.data : null}</span>

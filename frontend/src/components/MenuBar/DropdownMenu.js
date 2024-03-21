@@ -15,13 +15,13 @@ const DropdownMenu = () => {
         position='right'
       >
         <Dropdown.Item >
-          Личный кабинет
+          Регистрация
         </Dropdown.Item>
         <Dropdown.Item>
           Выбрать модель
           <Dropdown.Submenu position='right'>
             <Dropdown.Item>
-              CV
+              Классификация
               <Dropdown.Submenu position='right' className='sub-menu'>
               <Dropdown.Item>
                   Классификация изображений

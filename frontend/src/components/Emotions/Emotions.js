@@ -93,19 +93,15 @@ function Emotion() {
   useEffect(()=>{runFaceDetectorModel()}, []);
   return (
     <div className="App">
-      <Webcam
+      <Webcam className="Webcam"
           ref={webcamRef}
           style={{
-            position: "absolute",
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
             right: 600,
             top:20,
             textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
           }}
         />
 
@@ -116,15 +112,13 @@ function Emotion() {
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
-            right: 600,
-            top:20,
+            right: 730,
+            top:100,
             textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
+           
           }}
         />
-      <header className="App-header">
+      
         {/* <img src={logo} 
         className="App-logo" 
         alt="logo"
@@ -172,16 +166,7 @@ function Emotion() {
           <label forhtml="Disgust" style={{color:'pink'}} >Disgusted </label>
           <progress id="Disgust" value="0" max = "100" >10%</progress>
         </div>
-        <input id="emotion_text" name="emotion_text" vale="Neutral"
-               style={{
-                 position:"absolute",
-                 width:200,
-                 height:50,
-                 bottom:60,
-                 left:300,
-                 "font-size": "30px",
-               }}></input>
-      </header>
+
     </div>
   );
 }

@@ -86,7 +86,7 @@ export const PricingCardInfo = styled.div`
 export const PricingCardIcon = styled.img`
   height: 200px;
   width: 200px;
-  border-radius: 30px;
+  border-radius: 300px;
   border: 2px solid #7258E9;
   margin: 24px 0;
 `;

@@ -38,59 +38,30 @@ const MenuBar = () => {
         position='right'
         className="menu"
       >
-        <a href='/signin'><Dropdown.Item >
-          Личный кабинет
+        <a href='/register'><Dropdown.Item >
+          Регистрация
         </Dropdown.Item>
         </a>
         <Dropdown.Item>
           Выбрать модель
           <Dropdown.Submenu position='right'>
-            <a href='/CV'>
+            <a href='/get-started'>
             <Dropdown.Item>
-              CV
+              Компьютерное зрение
               <Dropdown.Submenu position='right' className='sub-menu'>
-              <a href='/classes'>
+              <a href='/classification'>
               <Dropdown.Item>
                   Классификация изображений
                 </Dropdown.Item>
                 </a>
-                <a href='/classes'>
+                <a href='/detection'>
                 <Dropdown.Item>
-                  Распознавание лиц
+                  Детекция
                 </Dropdown.Item>
                 </a>
-                <a href='/classes'>
+                <a href='/emotions'>
                 <Dropdown.Item>
-                  Позы
-                </Dropdown.Item>
-                </a>
-              </Dropdown.Submenu>
-            </Dropdown.Item>
-            </a>
-            <a href='/NLP'>
-            <Dropdown.Item>
-              NLP
-              <Dropdown.Submenu position='right'>
-              <a href='/classes'>
-              <Dropdown.Item>
-                  Распознавание речи
-                </Dropdown.Item>
-                </a>
-              </Dropdown.Submenu>
-            </Dropdown.Item>
-            </a>
-            <a href='CLML'>
-            <Dropdown.Item>
-              Classical ML
-              <Dropdown.Submenu position='right' className='sub-menu-classical-ml'>
-              <a href='/classes'>
-              <Dropdown.Item>
-                  Предсказание столбца в таблице
-                </Dropdown.Item>
-                </a>
-                <a href='/classes'>
-                <Dropdown.Item>
-                  Продвинутая аналитика
+                  Распознавание эмоций
                 </Dropdown.Item>
                 </a>
               </Dropdown.Submenu>

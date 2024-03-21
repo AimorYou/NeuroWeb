@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
 import MenuBar from '../components/MenuBar'
 
+import {UserProvider} from '../context/UserContext';
+
 
 const SigninPage = () => {
 
@@ -17,11 +19,12 @@ const SigninPage = () => {
 
   return (
     <div className='App'>
+      <UserProvider>
       <MenuBar />
       <Navbar toggle={toggle} />
       <Register />
       <Footer />
-      {/* C Футером прикол */}
+      </UserProvider>
     </div>
   )
 }

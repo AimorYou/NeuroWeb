@@ -37,7 +37,7 @@ function Detection() {
 
 
 
-      var socket = new WebSocket('ws://127.0.0.1:8000/ws/1')
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/ws/detection')
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -62,38 +62,29 @@ function Detection() {
   useEffect(()=>{runFaceDetectorModel()}, []);
   return (
     <div className="App">
-      <Webcam
+      <Webcam className="Webcam"
           ref={webcamRef}
           style={{
-            position: "absolute",
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
             right: 600,
             top:20,
             textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
           }}
         />
 
         <canvas
           ref={canvasRef}
           style={{
-            position: "absolute",
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
             right: 600,
             top:20,
             textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
           }}
         />
-      <header className="App-header">
         <div className="Prediction" style={{
           position:"absolute",
           right:100,
@@ -101,7 +92,6 @@ function Detection() {
           top: 60
         }}>
         </div>
-      </header>
     </div>
   );
 }

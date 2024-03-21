@@ -49,11 +49,8 @@
     font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     font-weight: 400;
-    width: 160px;
+    width: 170px;
     height: 30px;
-    padding: 20px;
-    margin: 30px;
-    list-style: none;
     text-align: center;
     align-items: center;
     text-decoration: none;
@@ -66,4 +63,38 @@
   .train-model-btn:hover
   {
   opacity: 0.8;
+  }
+
+  .object-is {
+    display: inline;
+    color: #fff;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    width: 190px;
+    height: 30px;
+    list-style: none;
+    text-align: center;
+    align-items: center;
+    text-decoration: none;
+    transition: color 100ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .webcam {
+    width: 700px;
+    height: 700px;
+    align-items: center;
+  }
+
+  .classification-wrapper {
+    padding: 100px 0 160px;
+    display: flex;
+    padding-left: 100px;
+    flex-direction: column;
+    justify-content: center;
+    background: #101021;
+
   }
