@@ -70,11 +70,6 @@ function WebcamCapture () {
         onClick={handleClickSendMessage}
         disabled={readyState !== ReadyState.OPEN}>Классифицировать</button>
       {lastMessage ? <span className='object-is'>Объект - {lastMessage.data}</span> : null}
-      <ul>
-        {messageHistory.map((message, idx) => (
-          <span key={idx}>{message ? message.data : null}</span>
-        ))}
-      </ul>
     </div>
   );
 };

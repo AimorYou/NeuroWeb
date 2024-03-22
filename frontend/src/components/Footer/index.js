@@ -28,9 +28,9 @@ export function FooterContainer() {
                         NeuroWeb
                     </NavLogo>
                     <Row2>
-                        <Link2 href="#"><FaGit /></Link2>
-                        <Link2 href="#"> <FaTelegram /> </Link2>
-                        <Link2 href="#"><FaYoutube /></Link2>
+                        <Link2 href="https://github.com/AimorYou/NeuroWeb/tree/master"><FaGit /></Link2>
+                        <Link2 href="https://t.me/+ASzBV3Yh6l1iMzQy"> <FaTelegram /> </Link2>
+                        <Link2 href="https://www.youtube.com/shorts/AcEkoGS8b9I"><FaYoutube /></Link2>
                     </Row2>
                 </Column>
                 <Column>

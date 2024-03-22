@@ -25,10 +25,10 @@ const Register = () => {
     const requestOptions = {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({email: email, hashed_password: password}),
+      body: JSON.stringify({username: email, password: password}),
     };
 
-    const response = await fetch("http://0.0.0.0:8888/api/v1/users", requestOptions)
+    const response = await fetch("http://0.0.0.0:8888/api/signup", requestOptions)
     const data = await response.json()
 
     if (!response.ok) {

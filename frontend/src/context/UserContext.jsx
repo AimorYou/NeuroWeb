@@ -15,7 +15,7 @@ export const UserProvider = (props) => {
                 },
             };
 
-            const response = await fetch("http://0.0.0.0:8888/api/v1/users/me", requestOptions);
+            const response = await fetch("http://0.0.0.0:8888/api/signup", requestOptions);
             if (!response.ok) {
                 setToken(null);
             }
