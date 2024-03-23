@@ -1,7 +1,4 @@
 # NeuroWeb
-
-## Зачем и для кого
-
 ## Описание проекта
 
 NeuroWeb - это многофункциональная веб-платформа, разработанная для обучения и применения различных нейронных сетей без необходимости программирования. Платформа обеспечивает удобный и интуитивно понятный интерфейс, позволяя пользователям с различным уровнем подготовки в области машинного обучения успешно работать с нейронными сетями.
@@ -15,64 +12,61 @@ NeuroWeb - это многофункциональная веб-платформ
 
 ## Стек технологий
 
-- **FastAPI** with Python 3.8
-- **React 16** with Typescript, Redux, and react-router
+- **FastAPI** с Python 3.8
+- **React 16** с использованием Typescript, Redux и react-router
 - Postgres
-- SqlAlchemy with Alembic for migrations
-- Pytest for backend tests
-- Jest for frontend tests
-- Perttier/Eslint (with Airbnb style guide)
-- Docker compose for easier development
-- Nginx as a reverse proxy to allow backend and frontend on the same port
+- SqlAlchemy с Alembic для миграций
+- Pytest для тестирования бэкенда
+- Jest для тестирования фронтенда
+- Prettier/Eslint (с использованием стандарта Airbnb)
+- Docker compose для упрощения разработки
+- Nginx в качестве обратного прокси для возможности использования бэкенда и фронтенда на одном порту
 
 ## Разработка
 
-The only dependencies for this project should be docker and docker-compose.
+Единственные зависимости для этого проекта должны быть Docker и docker-compose.
 
 ### Запуск проекта
 
-Starting the project with hot-reloading enabled
-(the first time it will take a while):
+Для запуска проекта с включенной функцией горячей перезагрузки (в первый раз это займет некоторое время):
 
 ```bash
 docker-compose up -d
 ```
 
-To run the alembic migrations (for the users table):
+Для запуска миграций Alembic (для таблицы пользователей):
 
 ```bash
 docker-compose run --rm backend alembic upgrade head
 ```
 
-And navigate to http://localhost:8000
+И перейдите по адресу http://localhost:8000
 
-_Note: If you see an Nginx error at first with a `502: Bad Gateway` page, you may have to wait for webpack to build the development server (the nginx container builds much more quickly)._
+Примечание: Если вы видите ошибку Nginx сначала с 502: Bad Gateway, возможно, вам придется подождать, пока webpack построит сервер разработки (контейнер nginx собирается намного быстрее).
 
-Auto-generated docs will be at
-http://localhost:8000/api/docs
+Автоматически сгенерированные документы будут доступны по адресу http://localhost:8000/api/docs
 
-### Rebuilding containers:
+### Пересборка контейнеров:
 
 ```
 docker-compose build
 ```
 
-### Restarting containers:
+### Перезапуск контейнеров:
 
 ```
 docker-compose restart
 ```
 
-### Bringing containers down:
+### Остановка контейнеров:
 
 ```
 docker-compose down
 ```
 
-### Frontend Development
+### Разработка фронтенда
 
-Alternatively to running inside docker, it can sometimes be easier
-to use npm directly for quicker reloading. To run using npm:
+В качестве альтернативы запуску внутри docker, иногда проще использовать npm напрямую для более быстрой перезагрузки. Чтобы запустить с помощью npm:
 
 ```
 cd frontend
@@ -80,9 +74,9 @@ npm install
 npm start
 ```
 
-This should redirect you to http://localhost:3000
+Это должно перенаправить вас на http://localhost:3000
 
-### Frontend Tests
+### Тестирование фронтенда
 
 ```
 cd frontend
@@ -90,15 +84,14 @@ npm install
 npm test
 ```
 
-## Migrations
+## Миграции
 
-Migrations are run using alembic. To run all migrations:
-
+Миграции запускаются с использованием alembic. Чтобы выполнить все миграции:
 ```
 docker-compose run --rm backend alembic upgrade head
 ```
 
-To create a new migration:
+Для создания новой миграции:
 
 ```
 alembic revision -m "create users table"
@@ -107,43 +100,43 @@ alembic revision -m "create users table"
 And fill in `upgrade` and `downgrade` methods. For more information see
 [Alembic's official documentation](https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script).
 
-## Testing
+## Тестирование
 
-There is a helper script for both frontend and backend tests:
+Есть вспомогательный скрипт для тестирования как фронтенда, так и бэкенда:
 
 ```
 ./scripts/test.sh
 ```
 
-### Backend Tests
+### Тестирование бэкенда
 
 ```
 docker-compose run backend pytest
 ```
 
-any arguments to pytest can also be passed after this command
+Любые аргументы для pytest также могут быть переданы после этой команды
 
-### Frontend Tests
+### Тестирование фронтенда
 
 ```
 docker-compose run frontend test
 ```
 
-This is the same as running npm test from within the frontend directory
+Это то же самое, что запуск npm test из каталога frontend
 
-## Logging
+## Журналирование
 
 ```
 docker-compose logs
 ```
 
-Or for a specific service:
+Или для конкретного сервиса:
 
 ```
 docker-compose logs -f name_of_service # frontend|backend|db
 ```
 
-## Project Layout
+## Структура проекта
 
 ```
 backend
@@ -170,3 +163,56 @@ frontend
     ├── index.tsx   # entrypoint
     └── App.tsx     # handles routing
 ```
+
+## Примеры использования программы
+
+<img width="737" alt="Screenshot 2024-03-22 at 09 47 16" src="https://github.com/AimorYou/NeuroWeb/assets/121317357/67a11fa8-613e-4526-8078-823e2464cd33">
+<img width="1432" alt="Screenshot 2024-03-22 at 09 49 22" src="https://github.com/AimorYou/NeuroWeb/assets/121317357/0dbdb695-959c-451e-8c52-5a6ade2266b5">
+<img width="1440" alt="Screenshot 2024-03-22 at 11 56 41" src="https://github.com/AimorYou/NeuroWeb/assets/121317357/a72a5a0a-73c1-4536-861a-6f2b1e89a8f2">
+
+
+## Вклад в разработку
+
+Вклад в развитие проекта делает сообщество открытого исходного кода удивительным местом для обучения, вдохновения и творчества. Любой вклад, который вы делаете, очень ценится.
+
+Если у вас есть предложение, которое сделает проект лучше, пожалуйста, форкните репозиторий и создайте pull request. Вы также можете просто открыть issue с тегом "enhancement". И, конечно, не забудьте поставить звезду проекту! Спасибо еще раз!
+
+1. Форкните проект.
+2. Создайте свою ветку (git checkout -b feature/AmazingFeature).
+3. Зафиксируйте свои изменения (git commit -m 'Add some AmazingFeature').
+4. Отправьте изменения в ветку (git push origin feature/AmazingFeature).
+5. Откройте pull request.
+
+## Лицензия и авторство
+
+MIT Лицензия
+
+Авторские права (с) 2023 NeuroWeb
+
+Настоящим предоставляется разрешение безвозмездно любому лицу, получающему копию
+этого программного обеспечения и связанных с ним документационных файлов (далее - "Программное обеспечение"),
+на использование Программного обеспечения без ограничений, включая, помимо прочего, права
+на использование, копирование, изменение, объединение, публикацию, распространение, подлицензирование и/или продажу
+копий Программного обеспечения, а также на разрешение лицам, которым предоставляется Программное обеспечение,
+проводить это, при соблюдении следующих условий:
+
+Вышеприведенное уведомление об авторских правах и это уведомление о разрешении должны быть включены во все
+копии или значительные части Программного обеспечения.
+
+ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ "КАК ЕСТЬ", БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, ЯВНЫХ ИЛИ
+ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ, НО НЕ ОГРАНИЧИВАЯСЬ, ГАРАНТИИ ТОВАРНОГО КАЧЕСТВА,
+ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННОЙ ЦЕЛИ И НЕНАРУШЕНИЯ. В НИКАКОМ СЛУЧАЕ АВТОРЫ ИЛИ ПРАВООБЛАДАТЕЛИ НЕ НЕСУТ ОТВЕТСТВЕННОСТИ
+ЗА ЛЮБЫЕ ПРЕТЕНЗИИ, УЩЕРБ ИЛИ ДРУГИЕ ОБЯЗАТЕЛЬСТВА, БУДЬ-ТО В ДОГОВОРЕ, ДЕЛИКТЕ ИЛИ ИНАЧЕ, ВОЗНИКАЮЩИЕ ИЗ,
+ИЛИ В СВЯЗИ С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ ИЛИ ИСПОЛЬЗОВАНИЕМ ИЛИ ИНЫМИ ДЕЙСТВИЯМИ
+С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ.
+
+email: help@neurowev.com
+telegram: @aimoryou
+
+
+![npms.io](https://img.shields.io/npms-io/quality-score/npm?style=flat&logo=npm&color=rgb(60%2C%20179%2C%20113))
+![NPM Version](https://img.shields.io/npm/v/%40emotion%2Freact)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/npm/%40testing-library%2Freact)
+
+
+
