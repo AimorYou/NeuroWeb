@@ -14,7 +14,7 @@ export const homeObjOne = {
       'Опыт работы с RESTful API.',
     buttonLabel: 'Начать',
     imgStart: '',
-    img: require('../../assets/images/test.png'),
+    img: require('../../assets/images/back.JPG'),
     alt: 'Credit Card',
     start: ''
   };
@@ -32,7 +32,7 @@ export const homeObjOne = {
     description3:'Опыт разработки и поддержки веб-сервисов и API.',   
     buttonLabel: 'Learn More',
     imgStart: 'start',
-    img: require('../../assets/images/test.png'),
+    img: require('../../assets/images/design.JPG'),
     alt: 'Vault',
     start: ''
   };
@@ -51,7 +51,7 @@ export const homeObjOne = {
     description3:'Понимание принципов дизайна и внимание к деталям.', 
     buttonLabel: 'View Case Study',
     imgStart: '',
-    img: require('../../assets/images/test.png'),
+    img: require('../../assets/images/front.JPG'),
     alt: 'Vault',
     start: 'true'
   };

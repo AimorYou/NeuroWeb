@@ -5,7 +5,9 @@ import { GiCrystalBars } from 'react-icons/gi';
 import { GiCutDiamond, GiRock } from 'react-icons/gi';
 import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
-import CatBoost from '../../assets/images/CatBoost.jpg'
+import Image from '../../assets/images/image.JPG'
+import Audio from '../../assets/images/audio.JPG'
+import Tables from '../../assets/images/tables.JPG'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -30,7 +32,7 @@ function Pricing() {
           <PricingContainer>
           <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Image} />
                 <Card primary>1. Изображения</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Соберите и сгруппируйте примеры в классы, или категории, которые вы хотите, чтобы компьютер изучил.</PricingCardFeature>
@@ -39,7 +41,7 @@ function Pricing() {
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Audio} />
                 <Card primary>2. Аудио</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Обучите свою модель, а затем сразу же протестируйте ее, чтобы проверить, может ли она правильно классифицировать новые примеры.</PricingCardFeature>
@@ -48,7 +50,7 @@ function Pricing() {
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Tables} />
                 <Card primary>3. Таблицы</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Экспортируйте модель для своих проектов: сайтов, приложений и других. Вы можете загрузить свою модель или разместить ее в Интернете.</PricingCardFeature>

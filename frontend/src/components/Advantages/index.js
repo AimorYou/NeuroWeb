@@ -5,7 +5,10 @@ import { GiCrystalBars } from 'react-icons/gi';
 import { GiCutDiamond, GiRock } from 'react-icons/gi';
 import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
-import CatBoost from '../../assets/images/CatBoost.jpg'
+import Versality from '../../assets/images/versality.JPG'
+import Scalability from '../../assets/images/scalability.JPG'
+import Analytics from '../../assets/images/analytics.JPG'
+import Efficiency from '../../assets/images/efficiency.JPG'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -30,7 +33,7 @@ function Pricing() {
           <PricingContainer>
           <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Versality} />
                 <Card primary>1. Многопрофильность</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Разнообразие областей</PricingCardFeature>
@@ -41,7 +44,7 @@ function Pricing() {
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Scalability} />
                 <Card primary>2. Маштабируемость</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Развитие по мере</PricingCardFeature>
@@ -52,7 +55,7 @@ function Pricing() {
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Analytics} />
                 <Card primary>3. Аналитика</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Глубокий анализ данных</PricingCardFeature>
@@ -63,7 +66,7 @@ function Pricing() {
             </PricingCard>
             <PricingCard to='/sign-up'>
               <PricingCardInfo>
-                <PricingCardIcon src={CatBoost} />
+                <PricingCardIcon src={Efficiency} />
                 <Card primary>4. Эффективность</Card>
                 <PricingCardFeatures>
                   <PricingCardFeature>Оптимизация процессов</PricingCardFeature>

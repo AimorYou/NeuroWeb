@@ -4,7 +4,7 @@ import "./Detection.css";
 import Webcam from "react-webcam";
 import { drawMesh } from "./utilities";
 
-function Detection() {
+function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -71,29 +71,29 @@ function Detection() {
             right: 600,
             top:20,
             textAlign: "center",
+            zindex: 9,
+            width: 640,
+            height: 480,
           }}
         />
 
         <canvas
           ref={canvasRef}
           style={{
+            position: "absolute",
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
-            right: 600,
-            top:20,
+            right: 760,
+            top:120,
             textAlign: "center",
+            zindex: 9,
+            width: 640,
+            height: 480,
           }}
         />
-        <div className="Prediction" style={{
-          position:"absolute",
-          right:100,
-          width:500,
-          top: 60
-        }}>
-        </div>
     </div>
   );
 }
 
-export default Detection;
+export default App;
