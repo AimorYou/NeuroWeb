@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react'
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   FormWrap,
@@ -20,31 +21,48 @@ const Register = () => {
   const [confirmationPassword, setConfirmationPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [, setToken] = useContext(UserContext);
- 
+  const navigate = useNavigate();
   const submitRegistration = async () => {
-    const requestOptions = {
+    try {
+    console.log("Clicked")
+    const formData = new FormData();
+    formData.append('username', email);
+    formData.append('password', password);
+    const requestOptions = new Request("http://0.0.0.0:8888/api/signup", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({email: email, hashed_password: password}),
-    };
+      // headers: {"Content-Type": "text/plain", "Access-Control-Allow-Origin": "(GET, POST, PUT, DELETE, PATCH, OPTIONS)"},
+      body: formData,
+    });
 
-    const response = await fetch("http://0.0.0.0:8888/api/v1/users", requestOptions)
+    console.log(requestOptions)
+
+    const response = await fetch(requestOptions)
     const data = await response.json()
 
+    console.log(response)
+    console.log(response.ok)
     if (!response.ok) {
       setErrorMessage(data.detail);
     } else {
       setToken(data.access_token)
+    }
+    }
+    catch (err) {
+      console.log(err)
+      navigate("/");
     }
 
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmationPassword && password.length > 5) {
-    submitRegistration();
+    console.log("clo¥ikked")
+    if (password === confirmationPassword && password.length > 4) {
+      console.log("good")
+      submitRegistration();
     } else {
-    setErrorMessage("Ensure that the passwords match and greater than 5 characters");
+      console.log("not good")
+      setErrorMessage("Ensure that the passwords match and greater than 5 characters");
     }
   };
 
@@ -57,7 +75,7 @@ const Register = () => {
       <Container>
         <FormWrap>
           <FormContent>
-            <Form action={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <FormH1>Регистрация</FormH1>
               <FormInput type='email'
               placeholder={emailPlaceholder}

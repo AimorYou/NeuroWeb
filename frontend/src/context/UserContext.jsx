@@ -15,13 +15,13 @@ export const UserProvider = (props) => {
                 },
             };
 
-            const response = await fetch("http://0.0.0.0:8888/api/v1/users/me", requestOptions);
-            if (!response.ok) {
-                setToken(null);
-            }
-            localStorage.setItem("hello", token);
+//             const response = await fetch("http://0.0.0.0:8888/api/v1/users/me", requestOptions);
+//             if (!response.ok) {
+//                 setToken(null);
+//             }
+//             localStorage.setItem("hello", token);
         };  
-        fetchUser();
+        // fetchUser();
     }, [token]);
     
     return (
