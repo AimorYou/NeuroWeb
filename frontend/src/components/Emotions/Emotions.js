@@ -112,7 +112,7 @@ function Emotion() {
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
-            right: 730,
+            right: 900,
             top:100,
             textAlign: "center",
            

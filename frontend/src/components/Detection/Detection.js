@@ -65,6 +65,7 @@ function App() {
       <Webcam className="Webcam"
           ref={webcamRef}
           style={{
+            
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
@@ -84,7 +85,7 @@ function App() {
             marginLeft: "auto",
             marginRight: "auto",
             left: 0,
-            right: 760,
+            right: 860,
             top:120,
             textAlign: "center",
             zindex: 9,
