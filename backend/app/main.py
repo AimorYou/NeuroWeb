@@ -8,6 +8,7 @@ from api.api_v1.routers.pre_trained import cv_router
 from core import config
 from db.session import SessionLocal
 from core.auth import get_current_active_user
+from db.schemas import JSONValidation
 
 
 app = FastAPI(
@@ -37,6 +38,12 @@ app.include_router(
 )
 app.include_router(auth_router, prefix="/api", tags=["auth"])
 app.include_router(cv_router, prefix="/api/cv", tags=["cv"])
+
+
+@app.post("/api/test-json")
+def test_json(req: JSONValidation):
+    return {"status": "200 OK"}
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)
