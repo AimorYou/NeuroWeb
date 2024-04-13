@@ -10,11 +10,20 @@ from db.session import SessionLocal
 from core.auth import get_current_active_user
 from db.schemas import JSONValidation
 
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title=config.PROJECT_NAME, docs_url="/api/docs", openapi_url="/api"
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    # allow_origins=['*'],
+    allow_origins=["http://localhost", "http://127.0.0.1:3000", 'http://localhost:8080', "http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.middleware("http")
 async def db_session_middleware(request: Request, call_next):

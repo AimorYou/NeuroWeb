@@ -51,29 +51,6 @@ const ClassesForm = () => {
   };
   const classPhotos = {};
   const handleSavePhotos = (formId, photos) => {
-    // setForms(prevForms => {
-    //   return prevForms.map(form => {
-    //     if (form.id === formId) {
-    //       // form.photos.push(photos);
-    //       // console.log(form.photos)
-    //       classPhotos[`class ${formId}`] = photos;
-    //       const obj = { classes: classPhotos};
-    //       const json = JSON.stringify(obj, null, 2);
-    //       const blob = new Blob([json], { type: 'application/json' });
-    //       const url = URL.createObjectURL(blob);
-    //       const a = document.createElement('a');
-    //       a.href = url;
-    //       a.download = 'captured_photos.json';
-    //       document.body.appendChild(a);
-    //       a.click();
-    //       document.body.removeChild(a);
-    //       URL.revokeObjectURL(url);
-    //     } else {
-    //       console.log('Фотографии не были захвачены');
-    //     }
-    //     return form;
-    //   })
-    // })
     setForms(prevForms => {
       return prevForms.map(form => {
         if (form.id === formId) {
@@ -96,21 +73,25 @@ const ClassesForm = () => {
     const obj = { classes: classPhotos};
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'captured_photos.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = 'captured_photos.json';
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);
+    // URL.revokeObjectURL(url);
 
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
-
+    const apiUrl = 'http://0.0.0.0:8888/api/test-json';
     try {
       // Make a POST request to your backend server with the JSON data
-      const response = await axios.post('api/test-json', classPhotos);
+      const response = await axios.post(apiUrl, blob, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       console.log('Response:', response.data);
     } catch (error) {
       console.error('Error:', error);
