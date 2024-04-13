@@ -3,7 +3,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import MainPage from './pages/MainPage';
 import SigninPage from './pages/SigninPage';
-import GetStartedPage from './pages/GetStartedPage';
+import ChoosePretrainedOrNot from './pages/ChoosePretrainedOrNot';
+import ChoosePretrainedModel from './pages/ChoosePretrainedModel';
+import ChooseModel from './pages/ChooseModel';
 
 import FAQPage from './pages/FAQPage'
 import TeamPage from './pages/TeamPage'
@@ -32,7 +34,9 @@ function App() {
           <Route index element={<MainPage/>} />
           <Route path='/signin' element={<SigninPage/>} />
           <Route path='/register' element={<Register/>} />
-          <Route path='/get-started' element={<GetStartedPage/>} />
+          <Route path='/get-started' element={<ChoosePretrainedOrNot/>} />
+          <Route path='/pretrained-models' element={<ChoosePretrainedModel/>} />
+          <Route path='/models-to-train' element={<ChooseModel/>} />
 
           <Route path='/faq' element={<FAQPage/>} />
           <Route path='/team' element={<TeamPage/>} />

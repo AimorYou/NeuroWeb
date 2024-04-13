@@ -17,7 +17,6 @@ const SigninPage = () => {
 
   return (
     <div className='App'>
-      <MenuBar />
       <Navbar toggle={toggle} />
       <SignIn />
       <Footer />

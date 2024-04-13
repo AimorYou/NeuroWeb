@@ -7,7 +7,6 @@ import MenuBar from '../../components/MenuBar'
 const Classes = () => {
   return (
     <div className='Classes-container'>
-      <MenuBar />
       <Navbar/>
     <React.Fragment>
         <ClassesForm/>

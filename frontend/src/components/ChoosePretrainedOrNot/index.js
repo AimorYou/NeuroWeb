@@ -21,41 +21,31 @@ import {
   PricingCardLength,
   PricingCardFeatures,
   PricingCardFeature
-} from './ChooseModelElements';
+} from './ChoosePretrainedOrNotElements';
 
 function Pricing() {
   return (
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Выберите модель</PricingHeading>
+          <PricingHeading>Выберите - обучить модель на своих данных или попробовать уже предобученные модели</PricingHeading>
           <PricingContainer>
-            <PricingCard to='/classes'>
+            <PricingCard to='/models-to-train'>
               <PricingCardInfo>
               <PricingCardIcon src={Classify} />
-                <PricingCardPlan>Работа с изображениями</PricingCardPlan>
+                <PricingCardPlan>Обучить модель на своих данных</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель идентифицирует и классифицирует объекты на основе их характеристик, обучаясь на размеченных данных</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/audio'>
+            <PricingCard to='/pretrained-models'>
               <PricingCardInfo>
               <PricingCardIcon src={Emotion} />
-                <PricingCardPlan>Работа с аудио</PricingCardPlan>
+                <PricingCardPlan>Попробовать предобученные модели</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель анализирует лицевые выражения, определяя эмоциональное состояние на основе распознанных паттернов</PricingCardFeature>
-                </PricingCardFeatures>
-                <Button primary>Выбрать</Button>
-              </PricingCardInfo>
-            </PricingCard>
-            <PricingCard to='/tables'>
-              <PricingCardInfo>
-              <PricingCardIcon src={Detect} />
-                <PricingCardPlan>Работа с таблицами</PricingCardPlan>
-                <PricingCardFeatures>
-                  <PricingCardFeature>Модель обнаруживает и локализует объекты на изображениях, позволяя идентифицировать их положение и границы</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>

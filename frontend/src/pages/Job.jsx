@@ -19,7 +19,6 @@ const MainPage = () => {
     
   return (
     <div className='App'>
-      <MenuBar />
       <Navbar toggle={toggle} />
       <JobSection {...homeObjOne}/>
       <JobSection {...homeObjTwo}/>

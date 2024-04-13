@@ -8,7 +8,6 @@ import MenuBar from '../../components/MenuBar'
 const Audio = () => {
   return (
     <div className='Audio-container'>
-      <MenuBar />
       <Navbar/>
     <React.Fragment>
         <AudioForm/>

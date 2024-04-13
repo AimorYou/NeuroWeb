@@ -6,7 +6,7 @@ import Webcam from 'react-webcam';
 import './Camera.css';
 import Dropdown from 'react-multilevel-dropdown';
 
-const CameraForm = ({formId, delForm}) => {
+const CameraForm = ({formId, delForm, handleSavePhotos}) => {
   const webcamRef = useRef(null);
   const [capturedPhotos, setCapturedPhotos] = useState([]);
   const [captureInterval, setCaptureInterval] = useState(null);
@@ -37,20 +37,7 @@ const CameraForm = ({formId, delForm}) => {
     setCapturedPhotos(updatedPhotos);
   };
   
-  const jsonArray = []
-  const forms = {formId : [capturedPhotos]}
-  const jsonObj = {
-    classes: [forms]
-  }
-  jsonArray.push(jsonObj)
-//TODO HandleSavePhotos можно добавить отправку на сервер
-  const handleSavePhotos = () => {
-    if (capturedPhotos.length > 0) {
-      console.log('Сохранение фотографий:', jsonArray);
-    } else {
-      console.log('Фотографии не были захвачены');
-    }
-  };
+  
 
   const MenuBar = () => {
     return (
@@ -79,23 +66,24 @@ const CameraForm = ({formId, delForm}) => {
         <div class="horizontal-line"></div>
         <div class="horizontal-btns">
           <button className='camera-upload-photo' onClick={() => setShowCamera(!showCamera) }><CameraAltIcon/></button>
-          <button className='camera-upload-photo' onClick={handleSavePhotos}><UploadAltIcon/></button>
+          <button className='camera-upload-photo'><UploadAltIcon/></button>
         </div>
         {showCamera && (
           <div>
             <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
-            <button className={'btn'} onMouseDown={startCapture} onMouseUp={stopCapture}>
+            <button className={'btn'} onMouseDown={startCapture} onMouseUp={stopCapture} onClick={() => handleSavePhotos(formId, capturedPhotos)}>
               Сфотографировать
             </button>
           </div>
         )}
         <div className="photo-container">
           {capturedPhotos.map((photo, index) => (
-            <div key={photo.id} className="photo-item">
+            <div key={index} className="photo-item">
               <img src={photo.photo} alt={`Photo ${index}`} />
               {/* <button className='btn' onClick={() => deletePhoto(index)}>Delete</button> */}
             </div>
           ))}
+        
         </div>
       </div>
       </div>
