@@ -51,7 +51,7 @@ function Navbar() {
             </MobileIcon>
             <NavMenu onClick={handleClick} click={click}>
               <NavItem>
-                <NavLinks to='/get-started' onClick={closeMobileMenu}>
+                <NavLinks to='/get-started' onClick={closeMobileMenu} activeclassname="active">
                   Начать
                 </NavLinks>
               </NavItem>

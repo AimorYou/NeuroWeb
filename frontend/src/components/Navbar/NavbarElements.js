@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FaMagento } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { Container } from '../globalStyles';
 
 export const Nav = styled.nav`
@@ -72,14 +72,9 @@ export const NavMenu = styled.ul`
   }
 `;
 
-export const NavItem = styled.li`
+export const NavItem = styled(Link)`
   height: 80px;
   border-bottom: 2px solid transparent;
-
-
-  &:hover {
-    border-bottom: 2px solid #666AED;
-  }
 
   @media screen and (max-width: 960px) {
     width: 100%;
@@ -100,13 +95,21 @@ export const NavItemBtn = styled.li`
   }
 `;
 
-export const NavLinks = styled(Link)`
+export const NavLinks = styled(NavLink)`
   color: #fff;
   display: flex;
   align-items: center;
   text-decoration: none;
   padding: 0.5rem 1rem;
   height: 100%;
+
+  &.active {
+    border-bottom: 2px solid #666AED;
+  }
+
+  &:hover {
+      color: #666AED;
+  }
 
   @media screen and (max-width: 960px) {
     text-align: center;
