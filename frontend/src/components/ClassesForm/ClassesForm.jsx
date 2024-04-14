@@ -6,7 +6,6 @@ import './ClassesForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 
-
 const ClassesForm = () => {
   const webcamRef = useRef(null);
   const [forms, setForms] = useState([]);
@@ -85,17 +84,21 @@ const ClassesForm = () => {
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
     const apiUrl = 'http://0.0.0.0:8888/api/test-json';
-    try {
-      // Make a POST request to your backend server with the JSON data
-      const response = await axios.post(apiUrl, blob, {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
+
+      try {
+        // Make a POST request to your backend server with the JSON data
+        const response = await axios.post(apiUrl, blob, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        console.log('Response:', response.data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+  
+      setShowCamera(!showCamera)
+      
   };
 
   return (
@@ -112,7 +115,7 @@ const ClassesForm = () => {
       </div>
       <div className='train-model-card'>
         <div className='heading'>Обучение</div>
-        <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
+        <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
       </div>
           <div className='preview-model-card'>
               <div className='heading'>Превью</div>
@@ -125,6 +128,12 @@ const ClassesForm = () => {
                 {showCamera && (
                   <div>
                     <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
+                    {forms.map(form => (
+                      <div key={form.id}>
+                        <label style={{color:'white'}}>Класс {form.id} </label>
+                        <progress value={0.75} />
+                      </div>
+                    ))}
                   </div>
                 )}
                 {!showCamera && (
