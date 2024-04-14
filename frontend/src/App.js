@@ -25,6 +25,7 @@ import Detection from './pages/Detection';
 
 import { Classes } from './pages/Classes';
 import { Audio } from './pages/Audio';
+import Tables  from './pages/Tables';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
 
           <Route path="/classes" element={<Classes />} />
           <Route path="/audio" element={<Audio />} />
+          <Route path="/tables" element={<Tables />} />
           
 
         </Routes>
