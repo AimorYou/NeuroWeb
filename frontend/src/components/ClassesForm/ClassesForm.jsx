@@ -103,6 +103,10 @@ const ClassesForm = () => {
 
   return (
     <React.Fragment>
+      <div className='text-to-show'>
+          Функционал обучения собственных моделей на мобильных устройствах не доступен. Переключитесь, пожалуйста, на ПК.
+      </div>
+      <div className="hide">
       <div className='horizontal'>
       <div>
       {forms.map(form => (
@@ -140,6 +144,7 @@ const ClassesForm = () => {
                 <div className='class-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь</div>
                 )}
           </div>
+      </div>
       </div>
     </React.Fragment>
   );
