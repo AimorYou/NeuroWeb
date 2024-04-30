@@ -209,3 +209,23 @@ def predict(image: str, class_mapping: dict, user_id: str):
         print(pred)
         print(class_mapping[str(int(pred_classes[0]))])
         return class_mapping[str(int(pred_classes[0]))]
+
+
+def _predict(model, image, class_mapping):
+    transform = Compose(
+        [
+            #         transforms.RandomRotation(degrees=15),
+            #         transforms.RandomVerticalFlip(),
+            #         transforms.RandomHorizontalFlip(),
+            transforms.Resize((224, 224)),
+            ToTensor(),
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+        ])
+    image = transform(Image.open(io.BytesIO(base64.b64decode(image)))).unsqueeze(0)
+    model.eval()
+    with torch.no_grad():
+        pred = model.forward(image)
+        pred_classes = torch.argmax(pred, dim=-1)
+        print(pred)
+        print(class_mapping[str(int(pred_classes[0]))])
+        return class_mapping[str(int(pred_classes[0]))]
