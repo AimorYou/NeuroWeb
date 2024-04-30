@@ -83,7 +83,7 @@ const ClassesForm = () => {
 
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
-    const apiUrl = 'http://0.0.0.0:8888/api/test-json';
+    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/train-model?user_id=1'; // как посылать uid
 
       try {
         // Make a POST request to your backend server with the JSON data

@@ -127,15 +127,14 @@ class CustomDataset(Dataset):
     def __init__(self, json_data, transform=None):
         self.data = []
         self.transform = transform
-        self.class_mapping = {
-            "cats": 0,
-            "dogs": 1
-        }
+        self.class_mapping = {k: v for v, k in enumerate(json_data["classes"].keys())}
         for class_name, images in json_data["classes"].items():
             for img_base64 in images:
+                img_base64 = img_base64.split(",")[1]
                 img_bytes = base64.b64decode(img_base64)
                 img = Image.open(io.BytesIO(img_bytes))
                 self.data.append((img, class_name))
+        print(f"class_mapping: {self.class_mapping}")
 
     def __len__(self):
         return len(self.data)
@@ -181,7 +180,7 @@ def train_model(json_data: dict, user_id: str):
     class_mapping = {k: v for k, v in enumerate(json_data["classes"].keys())}
     print(class_mapping)
 
-    with open(f"computer_vision/resources/classification_{user_id}.sav", "wb") as f:
+    with open(f"./app/computer_vision/resources/classification_{user_id}.sav", "wb") as f:
         pickle.dump(model, f)
 
     return class_mapping
@@ -198,7 +197,7 @@ def predict(image: str, class_mapping: dict, user_id: str):
             Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ])
 
-    with open(f"computer_vision/resources/classification_{user_id}.sav", "rb") as f:
+    with open(f"./app/computer_vision/resources/classification_{user_id}.sav", "rb") as f:
         model = pickle.load(f)
 
     image = transform(Image.open(io.BytesIO(base64.b64decode(image)))).unsqueeze(0)
