@@ -24,8 +24,6 @@ import pickle
 import torch
 import io
 
-
-
 LAST_BLOCK_MAPPING = {
     resnet18: "layer4.1",
     resnet152: "layer4.2"
@@ -51,7 +49,6 @@ def prepare_model(torch_model=resnet18,
                   torch_weights=ResNet18_Weights,
                   num_classes=2,
                   train_strategy="last_layer"):
-
     model = torch_model(weights=torch_weights, num_classes=1000)
 
     for param in model.parameters():
@@ -123,7 +120,6 @@ def transform_to_dataloader(param_1, param_2, param_3):
             Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ])
 
-
     return 123
 
 
@@ -149,7 +145,7 @@ class CustomDataset(Dataset):
         if self.transform:
             img = self.transform(img)
         return img, self.class_mapping[class_name]
-    
+
 
 def transform_data(data):
     pass
@@ -157,14 +153,14 @@ def transform_data(data):
 
 def train_model(json_data: dict, user_id: str):
     transform = Compose(
-    [
-    #         transforms.RandomRotation(degrees=15),
-    #         transforms.RandomVerticalFlip(),
-    #         transforms.RandomHorizontalFlip(),
-        transforms.Resize((224, 224)),
-        ToTensor(),
-        Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    ])
+        [
+            #         transforms.RandomRotation(degrees=15),
+            #         transforms.RandomVerticalFlip(),
+            #         transforms.RandomHorizontalFlip(),
+            transforms.Resize((224, 224)),
+            ToTensor(),
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+        ])
 
     # Create Dataset and DataLoader
     dataset = CustomDataset(json_data, transform=transform)
@@ -182,36 +178,35 @@ def train_model(json_data: dict, user_id: str):
     )
     trainer.fit(model, train_dataloaders=dataloader)
 
-    class_mapping = {k:v for k,v in enumerate(json_data["classes"].keys())}
+    class_mapping = {k: v for k, v in enumerate(json_data["classes"].keys())}
     print(class_mapping)
 
-    with open(f"classification_{user_id}", "wb") as f:
+    with open(f"computer_vision/resources/classification_{user_id}.sav", "wb") as f:
         pickle.dump(model, f)
 
     return class_mapping
 
 
 def predict(image: str, class_mapping: dict, user_id: str):
-
     transform = Compose(
-    [
-    #         transforms.RandomRotation(degrees=15),
-    #         transforms.RandomVerticalFlip(),
-    #         transforms.RandomHorizontalFlip(),
-        transforms.Resize((224, 224)),
-        ToTensor(),
-        Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    ])
+        [
+            #         transforms.RandomRotation(degrees=15),
+            #         transforms.RandomVerticalFlip(),
+            #         transforms.RandomHorizontalFlip(),
+            transforms.Resize((224, 224)),
+            ToTensor(),
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+        ])
 
-    with open(f"classification_{user_id}", "rb") as f:
+    with open(f"computer_vision/resources/classification_{user_id}.sav", "rb") as f:
         model = pickle.load(f)
 
     image = transform(Image.open(io.BytesIO(base64.b64decode(image)))).unsqueeze(0)
 
     model.eval()
     with torch.no_grad():
-            pred = model.forward(image)
-            pred_classes = torch.argmax(pred, dim=-1)
-            print(pred)
-            print(class_mapping[str(int(pred_classes[0]))])
-            return class_mapping[str(int(pred_classes[0]))]
+        pred = model.forward(image)
+        pred_classes = torch.argmax(pred, dim=-1)
+        print(pred)
+        print(class_mapping[str(int(pred_classes[0]))])
+        return class_mapping[str(int(pred_classes[0]))]

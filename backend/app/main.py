@@ -48,7 +48,7 @@ app.include_router(
 )
 app.include_router(auth_router, prefix="/api", tags=["auth"])
 app.include_router(cv_router, prefix="/api/cv", tags=["cv"])
-app.include_router(train_router, prefix="/api/train", tags=["train"])
+app.include_router(train_router, prefix="/api/cv/train", tags=["train"])
 
 
 @app.post("/api/test-json")

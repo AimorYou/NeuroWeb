@@ -15,32 +15,32 @@ import io
 train_router = r = APIRouter()
 
 
-# class ConnectionManager:
-#     def __init__(self):
-#         self.active_connections = []
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections = []
 
-#     async def connect(self, websocket: WebSocket):
-#         await websocket.accept()
-#         self.active_connections.append(websocket)
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
 
-#     def disconnect(self, websocket: WebSocket):
-#         self.active_connections.remove(websocket)
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
 
-#     async def send_text(self, message: str, websocket: WebSocket):
-#         await websocket.send_text(message)
+    async def send_text(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
 
-#     async def send_json(self, message: dict, websocket: WebSocket):
-#         await websocket.send_json(message)
+    async def send_json(self, message: dict, websocket: WebSocket):
+        await websocket.send_json(message)
 
 
-# manager = ConnectionManager()
+manager = ConnectionManager()
 
 
 @r.get("/")
 async def get():
     return {200: "OK"}
 
-@r.post("/train")
+@r.post("/train-model")
 async def train(json_data: dict, user_id: str):
     class_mapping = train_model(json_data=json_data, user_id=user_id)
     return {200: "OK", "class_mapping": class_mapping}
