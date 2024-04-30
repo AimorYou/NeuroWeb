@@ -1,3 +1,4 @@
+import json
 import random
 import math
 import sys
@@ -180,13 +181,19 @@ def train_model(json_data: dict, user_id: str):
     class_mapping = {k: v for k, v in enumerate(json_data["classes"].keys())}
     print(class_mapping)
 
-    with open(f"./app/computer_vision/resources/classification_{user_id}.sav", "wb") as f:
+    if not os.path.exists(f"./app/computer_vision/resources/user_{user_id}"):
+        os.mkdir(f"./app/computer_vision/resources/user_{user_id}")
+
+    with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "wb") as f:
         pickle.dump(model, f)
+
+    with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "w") as f:
+        json.dump(class_mapping, f)
 
     return class_mapping
 
 
-def predict(image: str, class_mapping: dict, user_id: str):
+def predict(image: str, user_id: str):
     transform = Compose(
         [
             #         transforms.RandomRotation(degrees=15),
@@ -197,8 +204,11 @@ def predict(image: str, class_mapping: dict, user_id: str):
             Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ])
 
-    with open(f"./app/computer_vision/resources/classification_{user_id}.sav", "rb") as f:
+    with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
         model = pickle.load(f)
+
+    with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
+        class_mapping = json.load(f)
 
     image = transform(Image.open(io.BytesIO(base64.b64decode(image)))).unsqueeze(0)
 

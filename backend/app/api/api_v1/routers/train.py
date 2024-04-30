@@ -50,8 +50,8 @@ async def train(json_data: dict, user_id: str):
 
 
 @r.post("/predict")
-async def train(json_data: dict, class_mapping: dict, user_id: str):
-    prediction = predict(image=json_data["image"], class_mapping=class_mapping, user_id=user_id)
+async def train(json_data: dict, user_id: str):
+    prediction = predict(image=json_data["image"], user_id=user_id)
     return {200: "OK", "prediction": prediction}
 
 
@@ -59,14 +59,16 @@ async def train(json_data: dict, class_mapping: dict, user_id: str):
 async def classification(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
-        with open(f"./app/computer_vision/resources/classification_{user_id}.sav", "rb") as f:
+        with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
             model = pickle.load(f)
+        with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
+            class_mapping = json.load(f)
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)
             print(f"data = {data}")
             img = data['data']['image'].split(',')[1]
-            class_mapping = data['data']["class_mapping"]
+            # class_mapping = data['data']["class_mapping"]
 
             clf_prediction = _predict(model, img, class_mapping)
 
