@@ -1,9 +1,9 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, APIRouter
+from fastapi import WebSocket, WebSocketDisconnect, APIRouter
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
-from computer_vision.classification import get_clf_prediction
-from computer_vision.detection import get_bbox_prediction
-from computer_vision.emotions import get_bbox_prediction_tf
+from computer_vision.pretrained_models.classification import get_clf_prediction
+from computer_vision.pretrained_models.detection import get_bbox_prediction
+from computer_vision.pretrained_models.emotions import get_bbox_prediction_tf
 from PIL import Image
 import numpy as np
 import base64

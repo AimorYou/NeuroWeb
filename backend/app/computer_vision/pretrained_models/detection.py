@@ -5,7 +5,7 @@ from PIL import Image
 from ultralytics import YOLO
 
 
-yolo_model = YOLO(os.path.join(os.path.dirname(__file__), "resources/yolov8n.pt"))
+yolo_model = YOLO(os.path.join(os.path.dirname(__file__), "../resources/yolov8n.pt"))
 yolo_mapping = [("person", (67, 161, 255)), ("bicycle", (19, 222, 24)), ("car", (186, 55, 2)),
                 ("motorcycle", (167, 146, 11)), ("airplane", (190, 76, 98)), ("bus", (130, 172, 179)),
                 ("train", (115, 209, 128)), ("truck", (204, 79, 135)), ("boat", (136, 126, 185)),

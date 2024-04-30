@@ -7,7 +7,7 @@ from torchvision.models import resnet18, ResNet18_Weights
 from torchvision.models import resnet152, ResNet152_Weights
 
 
-with open(os.path.join(os.path.dirname(__file__), "resources/imagenet_cls_mapping.json"), "r") as f:
+with open(os.path.join(os.path.dirname(__file__), "../resources/imagenet_cls_mapping.json"), "r") as f:
     imagenet_cls_mapping = json.loads(f.read())
 
 

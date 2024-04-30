@@ -1,18 +1,9 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, APIRouter
+from fastapi import WebSocket, WebSocketDisconnect, APIRouter
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
-from torchvision.transforms import Compose
-from computer_vision.classification import get_clf_prediction
-from computer_vision.detection import get_bbox_prediction
-from computer_vision.emotions import get_bbox_prediction_tf
-from computer_vision.train import train_model, predict, _predict
-from PIL import Image
-import numpy as np
+from computer_vision.trainable_models.classification import train_model, predict, _predict
 import pickle
-import base64
 import json
-import cv2
-import io
 
 train_router = r = APIRouter()
 
