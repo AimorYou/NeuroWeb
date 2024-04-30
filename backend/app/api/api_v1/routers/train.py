@@ -62,11 +62,13 @@ async def classification(websocket: WebSocket, user_id):
         with open(f"./app/computer_vision/resources/classification_{user_id}.sav", "rb") as f:
             model = pickle.load(f)
         while True:
-            data = await websocket.receive()
-            _, img = data.get("text").split(",")
-            class_mapping = data.get("class_mapping")
+            data = await websocket.receive_text()
+            data = json.loads(data)
+            print(f"data = {data}")
+            img = data['data']['image'].split(',')[1]
+            class_mapping = data['data']["class_mapping"]
 
-            clf_prediction = _predict(model, img)
+            clf_prediction = _predict(model, img, class_mapping)
 
             await manager.send_json(clf_prediction, websocket)
     except WebSocketDisconnect:

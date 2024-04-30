@@ -1,5 +1,5 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './ClassesForm.css';
@@ -13,6 +13,8 @@ const ClassesForm = () => {
   const [showCamera, setShowCamera] = useState(false);
   const [checked, setChecked] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState([]);
+  const [classMapping, setClassMapping] = useState({});
+
 
   const addForm = () => {
     const newForm = { id: formIdCounter, photos: [] };
@@ -48,6 +50,53 @@ const ClassesForm = () => {
       });
     });
   };
+
+  const runFaceDetectorModel = async () => {
+
+    // const model = await blazeface.load()
+    console.log("FaceDetection Model is Loaded..") 
+    setInterval(() => {
+      // detect(model);
+      detect("")
+    }, 1000);
+ 
+  }
+
+  const detect = async() => {
+    if (
+      typeof webcamRef.current !== "undefined" &&
+      webcamRef.current !== null &&
+      webcamRef.current.video.readyState === 4
+    ) {
+      // Get Video Properties
+      const video = webcamRef.current.video;
+      const videoWidth = webcamRef.current.video.videoWidth;
+      const videoHeight = webcamRef.current.video.videoHeight;
+
+      // Set video width
+      webcamRef.current.video.width = videoWidth;
+      webcamRef.current.video.height = videoHeight;
+
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/predict/1')
+      var imageSrc = webcamRef.current.getScreenshot()
+      var apiCall = {
+        event: "localhost:subscribe",
+        data: { 
+          'image': imageSrc,
+          'class_mapping': classMapping
+        },
+      };
+      socket.onopen = () => socket.send(JSON.stringify(apiCall))
+      // getWebSocket().send(JSON.stringify(apiCall))
+      
+      // getWebSocket().onmessage 
+      socket.onmessage = function(event) {
+        var predictions = JSON.parse(event.data)
+        console.log(predictions)
+      }
+    }
+  };
+
   const classPhotos = {};
   const handleSavePhotos = (formId, photos) => {
     setForms(prevForms => {
@@ -62,6 +111,7 @@ const ClassesForm = () => {
     // Log forms with photos for testing
     console.log(forms);
   };
+
 
   const sendJSON = async() => {
     const classPhotos = forms.reduce((accumulator, form) => {
@@ -93,14 +143,21 @@ const ClassesForm = () => {
           }
         });
         console.log('Response:', response.data);
+        if (response.data && response.data.class_mapping) {
+          console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
+          setClassMapping(response.data.class_mapping)
+        } else {
+          console.log('Error: No class mapping received');
+        }
+        setShowCamera(true)
       } catch (error) {
         console.error('Error:', error);
       }
-  
-      setShowCamera(!showCamera)
+      
       
   };
 
+  useEffect(()=>{runFaceDetectorModel()}, [classMapping]);
   return (
     <React.Fragment>
       <div className='text-to-show'>
