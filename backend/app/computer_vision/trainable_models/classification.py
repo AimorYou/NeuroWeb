@@ -13,6 +13,7 @@ from torchvision.datasets import ImageFolder
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torch.nn import functional as F
+import torch.nn.functional as nnf
 import matplotlib.pyplot as plt
 import pytorch_lightning as pl
 from PIL import Image
@@ -238,4 +239,9 @@ def _predict(model, image, class_mapping):
         pred_classes = torch.argmax(pred, dim=-1)
         print(pred)
         print(class_mapping[str(int(pred_classes[0]))])
-        return class_mapping[str(int(pred_classes[0]))]
+        prob = nnf.softmax(pred, dim=1)
+        print(prob)
+        mapped_prob = {k: round(float(v), 3) for k,v in zip(class_mapping.values(), prob[0])}
+        print(mapped_prob)
+        # return class_mapping[str(int(pred_classes[0]))]
+        return mapped_prob
