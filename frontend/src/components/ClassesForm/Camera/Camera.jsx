@@ -1,6 +1,7 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UploadAltIcon from '@mui/icons-material/Upload';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './Camera.css';
@@ -64,6 +65,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
     <React.Fragment>
       <div className="horizontal">
         <div className="card">
+        <div className="horizontal-className" onClick={() => setShowRenameForm(true)}>
           <div className="class-text">
             {showRenameForm ? (
               <RenameForm 
@@ -73,6 +75,8 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
             ) : (
               `${formName}`
             )}
+          </div>
+          <div className='class-edit-btn'><ModeEditIcon fontSize='small'/></div>
           </div>
           <MenuBar/>
           <div className="horizontal-line"></div>

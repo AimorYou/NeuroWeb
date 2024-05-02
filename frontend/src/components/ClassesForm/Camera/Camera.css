@@ -103,6 +103,15 @@
     align-items: center;
 }
 
+.horizontal-className {
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    justify-content: baseline;
+    align-items: center;
+}
+
+
 .camera-upload-photo {
   background-color: #6C58E9;
   border: 0.8px solid #fff;
@@ -161,6 +170,17 @@
 .class-text {
     color: #fff;
     font-size: 16px;
+    margin-bottom:  -20px;
+}
+
+.class-text:hover {
+    color: #cbc5ed;
+}
+
+.class-edit-btn {
+    color: #fff;
+    font-size: 16px;
+    padding-left: 5px;
     margin-bottom:  -20px;
 }
 

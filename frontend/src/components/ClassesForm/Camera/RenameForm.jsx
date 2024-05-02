@@ -4,7 +4,6 @@ import './RenameForm.css';
 const RenameForm = ({ initialValue, onSubmit }) => {
   const [value, setValue] = useState(initialValue);
   const [isEditing, setIsEditing] = useState(true);
-    const [tempValue, setTempValue] = useState(initialValue);
   const inputRef = useRef(null);
 
   useEffect(() => {
