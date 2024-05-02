@@ -49,6 +49,17 @@ services:
     depends_on:
       - "postgres"
 
+  ml-streamlit-app:
+    build:
+      context: ml-streamlit-app
+      dockerfile: Dockerfile
+    environment:
+      PYTHONPATH: .
+    ports:
+      - 8501:8501
+    depends_on:
+      - "backend"
+
 #  frontend:
 #    build:
 #      context: frontend
