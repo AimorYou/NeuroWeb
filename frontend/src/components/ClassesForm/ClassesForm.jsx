@@ -17,13 +17,24 @@ const ClassesForm = () => {
 
 
   const addForm = () => {
-    const newForm = { id: formIdCounter, photos: [] };
+    const newForm = { id: formIdCounter, name: `Класс ${formIdCounter}`, photos: [] };
     setFormIdCounter(formIdCounter + 1);
     setForms(prevForms => [...prevForms, newForm]);
   };
 
   const deleteForm = formId => {
     setForms(prevForms => prevForms.filter(form => form.id !== formId));
+  };
+
+  const renameForm = (formId, newName) => {
+    setForms(prevForms => {
+      return prevForms.map(form => {
+        if (form.id === formId) {
+          return { ...form, name: newName };
+        }
+        return form;
+      });
+    });
   };
 
   
@@ -93,11 +104,11 @@ const ClassesForm = () => {
       socket.onmessage = function(event) {
         var predictions = JSON.parse(event.data)
         forms.forEach(form => {
-          var element = document.getElementById(form.id);
+          var element = document.getElementById(form.name);
           if (element) {
-            element.value = Math.round(predictions[`class_${form.id}`]*100);
+            element.value = Math.round(predictions[form.name]*100);
           } else {
-            console.error(`Element with id ${form.id} not found`);
+            console.error(`Element with id ${form.name} not found`);
           }
         });
         console.log(predictions);
@@ -124,7 +135,7 @@ const ClassesForm = () => {
 
   const sendJSON = async() => {
     const classPhotos = forms.reduce((accumulator, form) => {
-      accumulator[`class_${form.id}`] = form.photos;
+      accumulator[form.name] = form.photos;
       return accumulator;
     }, {});
     
@@ -178,7 +189,7 @@ const ClassesForm = () => {
       {forms.map(form => (
         <div key={form.id}>
           {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
-          <Camera formId={form.id} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)}/>
+          <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)}/>
         </div>
       ))}
       <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
@@ -200,8 +211,8 @@ const ClassesForm = () => {
                     <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
                     {forms.map(form => (
                       <div key={form.id}>
-                        <label style={{color:'white'}}>Класс {form.id} </label>
-                        <progress id={form.id} value={0} max={100} />
+                        <label style={{color:'white'}}>{form.name} </label>
+                        <progress id={form.name} value={0} max={100} />
                       </div>
                     ))}
                   </div>
