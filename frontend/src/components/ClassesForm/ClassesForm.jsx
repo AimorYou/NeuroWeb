@@ -92,8 +92,17 @@ const ClassesForm = () => {
       // getWebSocket().onmessage 
       socket.onmessage = function(event) {
         var predictions = JSON.parse(event.data)
-        console.log(predictions)
+        forms.forEach(form => {
+          var element = document.getElementById(form.id);
+          if (element) {
+            element.value = Math.round(predictions[`class_${form.id}`]*100);
+          } else {
+            console.error(`Element with id ${form.id} not found`);
+          }
+        });
+        console.log(predictions);
       }
+      
     }
   };
 
@@ -192,7 +201,7 @@ const ClassesForm = () => {
                     {forms.map(form => (
                       <div key={form.id}>
                         <label style={{color:'white'}}>Класс {form.id} </label>
-                        <progress value={0.75} />
+                        <progress id={form.id} value={0} max={100} />
                       </div>
                     ))}
                   </div>
