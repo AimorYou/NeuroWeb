@@ -19,7 +19,7 @@ const Tables = () => {
     <div>
         <Navbar toggle={toggle} />
         <iframe
-          src="https://30days.streamlit.app/?embed=true"
+          src="http://0.0.0.0:8501"
           height="800"
           style={{ width: "100%", border: "none" }}
         ></iframe>
