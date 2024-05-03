@@ -2,7 +2,7 @@ import io
 import json
 import base64
 import pickle
-from typing import List
+from typing import List, Union
 
 import numpy as np
 from PIL import Image
@@ -22,8 +22,6 @@ class Recognizer:
         """
         self.face_images = []
         self.face_names = []
-        self._handle_json(json_data)
-
         self.face_encodings = []
         for face_image in self.face_images:
             # Take only first face occurance
@@ -48,7 +46,7 @@ class Recognizer:
                 self.face_names.append(class_name)
                 self.face_images.append(img_np)
 
-    def recognize(self, frame: np.ndarray) -> dict[str, bool | list]:
+    def recognize(self, frame: np.ndarray) -> dict[str, Union[bool, list]]:
         """
         Method recognizes known people from the given frame
 
@@ -76,19 +74,21 @@ class Recognizer:
 
         return json_out
 
-    def download_model(self, path: str ="model_rec.pkl"):
+    def dump_model(self, user_id: str, path: str = "model_rec.pkl"):
         """
         Method downloads trained face recognition model to the specified path
 
+        :param user_id: user id for identifying user directory
         :param path: desired path for saving model
         """
+        path = f"./app/computer_vision/resources/user_{user_id}/" + path
         with open(path, "wb") as model_rec:
             pickle.dump(self, model_rec)  # TODO: Implement sending to the frontend
 
 
 if __name__ == "__main__":
     with open("sample_face_rec.json", "r") as f:
-        face_rec_json = json.loads(f.read()) # same json structure as classification one
+        face_rec_json = json.loads(f.read())  # same json structure as classification one
 
     rec = Recognizer(face_rec_json)
 
@@ -97,4 +97,4 @@ if __name__ == "__main__":
     img_pil = Image.open(io.BytesIO(img_bytes))
     img_np = np.array(img_pil)
 
-    print(rec.recognize(img_np)) # {'recognized_flg': True, 'recognized_people': ['Арсений Пивоваров', 'Софья Мосина']}
+    print(rec.recognize(img_np))  # {'recognized_flg': True, 'recognized_people': ['Арсений Пивоваров', 'Софья Мосина']}
