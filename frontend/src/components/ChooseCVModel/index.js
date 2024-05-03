@@ -28,7 +28,7 @@ function Pricing() {
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Выберите модель</PricingHeading>
+          <PricingHeading>Выберите модель копьютерного зрения</PricingHeading>
           <PricingContainer>
             <PricingCard to='/classes'>
               <PricingCardInfo>

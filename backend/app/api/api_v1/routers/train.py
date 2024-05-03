@@ -37,7 +37,7 @@ async def get():
 
 
 @r.post("/classification/train-model")
-async def train(json_data: JSONValidation, user_id: str):
+async def train(json_data: dict, user_id: str):
     class_mapping = train_model(json_data=json_data, user_id=user_id)
     return {200: "OK", "class_mapping": class_mapping}
 
@@ -71,7 +71,7 @@ async def classification(websocket: WebSocket, user_id):
 
 
 @r.post("/face-recognition/train-model")
-async def train(json_data: JSONValidation, user_id: str):
+async def train(json_data: dict, user_id: str):
     recognizer = Recognizer(json_data=json_data)
     recognizer.dump_model(user_id=user_id)
     return {200: "OK"}

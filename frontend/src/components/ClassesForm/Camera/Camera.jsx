@@ -65,8 +65,8 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
     <React.Fragment>
       <div className="horizontal">
         <div className="card">
-        <div className="horizontal-className" onClick={() => setShowRenameForm(true)}>
-          <div className="class-text">
+        <div className="horizontal-className">
+          <div className="class-text" onClick={() => setShowRenameForm(true)}>
             {showRenameForm ? (
               <RenameForm 
                 initialValue={formName} 
@@ -75,6 +75,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
             ) : (
               `${formName}`
             )}
+            
           </div>
           <div className='class-edit-btn'><ModeEditIcon fontSize='small'/></div>
           </div>

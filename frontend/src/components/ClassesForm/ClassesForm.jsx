@@ -1,5 +1,6 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './ClassesForm.css';
@@ -14,6 +15,9 @@ const ClassesForm = () => {
   const [checked, setChecked] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState([]);
   const [classMapping, setClassMapping] = useState({});
+  const [freezeCamera, setFreezeCamera] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const [videoStopped, setVideoStopped] = useState(false);
 
 
   const addForm = () => {
@@ -62,6 +66,16 @@ const ClassesForm = () => {
     });
   };
 
+  const toggleFreezeCamera = () => {
+    setFreezeCamera(prevState => !prevState);
+    if (socket) {
+      socket.close();
+      setSocket(null);
+    }
+    // Останавливаем видео, если оно не остановлено; иначе, запускаем его
+    setVideoStopped(prevState => !prevState); 
+  };
+
   const runFaceDetectorModel = async () => {
 
     // const model = await blazeface.load()
@@ -88,7 +102,7 @@ const ClassesForm = () => {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/predict/1')
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1')
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -153,7 +167,7 @@ const ClassesForm = () => {
 
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
-    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/train-model?user_id=1'; // как посылать uid
+    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/classification/train-model?user_id=1'; // как посылать uid
 
       try {
         // Make a POST request to your backend server with the JSON data
@@ -178,6 +192,15 @@ const ClassesForm = () => {
   };
 
   useEffect(()=>{runFaceDetectorModel()}, [classMapping]);
+  useEffect(() => {
+    if (webcamRef.current) {
+      if (videoStopped) {
+        webcamRef.current.video.pause(); // Приостанавливаем видео
+      } else {
+        webcamRef.current.video.play(); // Запускаем видео
+      }
+    }
+  }, [videoStopped]);
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -199,15 +222,17 @@ const ClassesForm = () => {
         <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
       </div>
           <div className='preview-model-card'>
-              <div className='heading'>Превью</div>
+              <div className='preview'>Превью
+              <button className='export-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}><IosShareIcon/>Экспортировать модель</button>
+              </div>
                 <div className='horizontal-line' />
-                      <label className="toggle">
-                        <span className="toggle-label">Input</span>
-                        <input class="toggle-checkbox" type="checkbox" onClick={()=>setChecked(!checked)}/>
-                        <div className="toggle-switch"></div>
-                      </label>
                 {showCamera && (
                   <div>
+                    <label className="toggle">
+                        <span className="toggle-label">Input</span>
+                        <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera}/>
+                        <div className="toggle-switch"></div>
+                      </label>
                     <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
                     {forms.map(form => (
                       <div key={form.id}>
@@ -218,7 +243,7 @@ const ClassesForm = () => {
                   </div>
                 )}
                 {!showCamera && (
-                <div className='class-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь</div>
+                <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>
                 )}
           </div>
       </div>

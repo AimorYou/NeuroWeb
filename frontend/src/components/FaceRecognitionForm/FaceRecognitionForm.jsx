@@ -1,12 +1,13 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './FaceRecognitionForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 
-const ClassesForm = () => {
+const FaceRecognitionForm = () => {
   const webcamRef = useRef(null);
   const [forms, setForms] = useState([]);
   const [formIdCounter, setFormIdCounter] = useState(1);
@@ -16,7 +17,7 @@ const ClassesForm = () => {
   const [classMapping, setClassMapping] = useState({});
   const [freezeCamera, setFreezeCamera] = useState(false);
   const [socket, setSocket] = useState(null);
-  const [videoStopped, setVideoStopped] = useState(false); // Состояние для отслеживания остановки видео
+  const [videoStopped, setVideoStopped] = useState(false);
 
 
   const addForm = () => {
@@ -102,7 +103,7 @@ const ClassesForm = () => {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/predict/1')
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/face-recognition/predict/1')
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -167,7 +168,7 @@ const ClassesForm = () => {
 
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
-    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/train-model?user_id=1'; // как посылать uid
+    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/face-recognition/train-model?user_id=1'; // как посылать uid
 
       try {
         // Make a POST request to your backend server with the JSON data
@@ -223,15 +224,17 @@ const ClassesForm = () => {
         <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
       </div>
           <div className='preview-model-card'>
-              <div className='heading'>Превью</div>
+              <div className='preview'>Превью
+              <button className='export-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}><IosShareIcon/>Экспортировать модель</button>
+              </div>
                 <div className='horizontal-line' />
-                      <label className="toggle">
+                {showCamera && (
+                  <div>
+                    <label className="toggle">
                         <span className="toggle-label">Input</span>
                         <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera}/>
                         <div className="toggle-switch"></div>
                       </label>
-                {showCamera && (
-                  <div>
                     <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
                     {forms.map(form => (
                       <div key={form.id}>
@@ -242,7 +245,7 @@ const ClassesForm = () => {
                   </div>
                 )}
                 {!showCamera && (
-                <div className='class-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь</div>
+                <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>
                 )}
           </div>
       </div>
@@ -251,4 +254,4 @@ const ClassesForm = () => {
   );
 };
 
-export default ClassesForm;
+export default FaceRecognitionForm;

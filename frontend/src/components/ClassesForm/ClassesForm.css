@@ -29,6 +29,20 @@
     background: #7258e9;
 }
 
+.preview-model-card {
+  display: inline-table;
+  border-radius: 15px ;
+  padding: 10px;
+  width: 350px;
+  height: auto;
+  min-height: 140px;
+  align-items: center;
+  text-align: center;
+  margin-left: 5%;
+  margin-top: 3%;
+  background: #7258e9;
+}
+
 .horizontal {
     display: flex;
     flex-direction: row;
@@ -63,6 +77,15 @@
     font-weight: 700;
     text-align: center;
 }
+.preview {
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 10px;
+}
 
 .train-model-btn {
     display: inline-flex;
@@ -89,7 +112,34 @@
     touch-action: manipulation;
   }
 
-.train-model-btn:hover
+  .export-model-btn {
+    display: inline-flex;
+    background-color: #6C58E9;
+    border: 1.5px solid #fff;
+    border-radius: 8px;
+    border-style: 1px solid #fff;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    width: 250px;
+    height: 30px;
+    padding: 20px;
+    margin-left: 20px;
+    list-style: none;
+    text-align: center;
+    align-items: center;
+    text-decoration: none;
+    transition: color 100ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    justify-content: space-evenly;
+  }
+
+.train-model-btn:hover,
+.export-model-btn:hover
 {
   opacity: 0.8;
 }
@@ -107,6 +157,14 @@
     font-size: 12px;
     margin-bottom:  -20px;
     text-align: left;
+}
+
+.preview-text {
+  color: #fff;
+  font-size: 14px;
+  margin-bottom:  -20px;
+  text-align: left;
+  margin: 10px;
 }
 
 *,
