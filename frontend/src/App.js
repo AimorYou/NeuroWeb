@@ -6,6 +6,7 @@ import SigninPage from './pages/SigninPage';
 import ChoosePretrainedOrNot from './pages/ChoosePretrainedOrNot';
 import ChoosePretrainedModel from './pages/ChoosePretrainedModel';
 import ChooseModel from './pages/ChooseModel';
+import ChooseCVModel from './pages/ChooseCVModel';
 
 import FAQPage from './pages/FAQPage'
 import TeamPage from './pages/TeamPage'
@@ -22,9 +23,12 @@ import CLML from './pages/CLML';
 import Classification from './pages/Classification';
 import Emotions from './pages/Emotions';
 import Detection from './pages/Detection';
-
+// CV
 import { Classes } from './pages/Classes';
+import { FaceRecognition } from './pages/FaceRecognition';
+// NLP
 import { Audio } from './pages/Audio';
+// Classical ML
 import Tables  from './pages/Tables';
 
 function App() {
@@ -38,6 +42,7 @@ function App() {
           <Route path='/get-started' element={<ChoosePretrainedOrNot/>} />
           <Route path='/pretrained-models' element={<ChoosePretrainedModel/>} />
           <Route path='/models-to-train' element={<ChooseModel/>} />
+          <Route path='/cv-models' element={<ChooseCVModel/>} />
 
           <Route path='/faq' element={<FAQPage/>} />
           <Route path='/team' element={<TeamPage/>} />
@@ -55,7 +60,10 @@ function App() {
           <Route path='/detection' element={<Detection/>} />
 
           <Route path="/classes" element={<Classes />} />
+          <Route path="/face-recognition" element={<FaceRecognition />} />
+
           <Route path="/audio" element={<Audio />} />
+
           <Route path="/tables" element={<Tables />} />
           
 

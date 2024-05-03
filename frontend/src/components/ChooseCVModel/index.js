@@ -21,7 +21,7 @@ import {
   PricingCardLength,
   PricingCardFeatures,
   PricingCardFeature
-} from './ChooseModelElements';
+} from './ChooseCVModelElements';
 
 function Pricing() {
   return (
@@ -30,30 +30,30 @@ function Pricing() {
         <PricingWrapper>
           <PricingHeading>Выберите модель</PricingHeading>
           <PricingContainer>
-            <PricingCard to='/cv-models'>
+            <PricingCard to='/classes'>
               <PricingCardInfo>
               <PricingCardIcon src={Classify} />
-                <PricingCardPlan>Работа с изображениями</PricingCardPlan>
+                <PricingCardPlan>Классификация изображений</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель идентифицирует и классифицирует объекты на основе их характеристик, обучаясь на размеченных данных</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/audio'>
+            <PricingCard to='/face-recognition'>
               <PricingCardInfo>
               <PricingCardIcon src={Emotion} />
-                <PricingCardPlan>Работа с аудио</PricingCardPlan>
+                <PricingCardPlan>Распознование лиц</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель анализирует лицевые выражения, определяя эмоциональное состояние на основе распознанных паттернов</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/tables'>
+            <PricingCard to='/'>
               <PricingCardInfo>
               <PricingCardIcon src={Detect} />
-                <PricingCardPlan>Работа с таблицами</PricingCardPlan>
+                <PricingCardPlan>Детекция изображений</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель обнаруживает и локализует объекты на изображениях, позволяя идентифицировать их положение и границы</PricingCardFeature>
                 </PricingCardFeatures>
