@@ -75,9 +75,10 @@ def prepare_model(torch_model=resnet18,
 
 
 class CvModule(pl.LightningModule):
-    def __init__(self, model) -> None:
+    def __init__(self, model, num_classes) -> None:
         super().__init__()
         self.model = model
+        self.num_classes = num_classes
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
         self.loss = nn.CrossEntropyLoss()
@@ -94,7 +95,7 @@ class CvModule(pl.LightningModule):
         images, target = train_batch
         preds = self.forward(images)
         loss = self.loss(preds, target)
-        acc = accuracy(torch.argmax(preds, dim=-1).long(), target.long(), task="binary")
+        acc = accuracy(torch.argmax(preds, dim=-1).long(), target.long(), task="multiclass", num_classes=self.num_classes)
         self.log("train_accuracy", acc, prog_bar=True)
         self.log("train_loss", loss, prog_bar=True)
         return loss
@@ -166,13 +167,14 @@ def train_model(json_data: dict, user_id: str):
     # Create Dataset and DataLoader
     dataset = CustomDataset(json_data, transform=transform)
     dataloader = DataLoader(dataset, batch_size=2, shuffle=True)
+    num_classes = len(json_data["classes"])
 
-    test_model = prepare_model(resnet18, ResNet18_Weights)
+    test_model = prepare_model(resnet18, ResNet18_Weights, num_classes)
 
     torch.cuda.empty_cache()
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-    model = CvModule(test_model).to(device)  # YOUR CODE HERE
+    model = CvModule(test_model, num_classes).to(device)  # YOUR CODE HERE
     trainer = pl.Trainer(
         accelerator=device,
         max_epochs=20
