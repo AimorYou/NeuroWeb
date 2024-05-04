@@ -2,7 +2,6 @@ import os
 import io
 import yaml
 import base64
-from typing import List
 
 import numpy as np
 from PIL import Image
@@ -10,10 +9,27 @@ from ultralytics import YOLO
 
 
 class Detector:
-    def __init__(self, json_data: dict, uid: str) -> None:
+    colors = [
+        "RGB(255, 0, 0)",     # Red
+        "RGB(0, 255, 0)",     # Green
+        "RGB(0, 0, 255)",     # Blue
+        "RGB(255, 255, 0)",   # Yellow
+        "RGB(255, 0, 255)",   # Magenta
+        "RGB(0, 255, 255)",   # Cyan
+        "RGB(128, 0, 128)",   # Purple
+        "RGB(0, 128, 128)",   # Teal
+        "RGB(128, 128, 0)",   # Olive
+        "RGB(128, 128, 128)"  # Gray
+    ]
+
+    def __init__(self, json_data: dict, uid: str, mode: str = "train") -> None:
         """
-        Constructor parses input json containing data in YOLOv8 format and creates dir for training
-        Input json format:
+        This class works in two modes:
+            train: Constructor parses input json containing data in YOLOv8 format and creates dir for training.
+            Next, the model immediately starts training on the stored data
+            inference: Model loads according to the best weights on given uid dir.
+
+        Input json format (json_data):
         {
             "classes": {
                 "names": ["face_with_mask", "face_without_mask"],
@@ -30,20 +46,32 @@ class Detector:
             }
         }
 
-        :param json_data: input json from backend
+        :param json_data: input json with data for training from the backend
+        :param uid: name of the user directory
+        :param mode: inference/train
         """
-        self.data = json_data["classes"]["data"]
-        self.hyperparams = json_data["hyperparameters"]
-        self.model = None
+        if len(json_data["classes"]["names"]) > len(self.colors):
+            raise Exception(f"Classes number exceeds the limit in {len(self.colors)}")
 
-        self._handle_json(json_data, uid)
-        self.train_model()
+        if mode == "train":
+            self.data = json_data["classes"]["data"]
+            self.class_names = json_data["classes"]["names"]
+            self.hyperparams = json_data["hyperparameters"]
+            self.model = None
+
+            self._handle_json(json_data, uid)
+            self._train_model()
+        elif mode == "inference":
+            self.model = YOLO(f"{uid}/runs/detect/train/weights/best.pt")  # FIXME: Fix path
+            self.class_names = json_data["classes"]["names"]
+        else:
+            raise Exception("Unknown mode! Avialable modes are train and inference")
 
     def _handle_json(self, json_in: dict, uid: str) -> None:
         """
         Method handles input json and creates YOLOv8 format dir for training
 
-        :param json_data: input json from backend
+        :param json_in: input json from backend
         """
         # 1. Create dir with user id and move there
         try:
@@ -84,8 +112,8 @@ class Detector:
             img_pil = Image.open(io.BytesIO(img_bytes))
             img_pil.save(os.path.abspath(f"{os.curdir}/data/train/images/{i}.jpg"))
 
-        with open(os.path.abspath(f"{os.curdir}/data/train/labels/{i}.txt"), "w") as f:
-            f.write(self.data["labels"][i])
+            with open(os.path.abspath(f"{os.curdir}/data/train/labels/{i}.txt"), "w") as f:
+                f.write(self.data["labels"][i])
 
         for i in range(train_len, data_len):
             image_b64 = self.data["images"][i]
@@ -93,10 +121,10 @@ class Detector:
             img_pil = Image.open(io.BytesIO(img_bytes))
             img_pil.save(os.path.abspath(f"{os.curdir}/data/val/images/{i}.jpg"))
 
-        with open(os.path.abspath(f"{os.curdir}/data/val/labels/{i}.txt"), "w") as f:
-            f.write(self.data["labels"][i])
+            with open(os.path.abspath(f"{os.curdir}/data/val/labels/{i}.txt"), "w") as f:
+                f.write(self.data["labels"][i])
 
-    def train_model(self) -> None:
+    def _train_model(self) -> None:
         """
         Method trains the specified yolo model (nano/small/medium)
         """
@@ -112,16 +140,28 @@ class Detector:
                          batch=self.hyperparams["batch_size"],
                          epochs=self.hyperparams["n_epochs"])
 
-    def predict(self, image_b64: str):
+    def predict(self, image_b64: str, debug: bool = False):
         """
-        Method downloads trained face recognition model to the specified path
+        Method makes prediction on given base64 image
 
         :param image_b64: base64 image
+        :param debug: logging lavel
         """
         img_bytes = base64.b64decode(image_b64)
         img_pil = Image.open(io.BytesIO(img_bytes))
         img_np = np.array(img_pil)
 
-        res = self.model.predict(img_np)  # TODO: Handle result
+        yolo_results = self.model.predict(img_np, verbose=debug)
+        structured_result = {}
 
-        return res
+        boxes_info = yolo_results[0].boxes
+        for idx, cls_prediction in enumerate(boxes_info.cls):
+            bbox_info = {
+                "cls": self.class_names[int(cls_prediction.item())][0],
+                "conf": round(boxes_info.conf[idx].item(), 2),
+                "coordinates": boxes_info.xyxy[idx].tolist(),
+                "color": self.colors[int(cls_prediction.item())]
+            }
+            structured_result[idx] = bbox_info
+
+        return structured_result

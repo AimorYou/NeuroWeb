@@ -83,7 +83,7 @@ class Recognizer:
         """
         path = f"./app/computer_vision/resources/user_{user_id}/" + path
         with open(path, "wb") as model_rec:
-            pickle.dump(self, model_rec)  # TODO: Implement sending to the frontend
+            pickle.dump(self, model_rec)
 
 
 if __name__ == "__main__":

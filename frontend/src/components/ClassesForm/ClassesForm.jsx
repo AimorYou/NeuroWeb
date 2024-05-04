@@ -201,6 +201,9 @@ const ClassesForm = () => {
       }
     }
   }, [videoStopped]);
+
+  const disableButtons = forms.length < 2 || forms.some(form => form.photos.length === 0);
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -219,11 +222,11 @@ const ClassesForm = () => {
       </div>
       <div className='train-model-card'>
         <div className='heading'>Обучение</div>
-        <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
+        <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
       </div>
           <div className='preview-model-card'>
               <div className='preview'>Превью
-              <button className='export-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}><IosShareIcon/>Экспортировать модель</button>
+              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon/>Экспортировать модель</button>
               </div>
                 <div className='horizontal-line' />
                 {showCamera && (
