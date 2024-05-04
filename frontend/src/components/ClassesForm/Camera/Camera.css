@@ -33,22 +33,23 @@
 .photo-container {
     border-radius: 2%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    
 }
 
 .photo-item {
-    margin: 10px;
-    padding: 5px;
-    width: 60px;
-    height: 60px;
-    box-sizing: border-box;
+    border-radius: 10%; 
+    width: 100%;
+    height: 100%;
+    justify-content: baseline;
 }
 
 .photo-item img {
-    max-width: 100%;
-    height: auto;
+    border-radius: 10%; 
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
 }
+
 
 .photo-item button {
     display: block;
@@ -56,8 +57,9 @@
 }
 
 .webcam {
-    max-width: 250px;
-    max-height: 250px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     
     border-radius: 10px;
 }
@@ -74,8 +76,8 @@
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  width: 170px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   list-style: none;
   margin: 5px;
   padding: 10px 16px;
@@ -169,17 +171,19 @@
 
 .class-text {
     color: #fff;
-    font-size: 16px;
-    margin-bottom:  -20px;
+    font-size: 16px !important;
+    margin-bottom: -20px;
+    margin-left: 10px;
+    font-weight: bold; 
 }
 
-.class-text:hover {
+.class-text:hover, .class-edit-btn:hover {
     color: #cbc5ed;
 }
 
 .class-edit-btn {
     color: #fff;
-    font-size: 16px;
+    font-size: 20px;
     padding-left: 5px;
     margin-bottom:  -20px;
 }

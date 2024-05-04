@@ -77,7 +77,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
             )}
             
           </div>
-          <div className='class-edit-btn'><ModeEditIcon fontSize='small'/></div>
+          <div className='class-edit-btn'  onClick={() => setShowRenameForm(true)} ><ModeEditIcon fontSize='small'/></div>
           </div>
           <MenuBar/>
           <div className="horizontal-line"></div>
