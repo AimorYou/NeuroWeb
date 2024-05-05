@@ -232,17 +232,19 @@ const ClassesForm = () => {
                 {showCamera && (
                   <div>
                     <label className="toggle">
-                        <span className="toggle-label">Input</span>
+                        <span className="toggle-label">{freezeCamera ? "Выкл" : "Вкл"}</span>
                         <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera}/>
                         <div className="toggle-switch"></div>
                       </label>
                     <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
-                    {forms.map(form => (
-                      <div key={form.id}>
-                        <label style={{color:'white'}}>{form.name} </label>
-                        <progress id={form.name} value={0} max={100} />
-                      </div>
-                    ))}
+                    <div className="preview-progress-bars">
+                      {forms.map(form => (
+                        <div key={form.id}>
+                          <label style={{color:'white'}}>{form.name} </label>
+                          <progress id={form.name} value={0} max={100} />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
                 {!showCamera && (
