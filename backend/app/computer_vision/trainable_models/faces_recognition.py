@@ -22,9 +22,11 @@ class Recognizer:
         """
         self.face_images = []
         self.face_names = []
+        self.success = True
+        self.failed_on = ""
         self._handle_json(json_data=json_data)
         self.face_encodings = []
-        for face_image in self.face_images:
+        for face_image, face_name in zip(self.face_images, self.face_names):
             # Take only first face occurance
             face_encoding = face_recognition.face_encodings(face_image,
                                                             num_jitters=1,
@@ -32,6 +34,10 @@ class Recognizer:
                                                             model='small')  # which model to use. “large” or “small”
             if face_encoding:
                 self.face_encodings.append(face_encoding[0])
+            else:
+                self.success = False
+                self.failed_on = face_name
+                break
 
     def _handle_json(self, json_data: dict):
         """

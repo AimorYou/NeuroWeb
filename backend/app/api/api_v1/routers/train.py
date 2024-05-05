@@ -73,8 +73,11 @@ async def classification(websocket: WebSocket, user_id):
 @r.post("/face-recognition/train-model")
 async def train(json_data: dict, user_id: str):
     recognizer = Recognizer(json_data=json_data)
-    recognizer.dump_model(user_id=user_id)
-    return {200: "OK"}
+    if recognizer.success:
+        recognizer.dump_model(user_id=user_id)
+        return {200: "OK"}
+    else:
+        return {400: f"Лицо класса {recognizer.failed_on} не было обнаружено\n Сделайте фотографию, где будет лучше видно лицо"}
 
 
 @r.websocket("/ws/face-recognition/predict/{user_id}")
