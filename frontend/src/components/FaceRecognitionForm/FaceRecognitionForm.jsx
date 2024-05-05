@@ -158,14 +158,14 @@ const FaceRecognitionForm = () => {
     const obj = { classes: classPhotos };
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'captured_photos.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = 'captured_photos.json';
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);
+    // URL.revokeObjectURL(url);
 
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
