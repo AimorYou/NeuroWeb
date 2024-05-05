@@ -41,7 +41,7 @@ const FaceRecognitionForm = () => {
     });
   };
 
-  
+
   const TakePhoto = formId => {
     const capturedPhoto = webcamRef.current.getScreenshot();
 
@@ -73,21 +73,21 @@ const FaceRecognitionForm = () => {
       setSocket(null);
     }
     // Останавливаем видео, если оно не остановлено; иначе, запускаем его
-    setVideoStopped(prevState => !prevState); 
+    setVideoStopped(prevState => !prevState);
   };
 
   const runFaceDetectorModel = async () => {
 
     // const model = await blazeface.load()
-    console.log("FaceDetection Model is Loaded..") 
+    console.log("FaceDetection Model is Loaded..")
     setInterval(() => {
       // detect(model);
       detect("")
     }, 1000);
- 
+
   }
 
-  const detect = async() => {
+  const detect = async () => {
     if (
       !freezeCamera &&
       typeof webcamRef.current !== "undefined" &&
@@ -107,28 +107,29 @@ const FaceRecognitionForm = () => {
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
-        data: { 
+        data: {
           'image': imageSrc,
           'class_mapping': classMapping
         },
       };
       socket.onopen = () => socket.send(JSON.stringify(apiCall))
       // getWebSocket().send(JSON.stringify(apiCall))
-      
+
       // getWebSocket().onmessage 
-      socket.onmessage = function(event) {
-        var predictions = JSON.parse(event.data)
-        forms.forEach(form => {
-          var element = document.getElementById(form.name);
-          if (element) {
-            element.value = Math.round(predictions[form.name]*100);
-          } else {
-            console.error(`Element with id ${form.name} not found`);
-          }
-        });
-        console.log(predictions);
-      }
-      
+      socket.onmessage = function (event) {
+        var predictions = JSON.parse(event.data);
+        var recognizedPeople = predictions.recognized_people;
+
+        if (predictions.recognized_flg && recognizedPeople.length > 0) {
+          recognizedPeople.forEach(person => {
+            console.log(person);
+          });
+        } else {
+          console.log("Никого");
+        }
+      };
+
+
     }
   };
 
@@ -148,52 +149,52 @@ const FaceRecognitionForm = () => {
   };
 
 
-  const sendJSON = async() => {
+  const sendJSON = async () => {
     const classPhotos = forms.reduce((accumulator, form) => {
       accumulator[form.name] = form.photos;
       return accumulator;
     }, {});
-    
-    const obj = { classes: classPhotos};
+
+    const obj = { classes: classPhotos };
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = 'captured_photos.json';
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-    // URL.revokeObjectURL(url);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'captured_photos.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 
     // Send classPhotos to the server or further processing
     console.log(classPhotos);
     const apiUrl = 'http://0.0.0.0:8888/api/cv/train/face-recognition/train-model?user_id=1'; // как посылать uid
 
-      try {
-        // Make a POST request to your backend server with the JSON data
-        const response = await axios.post(apiUrl, blob, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-        console.log('Response:', response.data);
-        if (response.data && response.data.class_mapping) {
-          console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
-          setClassMapping(response.data.class_mapping)
-        } else {
-          console.log('Error: No class mapping received');
+    try {
+      // Make a POST request to your backend server with the JSON data
+      const response = await axios.post(apiUrl, blob, {
+        headers: {
+          'Content-Type': 'application/json',
         }
-        setShowCamera(true)
-      } catch (error) {
-        console.error('Error:', error);
+      });
+      console.log('Response:', response.data);
+      if (response.data && response.data.class_mapping) {
+        console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
+        setClassMapping(response.data.class_mapping)
+      } else {
+        console.log('Error: No class mapping received');
       }
-      
-      
+      setShowCamera(true)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+
   };
 
-  useEffect(()=>{runFaceDetectorModel();}, [classMapping]);
- 
+  useEffect(() => { runFaceDetectorModel(); }, [classMapping]);
+
   useEffect(() => {
     if (webcamRef.current) {
       if (videoStopped) {
@@ -206,49 +207,58 @@ const FaceRecognitionForm = () => {
   return (
     <React.Fragment>
       <div className='text-to-show'>
-          Функционал обучения собственных моделей на мобильных устройствах не доступен. Переключитесь, пожалуйста, на ПК.
+        Функционал обучения собственных моделей на мобильных устройствах не доступен. Переключитесь, пожалуйста, на ПК.
       </div>
       <div className="hide">
-      <div className='horizontal'>
-      <div>
-      {forms.map(form => (
-        <div key={form.id}>
-          {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
-          <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)}/>
-        </div>
-      ))}
-      <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
-      </div>
-      <div className='train-model-card'>
-        <div className='heading'>Обучение</div>
-        <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
-      </div>
-          <div className='preview-model-card'>
-              <div className='preview'>Превью
-              <button className='export-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}><IosShareIcon/>Экспортировать модель</button>
+        <div className='horizontal'>
+          <div>
+            {forms.map(form => (
+              <div key={form.id}>
+                {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
+                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)} />
               </div>
-                <div className='horizontal-line' />
-                {showCamera && (
-                  <div>
-                    <label className="toggle">
-                        <span className="toggle-label">Input</span>
-                        <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera}/>
-                        <div className="toggle-switch"></div>
-                      </label>
-                    <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
-                    {forms.map(form => (
-                      <div key={form.id}>
-                        <label style={{color:'white'}}>{form.name} </label>
-                        <progress id={form.name} value={0} max={100} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {!showCamera && (
-                <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>
-                )}
+            ))}
+            <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
           </div>
-      </div>
+          <div className='train-model-card'>
+            <div className='heading'>Обучение</div>
+            <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
+          </div>
+          <div className='preview-model-card'>
+            <div className='preview'>Превью
+              <button className='export-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
+            </div>
+            <div className='horizontal-line' />
+            {showCamera && (
+              <div>
+                <label className="toggle">
+                  <span className="toggle-label">Input</span>
+                  <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera} />
+                  <div className="toggle-switch"></div>
+                </label>
+                <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
+                {forms.map(form => (
+                  <div key={form.id}>
+                    <label style={{ color: 'white' }}>{form.name}:</label>
+                    {form.recognizedPeople && form.recognizedPeople.length > 0 ? (
+                      <ul>
+                        {form.recognizedPeople.map((person, index) => (
+                          <li key={index}>{person}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <span>Никого</span>
+                    )}
+                  </div>
+                ))}
+
+              </div>
+            )}
+            {!showCamera && (
+              <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>
+            )}
+          </div>
+        </div>
       </div>
     </React.Fragment>
   );

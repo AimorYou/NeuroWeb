@@ -77,7 +77,7 @@ async def train(json_data: dict, user_id: str):
     return {200: "OK"}
 
 
-@r.websocket("/ws/recognition/predict/{user_id}")
+@r.websocket("/ws/face-recognition/predict/{user_id}")
 async def classification(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:

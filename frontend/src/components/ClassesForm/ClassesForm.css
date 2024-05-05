@@ -167,6 +167,11 @@
   margin: 10px;
 }
 
+.preview-progress-bars {
+  flex: 1;
+  margin-left: 60px; /* Расстояние между камерой и прогресс-барами */
+}
+
 *,
 *:before,
 *:after {
@@ -179,11 +184,14 @@ body {
 
 .toggle {
   cursor: pointer;
-  display: inline-block;
+  display: flex;
+  position: relative;
+  top: -170px;
+  left: -10px;
 }
 
 .toggle-switch {
-  display: inline-block;
+  display: flex;
   background: #ccc;
   border-radius: 16px;
   border: 1px solid #fff;
@@ -197,7 +205,7 @@ body {
   content: "";
 }
 .toggle-switch:before {
-  display: block;
+  display: flex;
   background: linear-gradient(to bottom, #fff 0%, #eee 100%);
   border-radius: 50%;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
@@ -210,7 +218,7 @@ body {
 }
 .toggle:hover .toggle-switch:before {
   background: linear-gradient(to bottom, #fff 0%, #fff 100%);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0);
 }
 .toggle-checkbox:checked + .toggle-switch {
   background: #7258e9;
@@ -220,7 +228,6 @@ body {
 }
 
 .toggle-checkbox {
-  position: absolute;
   visibility: hidden;
 }
 
@@ -230,4 +237,3 @@ body {
   top: 2px;
   color: #fff;
 }
-
