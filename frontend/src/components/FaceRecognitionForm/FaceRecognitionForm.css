@@ -159,6 +159,13 @@ opacity: 0.8;
   text-align: left;
 }
 
+.names-text {
+  color: #fff;
+  font-size: 14px;
+  text-align: right;
+  font-weight: bold;
+}
+
 .preview-text {
 color: #fff;
 font-size: 14px;

@@ -18,6 +18,8 @@ const FaceRecognitionForm = () => {
   const [freezeCamera, setFreezeCamera] = useState(false);
   const [socket, setSocket] = useState(null);
   const [videoStopped, setVideoStopped] = useState(false);
+  const [recognizedPeople, setRecognizedPeople] = useState([]);
+
 
 
   const addForm = () => {
@@ -121,13 +123,12 @@ const FaceRecognitionForm = () => {
         var recognizedPeople = predictions.recognized_people;
 
         if (predictions.recognized_flg && recognizedPeople.length > 0) {
-          recognizedPeople.forEach(person => {
-            console.log(person);
-          });
+          setRecognizedPeople(recognizedPeople);
         } else {
-          console.log("Никого");
+          setRecognizedPeople([]);
         }
       };
+
 
 
     }
@@ -204,6 +205,9 @@ const FaceRecognitionForm = () => {
       }
     }
   }, [videoStopped]);
+
+  const disableButtons = forms.length < 1 || forms.some(form => form.photos.length === 0);
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -222,35 +226,34 @@ const FaceRecognitionForm = () => {
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}>Обучить модель</button>
+            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
-              <button className='export-model-btn' onClick={sendJSON} disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
+              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
             </div>
             <div className='horizontal-line' />
             {showCamera && (
               <div>
                 <label className="toggle">
                   <span className="toggle-label">Input</span>
-                  <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera} />
+                  <input className="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera} />
                   <div className="toggle-switch"></div>
                 </label>
                 <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
-                {forms.map(form => (
-                  <div key={form.id}>
-                    <label style={{ color: 'white' }}>{form.name}:</label>
-                    {form.recognizedPeople && form.recognizedPeople.length > 0 ? (
+                <div className="names-text">
+                <label style={{ color: 'white' }}>Распознанные люди:</label>
+                    {recognizedPeople.length > 0 ? (
                       <ul>
-                        {form.recognizedPeople.map((person, index) => (
-                          <li key={index}>{person}</li>
+                        {recognizedPeople.map((person, index) => (
+                          <div key={index}>{person}</div>
                         ))}
                       </ul>
                     ) : (
-                      <span>Никого</span>
+                      <div>Никого</div>
                     )}
+
                   </div>
-                ))}
 
               </div>
             )}
