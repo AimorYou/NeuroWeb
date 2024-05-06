@@ -26,6 +26,7 @@ import Detection from './pages/Detection';
 // CV
 import { Classes } from './pages/Classes';
 import { FaceRecognition } from './pages/FaceRecognition';
+import { ImageDetection } from './pages/ImageDetection';
 // NLP
 import { Audio } from './pages/Audio';
 // Classical ML
@@ -61,6 +62,7 @@ function App() {
 
           <Route path="/classes" element={<Classes />} />
           <Route path="/face-recognition" element={<FaceRecognition />} />
+          <Route path="/image-detection" element={<ImageDetection />} />
 
           <Route path="/audio" element={<Audio />} />
 

@@ -9,8 +9,8 @@ import axios from 'axios';
 
 const ClassesForm = () => {
   const webcamRef = useRef(null);
-  const [forms, setForms] = useState([]);
-  const [formIdCounter, setFormIdCounter] = useState(1);
+  const [forms, setForms] = useState([{ id: 1, name: 'Класс 1', photos: [] }, { id: 2, name: 'Класс 2', photos: [] }]);
+  const [formIdCounter, setFormIdCounter] = useState(3);
   const [showCamera, setShowCamera] = useState(false);
   const [checked, setChecked] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState([]);

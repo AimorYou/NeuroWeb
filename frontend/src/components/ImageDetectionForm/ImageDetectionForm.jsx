@@ -3,14 +3,14 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
-import './FaceRecognitionForm.css';
+import './ImageDetectionForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 
-const FaceRecognitionForm = () => {
+const ImageDetectionForm = () => {
   const webcamRef = useRef(null);
-  const [forms, setForms] = useState([{ id: 1, name: 'Имя 1', photos: [] }, { id: 2, name: 'Имя 2', photos: [] }]);
-  const [formIdCounter, setFormIdCounter] = useState(3);
+  const [forms, setForms] = useState([{ id: 1, name: 'Имя 1', photos: [] }]);
+  const [formIdCounter, setFormIdCounter] = useState(2);
   const [showCamera, setShowCamera] = useState(false);
   const [checked, setChecked] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState([]);
@@ -180,15 +180,13 @@ const FaceRecognitionForm = () => {
         }
       });
       console.log('Response:', response.data);
-      if (response.data && response.data.status == 200) {
-        // console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
-        // setClassMapping(response.data.class_mapping)
-        setShowCamera(true)
+      if (response.data && response.data.class_mapping) {
+        console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
+        setClassMapping(response.data.class_mapping)
       } else {
-        console.log("Error", response.data.message);
-        // window
+        console.log('Error: No class mapping received');
       }
-      
+      setShowCamera(true)
     } catch (error) {
       console.error('Error:', error);
     }
@@ -196,10 +194,7 @@ const FaceRecognitionForm = () => {
 
   };
 
-  if (showCamera) {
-    useEffect(() => { runFaceDetectorModel(); }, [classMapping]);
-  } 
-  
+  useEffect(() => { runFaceDetectorModel(); }, [classMapping]);
 
   useEffect(() => {
     if (webcamRef.current) {
@@ -211,7 +206,7 @@ const FaceRecognitionForm = () => {
     }
   }, [videoStopped]);
 
-  const disableButtons = forms.length < 1 || forms.some(form => form.photos.length === 0);
+  const disableButtons = forms.length === 0 || forms.some(form => form.photos.length === 0);
 
   return (
     <React.Fragment>
@@ -227,7 +222,6 @@ const FaceRecognitionForm = () => {
                 <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)} />
               </div>
             ))}
-            <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
@@ -235,7 +229,7 @@ const FaceRecognitionForm = () => {
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
-              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
+              <button className='export-model-btn'><IosShareIcon />Экспортировать модель</button>
             </div>
             <div className='horizontal-line' />
             {showCamera && (
@@ -272,4 +266,4 @@ const FaceRecognitionForm = () => {
   );
 };
 
-export default FaceRecognitionForm;
+export default ImageDetectionForm;
