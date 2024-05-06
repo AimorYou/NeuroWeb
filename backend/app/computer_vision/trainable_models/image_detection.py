@@ -59,7 +59,7 @@ class Detector:
             self.hyperparams = json_data["hyperparameters"]
             self.model = None
 
-            self._handle_json(json_data, uid)
+            # self._handle_json(json_data, uid)
             self._train_model()
         elif mode == "inference":
             self.model = YOLO(f"{uid}/runs/detect/train/weights/best.pt")  # FIXME: Fix path
