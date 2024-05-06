@@ -112,7 +112,7 @@ async def classification(websocket: WebSocket, user_id):
 @r.post("/detection/train-model")
 async def train(files: list[UploadFile], user_id: str, names: list[str], train_size: float = 0.7):
     _create_directories(user_id, names)
-    # _fill_directories(files, user_id, train_size)
+    _fill_directories(files, user_id, train_size)
 
     hyperparameters = {
         "model": "nano",  # nano/small/medium,
@@ -124,9 +124,37 @@ async def train(files: list[UploadFile], user_id: str, names: list[str], train_s
     detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="train")
 
 
+@r.websocket("/ws/detection/predict/{user_id}")
+async def classification(websocket: WebSocket, user_id, names: list[str],):
+    await manager.connect(websocket)
+    try:
+        hyperparameters = {
+            "model": "nano",  # nano/small/medium,
+            "train_size": 0.7,
+            "batch_size": 16,
+            "n_epochs": 35
+        } # Научиться получать из запроса
+        detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="inference")
+        while True:
+            data = await websocket.receive_text()
+            data = json.loads(data)
+            print(f"data = {data}")
+            img = data['data']['image'].split(',')[1]
+            # class_mapping = data['data']["class_mapping"]
+
+            prediction = detector.predict(img)
+
+            await manager.send_json(prediction, websocket)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+
 def _create_directories(user_id: str, names: list[str]):
     if not os.path.exists(f"./app/computer_vision/resources/user_{user_id}"):
         os.mkdir(f"./app/computer_vision/resources/user_{user_id}")
+
+    # clear existing directories
+    if os.path.exists(f"./app/computer_vision/resources/user_{user_id}/yolo_data"):
+        os.removedirs(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
 
     try:
         os.mkdir(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
