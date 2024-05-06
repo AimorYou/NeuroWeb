@@ -1,10 +1,10 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UploadAltIcon from '@mui/icons-material/Upload';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './Camera.css';
 
-const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos }) => {
+const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, handleSaveTxtFiles }) => {
   const webcamRef = useRef(null);
   const inputRef = useRef(null);
   const txtInputRef = useRef(null);
@@ -17,6 +17,14 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [isDraggingTxt, setIsDraggingTxt] = useState(false);
   const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
+  
+  const savePhotos = () => {
+    handleSavePhotos(formId, uploadedPhotos);
+  };
+
+  const saveTxtFiles = () => {
+    handleSaveTxtFiles(formId, uploadedTxtFiles);
+  };
 
   const handleTxtFileInput = (event) => {
     const files = event.target.files;
@@ -25,6 +33,8 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
       reader.onload = (e) => {
         const content = e.target.result;
         setUploadedTxtFiles((prevTxtFiles) => [...prevTxtFiles, { name: file.name, content }]);
+        saveTxtFiles([...uploadedTxtFiles, { name: file.name, content }]);
+        
       };
       reader.readAsText(file);
     });
@@ -67,6 +77,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
       reader.onload = (e) => {
         const src = e.target.result;
         setUploadedPhotos((prevImageFiles) => [...prevImageFiles, { name: file.name, src }]);
+        savePhotos([...uploadedPhotos, { name: file.name, src }]);
       };
       reader.readAsDataURL(file);
     });
@@ -160,12 +171,6 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
           > Перетащите сюда файлы или нажмите, чтобы выбрать фотографии
           </div>
           <div className="photo-container">
-            {capturedPhotos.map((photo, index) => (
-              <div key={index} className="photo-item">
-                <img src={photo.photo} alt={`Photo ${index}`} />
-                {/* <button className='btn' onClick={() => deletePhoto(index)}>Удалить</button> */}
-              </div>
-            ))}
             <div className="uploaded-files">
             <h3>Загруженные изображения:</h3>
               {uploadedPhotos.map((file, index) => (

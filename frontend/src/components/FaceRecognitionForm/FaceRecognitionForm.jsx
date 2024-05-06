@@ -196,9 +196,12 @@ const FaceRecognitionForm = () => {
 
   };
 
-  if (showCamera) {
-    useEffect(() => { runFaceDetectorModel(); }, [classMapping]);
-  } 
+  useEffect(() => {
+    if (showCamera) {
+      runFaceDetectorModel();
+    }
+  }, [showCamera, classMapping]);
+   
   
 
   useEffect(() => {

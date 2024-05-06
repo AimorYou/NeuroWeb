@@ -19,8 +19,22 @@ const ImageDetectionForm = () => {
   const [socket, setSocket] = useState(null);
   const [videoStopped, setVideoStopped] = useState(false);
   const [recognizedPeople, setRecognizedPeople] = useState([]);
+  const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
 
+  const handleSavePhotos = (formId, photos) => {
+    setUploadedPhotos((prevPhotos) => [
+      ...prevPhotos,
+      { formId, photos },
+    ]);
+  };
 
+  const handleSaveTxtFiles = (formId, txtFiles) => {
+    setUploadedTxtFiles((prevTxtFiles) => [
+      ...prevTxtFiles,
+      { formId, txtFiles },
+    ]);
+  };
 
   const addForm = () => {
     const newForm = { id: formIdCounter, name: `Имя ${formIdCounter}`, photos: [] };
@@ -134,64 +148,51 @@ const ImageDetectionForm = () => {
     }
   };
 
-  const classPhotos = {};
-  const handleSavePhotos = (formId, photos) => {
-    setForms(prevForms => {
-      return prevForms.map(form => {
-        if (form.id === formId) {
-          form.photos = photos.map(photo => photo.photo);
-        }
-        return form;
-      });
-    });
 
-    // Log forms with photos for testing
-    console.log(forms);
-  };
 
 
   const sendJSON = async () => {
-    const classPhotos = forms.reduce((accumulator, form) => {
-      accumulator[form.name] = form.photos;
-      return accumulator;
-    }, {});
+    // Формируем данные для отправки на бэкенд
+    const formData = new FormData();
 
-    const obj = { classes: classPhotos };
-    const json = JSON.stringify(obj, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = 'captured_photos.json';
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-    // URL.revokeObjectURL(url);
+    console.log(uploadedPhotos)
+    console.log(uploadedTxtFiles)
 
-    // Send classPhotos to the server or further processing
-    console.log(classPhotos);
+    // Добавляем загруженные фотографии
+    uploadedPhotos.forEach((uploadedPhoto) => {
+      uploadedPhoto.photos.forEach((photo) => {
+        formData.append(`photos_${uploadedPhoto.formId}[]`, photo);
+      });
+    });
+
+    // Добавляем загруженные текстовые файлы
+    uploadedTxtFiles.forEach((uploadedTxtFile) => {
+      uploadedTxtFile.txtFiles.forEach((txtFile) => {
+        formData.append(`txt_files_${uploadedTxtFile.formId}[]`, txtFile);
+      });
+    });
+
+    console.log(formData)
+
+    // Отправляем данные на бэкенд
     const apiUrl = 'http://0.0.0.0:8888/api/cv/train/face-recognition/train-model?user_id=1'; // как посылать uid
-
     try {
-      // Make a POST request to your backend server with the JSON data
-      const response = await axios.post(apiUrl, blob, {
+      const response = await axios.post(apiUrl, formData, {
         headers: {
-          'Content-Type': 'application/json',
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       console.log('Response:', response.data);
       if (response.data && response.data.class_mapping) {
         console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
-        setClassMapping(response.data.class_mapping)
+        setClassMapping(response.data.class_mapping);
       } else {
         console.log('Error: No class mapping received');
       }
-      setShowCamera(true)
+      setShowCamera(true);
     } catch (error) {
       console.error('Error:', error);
     }
-
-
   };
 
   useEffect(() => { runFaceDetectorModel(); }, [classMapping]);
@@ -206,8 +207,6 @@ const ImageDetectionForm = () => {
     }
   }, [videoStopped]);
 
-  const disableButtons = forms.length === 0 || forms.some(form => form.photos.length === 0);
-
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -219,13 +218,13 @@ const ImageDetectionForm = () => {
             {forms.map(form => (
               <div key={form.id}>
                 {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
-                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)} />
+                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} handleSaveTxtFiles={handleSaveTxtFiles} TakePhoto={() => TakePhoto(form.id)} />
               </div>
             ))}
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
