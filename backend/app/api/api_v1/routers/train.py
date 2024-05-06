@@ -4,6 +4,7 @@ from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile
 from db.schemas import JSONValidation
 from computer_vision.trainable_models.classification import train_model, predict, _predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
+from computer_vision.trainable_models.image_detection import Detector
 import pickle
 import json
 import yaml
@@ -120,10 +121,40 @@ async def train(files: list[UploadFile], user_id: str, names: list[str], train_s
         "n_epochs": 35
     }
 
+    detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="train")
+
+
+@r.websocket("/ws/detection/predict/{user_id}")
+async def classification(websocket: WebSocket, user_id, names: list[str],):
+    await manager.connect(websocket)
+    try:
+        hyperparameters = {
+            "model": "nano",  # nano/small/medium,
+            "train_size": 0.7,
+            "batch_size": 16,
+            "n_epochs": 35
+        } # Научиться получать из запроса
+        detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="inference")
+        while True:
+            data = await websocket.receive_text()
+            data = json.loads(data)
+            print(f"data = {data}")
+            img = data['data']['image'].split(',')[1]
+            # class_mapping = data['data']["class_mapping"]
+
+            prediction = detector.predict(img)
+
+            await manager.send_json(prediction, websocket)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
 
 def _create_directories(user_id: str, names: list[str]):
     if not os.path.exists(f"./app/computer_vision/resources/user_{user_id}"):
         os.mkdir(f"./app/computer_vision/resources/user_{user_id}")
+
+    # clear existing directories
+    if os.path.exists(f"./app/computer_vision/resources/user_{user_id}/yolo_data"):
+        os.removedirs(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
 
     try:
         os.mkdir(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
@@ -137,8 +168,9 @@ def _create_directories(user_id: str, names: list[str]):
         pass
 
     data_yaml = {
-        "train": "../train/images",
-        "val": "../val/images",
+        "path": f"{os.getcwd()}/app/computer_vision/resources/user_{user_id}/yolo_data/",
+        "train": f"{os.getcwd()}/app/computer_vision/resources/user_{user_id}/yolo_data/train/images",
+        "val": f"{os.getcwd()}/app/computer_vision/resources/user_{user_id}/yolo_data/val/images",
         "nc": len(names),
         "names": names
     }

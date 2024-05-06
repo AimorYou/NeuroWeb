@@ -161,3 +161,4 @@ cython_debug/
 *.sav
 lightning_logs/
 app/computer_vision/resources/user*
+.DS_Store

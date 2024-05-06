@@ -22,7 +22,7 @@ class Detector:
         "RGB(128, 128, 128)"  # Gray
     ]
 
-    def __init__(self, json_data: dict, uid: str, mode: str = "train") -> None:
+    def __init__(self, names: list[str], uid: str, hyperparameters: dict, mode: str = "train") -> None:
         """
         This class works in two modes:
             train: Constructor parses input json containing data in YOLOv8 format and creates dir for training.
@@ -50,20 +50,20 @@ class Detector:
         :param uid: name of the user directory
         :param mode: inference/train
         """
-        if len(json_data["classes"]["names"]) > len(self.colors):
+        if len(names) > len(self.colors):
             raise Exception(f"Classes number exceeds the limit in {len(self.colors)}")
 
         if mode == "train":
-            self.data = json_data["classes"]["data"]
-            self.class_names = json_data["classes"]["names"]
-            self.hyperparams = json_data["hyperparameters"]
+            # self.data = json_data["classes"]["data"]
+            self.class_names = names
+            self.hyperparams = hyperparameters
             self.model = None
 
             # self._handle_json(json_data, uid)
-            self._train_model()
+            self._train_model(uid)
         elif mode == "inference":
-            self.model = YOLO(f"{uid}/runs/detect/train/weights/best.pt")  # FIXME: Fix path
-            self.class_names = json_data["classes"]["names"]
+            self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/train/weights/best.pt")  # FIXME: Fix path
+            self.class_names = names
         else:
             raise Exception("Unknown mode! Avialable modes are train and inference")
 
@@ -124,7 +124,7 @@ class Detector:
             with open(os.path.abspath(f"{os.curdir}/data/val/labels/{i}.txt"), "w") as f:
                 f.write(self.data["labels"][i])
 
-    def _train_model(self) -> None:
+    def _train_model(self, uid: str) -> None:
         """
         Method trains the specified yolo model (nano/small/medium)
         """
@@ -134,11 +134,12 @@ class Detector:
             "medium": "yolov8m.pt"
         }
         model_name = YOLO_models_mapping[self.hyperparams["model"]]
-        self.model = YOLO(os.path.abspath(f"{os.curdir}/../{model_name}"))
+        self.model = YOLO(f"./app/computer_vision/resources/{model_name}")
 
-        self.model.train(data=os.path.abspath(f"{os.curdir}/data/data.yaml"),
+        self.model.train(data=f"./app/computer_vision/resources/user_{uid}/yolo_data/data.yaml",
                          batch=self.hyperparams["batch_size"],
-                         epochs=self.hyperparams["n_epochs"])
+                         epochs=self.hyperparams["n_epochs"],
+                         project=f"./app/computer_vision/resources/user_{uid}/")
 
     def predict(self, image_b64: str, debug: bool = False):
         """
