@@ -153,30 +153,30 @@ def _fill_directories(files: list[UploadFile], user_id: str, train_size: float):
     for i in range(train_len):
         # Сохраняем картинки
         image_file = images[i]
-        data = image_file.read()
-        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/train/images" / image_file.filename
+        data = image_file.file.read()
+        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/train/images/" + image_file.filename
         with open(save_to, "wb") as f:
             f.write(data)
 
         # Сохраняем labels
         label_file = labels[i]
-        data = label_file.read()
-        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/train/labels" / label_file.filename
+        data = label_file.file.read()
+        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/train/labels/" + label_file.filename
         with open(save_to, "wb") as f:
             f.write(data)
 
     for i in range(train_len, data_len):
         # Сохраняем картинки
         image_file = images[i]
-        data = image_file.read()
-        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/val/images" / image_file.filename
+        data = image_file.file.read()
+        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/val/images/" + image_file.filename
         with open(save_to, "wb") as f:
             f.write(data)
 
         # Сохраняем labels
         label_file = labels[i]
-        data = label_file.read()
-        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/val/labels" / label_file.filename
+        data = label_file.file.read()
+        save_to = f"./app/computer_vision/resources/user_{user_id}/yolo_data/val/labels/" + label_file.filename
         with open(save_to, "wb") as f:
             f.write(data)
 
