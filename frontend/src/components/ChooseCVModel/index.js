@@ -50,7 +50,7 @@ function Pricing() {
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/'>
+            <PricingCard to='/image-detection'>
               <PricingCardInfo>
               <PricingCardIcon src={Detect} />
                 <PricingCardPlan>Детекция изображений</PricingCardPlan>

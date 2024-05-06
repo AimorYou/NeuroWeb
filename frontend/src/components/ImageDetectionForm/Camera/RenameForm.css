@@ -1,0 +1,16 @@
+.rename-form {
+    cursor: pointer;
+  }
+  
+  .rename-form input {
+    border: none;
+    padding: 3px;
+    width: auto;
+  }
+  
+  .rename-form input:focus {
+    outline: none;
+    border-color: #7258e9;
+  }
+
+  

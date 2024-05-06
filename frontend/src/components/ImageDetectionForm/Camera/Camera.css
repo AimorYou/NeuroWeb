@@ -1,0 +1,326 @@
+.card {
+    border-radius: 15px ;
+    padding: 10px;
+    width: 500px;
+    height: auto;
+    min-height: 174px;
+    margin-left: 5%;
+    margin-top: 3%;
+    background: #7258e9;
+}
+
+.train_model {
+    border-radius: 15px ;
+    padding: 10px;
+    width: 250px;
+    height: auto;
+    min-height: 124px;
+    align-items: center;
+    text-align: center;
+    margin-left: 5%;
+    margin-top: 3%;
+    background: #7258e9;
+}
+
+ .horizontal-line {
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    margin-top: 6%;
+    margin-bottom: 3%;
+ }
+
+.photo-container {
+    border-radius: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.photo-item {
+    margin: 10px;
+    padding: 5px;
+    width: 60px;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+
+
+.photo-item button {
+    display: block;
+    margin-top: 5px;
+}
+
+.webcam {
+    max-width: 250px;
+    max-height: 250px;
+    
+    border-radius: 10px;
+}
+
+.btn {
+  background-color: #6C58E9;
+  border: 0.8px solid #fff;
+  border-radius: 8px;
+  border-style: 0.8px solid #fff;
+  
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  width: 170px;
+  height: 30px;
+  list-style: none;
+  margin: 5px;
+  padding: 10px 16px;
+  text-align: center;
+  align-items: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+    
+}
+
+.horizontal-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+
+.horizontal-className {
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    justify-content: baseline;
+    align-items: center;
+}
+
+
+.camera-upload-photo {
+  background-color: #6C58E9;
+  border: 0.8px solid #fff;
+  border-radius: 8px;
+  border-style: 0.8px solid #fff;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  width: 60px;
+  height: 60px;
+  list-style: none;
+  margin: 5px;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.camera-upload-photo:hover,
+.btn:hover,
+.train-model-btn:hover
+{
+  opacity: 0.8;
+}
+
+.icon-btn {
+    display: block;
+    margin-left: 5px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 60px;
+    height: 60px;
+    white-space: nowrap;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    grid-auto-columns: auto;
+}
+
+.more-btn {
+    background: rgba(255, 255, 255, 0);
+    border-style: outset;
+    border: none;
+    color: #fff;
+    float: right;
+}
+
+.class-text {
+    color: #fff;
+    font-size: 14px;
+    margin-bottom:  -20px;
+}
+
+.class-edit-btn {
+    color: #fff;
+    font-size: 16px;
+    padding-left: 5px;
+    margin-bottom:  -20px;
+}
+
+.train-model-btn {
+  background-color: #6C58E9;
+  border: 0.8px solid #fff;
+  border-radius: 8px;
+  border-style: 0.8px solid #fff;
+  
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  width: 150px;
+  height: 30px;
+  list-style: none;
+  margin: 5px;
+  padding: 10px 16px;
+  text-align: center;
+  align-items: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.drop-area {
+    color: #fff;
+    border: 2px dashed #cccccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .drag-over {
+    background-color: #887be0;
+  }
+  
+  .photo-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .photo-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .photo-item img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 5px;
+  }
+  
+  .btn {
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #ff5f5f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #ff3333;
+  }
+  
+  .more-btn {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .more-btn .dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .more-btn .dropdown .dropdown-item {
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  
+  .more-btn .dropdown .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .uploaded-images {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .uploaded-images-text {
+    color: #fff;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 14px;
+  }
+  
+  .image-container {
+    color: #fff;
+    font-size: 12px;
+  }
+  
+  
+  .image-container li {
+    color: #fff;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+
+  .uploaded-files {
+    margin-top: 20px;
+  }
+  
+  .uploaded-files h3 {
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  
+  .uploaded-files ul {
+    list-style: none;
+    color: #fff;
+  }
+  
+  .uploaded-files li {
+    color: #fff;
+    margin-top: 5px;
+    font-size: 14px;
+    margin: 10px;
+  }
+  
+  .uploaded-files li::before {
+    content: "📄"; /* Иконка файла */
+    margin-right: 5px;
+  }
+  
+  
