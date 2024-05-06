@@ -4,6 +4,7 @@ from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile
 from db.schemas import JSONValidation
 from computer_vision.trainable_models.classification import train_model, predict, _predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
+from computer_vision.trainable_models.image_detection import Detector
 import pickle
 import json
 import yaml
@@ -106,7 +107,7 @@ async def classification(websocket: WebSocket, user_id):
 @r.post("/detection/train-model")
 async def train(files: list[UploadFile], user_id: str, names: list[str], train_size: float = 0.7):
     _create_directories(user_id, names)
-    _fill_directories(files, user_id, train_size)
+    # _fill_directories(files, user_id, train_size)
 
     hyperparameters = {
         "model": "nano",  # nano/small/medium,
@@ -114,6 +115,8 @@ async def train(files: list[UploadFile], user_id: str, names: list[str], train_s
         "batch_size": 16,
         "n_epochs": 35
     }
+
+    detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="train")
 
 
 def _create_directories(user_id: str, names: list[str]):
@@ -132,8 +135,9 @@ def _create_directories(user_id: str, names: list[str]):
         pass
 
     data_yaml = {
-        "train": "../train/images",
-        "val": "../val/images",
+        "path": f"{os.getcwd()}/app/computer_vision/resources/user_{user_id}/yolo_data/",
+        "train": f"{os.getcwd()}/app/computer_vision/resources/user_{user_id}/yolo_data/train/images",
+        "val": f"{os.getcwd()}/app/computer_vision/resources/user_{user_id}/yolo_data/val/images",
         "nc": len(names),
         "names": names
     }
