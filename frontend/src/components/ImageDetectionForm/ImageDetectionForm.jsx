@@ -144,6 +144,25 @@ const ImageDetectionForm = () => {
     }
   };
 
+  function dataURItoBlob(dataURI) {
+    // Разделяем dataURI на две части: метаданные и base64-код
+    const splitDataURI = dataURI.split(',');
+    // Получаем тип данных изображения из метаданных
+    const type = splitDataURI[0].split(':')[1].split(';')[0];
+    // Получаем base64-код изображения
+    const byteString = atob(splitDataURI[1]);
+    // Создаем массив, куда будем записывать бинарные данные изображения
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const intArray = new Uint8Array(arrayBuffer);
+    // Заполняем массив бинарными данными изображения
+    for (let i = 0; i < byteString.length; i++) {
+        intArray[i] = byteString.charCodeAt(i);
+    }
+    // Создаем Blob из бинарных данных и возвращаем
+    return new Blob([arrayBuffer], { type: type });
+}
+
+
   const sendJSON = async () => {
 
     // Формируем данные для отправки на бэкенд
@@ -153,7 +172,7 @@ const ImageDetectionForm = () => {
     console.log(uploadedTxtFiles)
 
    uploadedPhotos.forEach((uploadedPhoto) => {
-      const blob = new Blob([uploadedPhoto.photos.content], { type: 'image/jpg' });
+      const blob = dataURItoBlob(uploadedPhoto.photos.src);
       const file = new File([blob], `${uploadedPhoto.photos.name}`, { type: 'image/jpg' });
       formData.append(`files`, file);
   });
