@@ -2,7 +2,7 @@ from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile, Form,
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
 from db.schemas import JSONValidation
-from typing import Any
+from typing import Any, List
 from computer_vision.trainable_models.classification import train_model, predict, _predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
 from computer_vision.trainable_models.image_detection import Detector
@@ -112,7 +112,7 @@ async def classification(websocket: WebSocket, user_id):
 
 @r.post("/detection/train-model")
 async def train(
-        files: list[UploadFile] = Form(),
+        files: List[UploadFile] = Form(),
         user_id: str = Query(),
         names: list[str] = Query(),
         train_size: float = Query(default=0.7)

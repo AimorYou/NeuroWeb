@@ -169,12 +169,11 @@ const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`
 
 console.log(classNamesParam)
     // Отправляем данные на бэкенд
-    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/face-recognition/train-model?user_id=1'; // как посылать uid
+    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/detection/train-model?user_id=1'; // как посылать uid
     try {
       const response = await fetch(apiUrl, {
         method: "POST",
         body: formData,
-        headers: {"Content-Type": "multipart/form-data"}
       });
       console.log('Response:', response.data);
 
