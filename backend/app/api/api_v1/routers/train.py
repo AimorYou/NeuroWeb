@@ -7,6 +7,7 @@ from computer_vision.trainable_models.classification import train_model, predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
 from computer_vision.trainable_models.image_detection import Detector
 import pickle
+import shutil
 import json
 import yaml
 import os
@@ -161,7 +162,7 @@ def _create_directories(user_id: str, names: list[str]):
 
     # clear existing directories
     if os.path.exists(f"./app/computer_vision/resources/user_{user_id}/yolo_data"):
-        os.removedirs(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
+        shutil.rmtree(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
 
     try:
         os.mkdir(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
