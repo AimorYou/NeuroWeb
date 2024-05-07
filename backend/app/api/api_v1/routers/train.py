@@ -1,4 +1,4 @@
-from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile
+from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile, Form, Query
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
 from db.schemas import JSONValidation
@@ -82,12 +82,12 @@ async def train(json_data: dict, user_id: str):
         return {
             "status": 200,
             "message": "OK"
-            }
+        }
     else:
         return {
             "status": 400,
             "message": f"Лицо класса {recognizer.failed_on} не было обнаружено\n Сделайте фотографию, где будет лучше видно лицо"
-            }
+        }
 
 
 @r.websocket("/ws/face-recognition/predict/{user_id}")
@@ -111,7 +111,12 @@ async def classification(websocket: WebSocket, user_id):
 
 
 @r.post("/detection/train-model")
-async def train(files: list[UploadFile], user_id: str, names: list[str], train_size: float = 0.7):
+async def train(
+        files: list[UploadFile] = Form(),
+        user_id: str = Query(),
+        names: list[str] = Query(),
+        train_size: float = Query(default=0.7)
+):
     _create_directories(user_id, names)
     _fill_directories(files, user_id, train_size)
 
@@ -126,7 +131,7 @@ async def train(files: list[UploadFile], user_id: str, names: list[str], train_s
 
 
 @r.websocket("/ws/detection/predict/{user_id}")
-async def classification(websocket: WebSocket, user_id, names: list[str],):
+async def classification(websocket: WebSocket, user_id, names: list[str], ):
     await manager.connect(websocket)
     try:
         hyperparameters = {
@@ -134,7 +139,7 @@ async def classification(websocket: WebSocket, user_id, names: list[str],):
             "train_size": 0.7,
             "batch_size": 16,
             "n_epochs": 35
-        } # Научиться получать из запроса
+        }  # Научиться получать из запроса
         detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="inference")
         while True:
             data = await websocket.receive_text()
@@ -148,6 +153,7 @@ async def classification(websocket: WebSocket, user_id, names: list[str],):
             await manager.send_json(prediction, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
+
 
 def _create_directories(user_id: str, names: list[str]):
     if not os.path.exists(f"./app/computer_vision/resources/user_{user_id}"):
