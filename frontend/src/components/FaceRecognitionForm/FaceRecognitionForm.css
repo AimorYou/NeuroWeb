@@ -238,3 +238,52 @@ top: 2px;
 color: #fff;
 }
 
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(114, 88, 233, 0.5); /* Adjusted purple color with transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-inner {
+  background-color: #7258e9; /* Purple color */
+  padding: 20px;
+  border-radius: 10px; /* Slightly increased border radius */
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); /* Increased shadow */
+  text-align: center; /* Centered text */
+  position: relative; /* Needed for absolute positioning of the close button */
+  height: 170px;
+  width: 400px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0px;
+  right: 10px; /* Positioned at top-right corner */
+  padding: 5px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #fff;
+  transition: color 0.3s; /* Smooth transition for color change */
+}
+
+.close-btn:hover {
+  color: #a79dec; /* Lighter purple color on hover */
+}
+
+.popup-inner p {
+  margin-top: 20px;
+  font-size: 18px; /* Slightly increased font size */
+  line-height: 1.6; /* Increased line height for better readability */
+  color: #fff;
+}
+

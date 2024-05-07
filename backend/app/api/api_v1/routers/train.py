@@ -2,6 +2,7 @@ from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
 from db.schemas import JSONValidation
+from typing import Any
 from computer_vision.trainable_models.classification import train_model, predict, _predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
 from computer_vision.trainable_models.image_detection import Detector
@@ -224,7 +225,9 @@ def _divide_files(files: list[UploadFile]):
     for file in files:
         if "txt" in file.filename:
             labels.append(file)
-        elif "jpg" in file.filename:
+        elif file.filename.split(".")[1] in {"jpg", "jpeg"}:
             images.append(file)
+        else:
+            raise Exception("Unknown file extention")
 
     return sorted(images, key=lambda f: f.filename), sorted(labels, key=lambda f: f.filename)

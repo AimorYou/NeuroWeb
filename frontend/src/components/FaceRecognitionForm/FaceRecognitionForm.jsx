@@ -7,6 +7,17 @@ import './FaceRecognitionForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 
+const Popup = ({ message, onClose }) => {
+  return (
+    <div className="popup">
+      <div className="popup-inner">
+        <button className="close-btn" onClick={onClose}>×</button>
+        <p>{message}</p>
+      </div>
+    </div>
+  );
+};
+
 const FaceRecognitionForm = () => {
   const webcamRef = useRef(null);
   const [forms, setForms] = useState([{ id: 1, name: 'Имя 1', photos: [] }, { id: 2, name: 'Имя 2', photos: [] }]);
@@ -19,6 +30,7 @@ const FaceRecognitionForm = () => {
   const [socket, setSocket] = useState(null);
   const [videoStopped, setVideoStopped] = useState(false);
   const [recognizedPeople, setRecognizedPeople] = useState([]);
+  const [popupMessage, setPopupMessage] = useState("");
 
 
 
@@ -186,6 +198,7 @@ const FaceRecognitionForm = () => {
         setShowCamera(true)
       } else {
         console.log("Error", response.data.message);
+        setPopupMessage(response.data.message);
         // window
       }
       
@@ -195,6 +208,14 @@ const FaceRecognitionForm = () => {
 
 
   };
+
+  useEffect(() => {
+    if (popupMessage) {
+      setTimeout(() => {
+        setPopupMessage("");
+      }, 5000); // Close popup after 5 seconds
+    }
+  }, [popupMessage]);
 
   useEffect(() => {
     if (showCamera) {
@@ -224,6 +245,7 @@ const FaceRecognitionForm = () => {
       <div className="hide">
         <div className='horizontal'>
           <div>
+          {popupMessage && <Popup message={popupMessage} onClose={() => setPopupMessage("")} />}
             {forms.map(form => (
               <div key={form.id}>
                 {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}

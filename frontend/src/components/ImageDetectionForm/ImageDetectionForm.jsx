@@ -21,6 +21,7 @@ const ImageDetectionForm = () => {
   const [recognizedPeople, setRecognizedPeople] = useState([]);
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
+  const [classNames, setClassNames] = useState('');
 
   const handleSavePhotos = (formId, photos) => {
     setUploadedPhotos((prevPhotos) => [
@@ -36,11 +37,6 @@ const ImageDetectionForm = () => {
     ]);
   };
 
-  const addForm = () => {
-    const newForm = { id: formIdCounter, name: `Имя ${formIdCounter}`, photos: [] };
-    setFormIdCounter(formIdCounter + 1);
-    setForms(prevForms => [...prevForms, newForm]);
-  };
 
   const deleteForm = formId => {
     setForms(prevForms => prevForms.filter(form => form.id !== formId));
@@ -148,9 +144,6 @@ const ImageDetectionForm = () => {
     }
   };
 
-
-
-
   const sendJSON = async () => {
     // Формируем данные для отправки на бэкенд
     const formData = new FormData();
@@ -158,44 +151,39 @@ const ImageDetectionForm = () => {
     console.log(uploadedPhotos)
     console.log(uploadedTxtFiles)
 
-    // Добавляем загруженные фотографии
     uploadedPhotos.forEach((uploadedPhoto) => {
-      uploadedPhoto.photos.forEach((photo) => {
-        formData.append(`photos_${uploadedPhoto.formId}[]`, photo);
-      });
-    });
+      formData.append(`file_upload`, uploadedPhoto.photos);
+  });
 
-    // Добавляем загруженные текстовые файлы
-    uploadedTxtFiles.forEach((uploadedTxtFile) => {
-      uploadedTxtFile.txtFiles.forEach((txtFile) => {
-        formData.append(`txt_files_${uploadedTxtFile.formId}[]`, txtFile);
-      });
-    });
+  uploadedTxtFiles.forEach((uploadedTxtFile) => {
+      formData.append(`file_upload`, uploadedTxtFile.txtFiles);
+  });
+  console.log("HERE")
+  console.log(formData.values().next().value.toString())
 
-    console.log(formData)
+  for (const pair of formData.entries()) {
+    console.log(pair[0], pair[1]);
+}
 
+const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`).join('&');
+
+console.log(classNamesParam)
     // Отправляем данные на бэкенд
     const apiUrl = 'http://0.0.0.0:8888/api/cv/train/face-recognition/train-model?user_id=1'; // как посылать uid
     try {
-      const response = await axios.post(apiUrl, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        body: formData,
+        headers: {"Content-Type": "multipart/form-data"}
       });
       console.log('Response:', response.data);
-      if (response.data && response.data.class_mapping) {
-        console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
-        setClassMapping(response.data.class_mapping);
-      } else {
-        console.log('Error: No class mapping received');
-      }
+
       setShowCamera(true);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  useEffect(() => { runFaceDetectorModel(); }, [classMapping]);
 
   useEffect(() => {
     if (webcamRef.current) {
@@ -218,7 +206,7 @@ const ImageDetectionForm = () => {
             {forms.map(form => (
               <div key={form.id}>
                 {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
-                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} handleSaveTxtFiles={handleSaveTxtFiles} TakePhoto={() => TakePhoto(form.id)} />
+                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} handleSaveTxtFiles={handleSaveTxtFiles} setClassNames={setClassNames} TakePhoto={() => TakePhoto(form.id)} />
               </div>
             ))}
           </div>

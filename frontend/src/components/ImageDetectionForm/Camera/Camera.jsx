@@ -1,10 +1,11 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UploadAltIcon from '@mui/icons-material/Upload';
+import { TextField, Button, Typography, Container, Grid } from '@mui/material';
 import React, { useRef, useState, useEffect } from 'react';
 import './Camera.css';
 
-const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, handleSaveTxtFiles }) => {
+const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, handleSaveTxtFiles, setClassNames  }) => {
   const webcamRef = useRef(null);
   const inputRef = useRef(null);
   const txtInputRef = useRef(null);
@@ -17,14 +18,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [isDraggingTxt, setIsDraggingTxt] = useState(false);
   const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
-  
-  const savePhotos = () => {
-    handleSavePhotos(formId, uploadedPhotos);
-  };
-
-  const saveTxtFiles = () => {
-    handleSaveTxtFiles(formId, uploadedTxtFiles);
-  };
+  const [classNames, setClassNamesLocal] = useState('');
 
   const handleTxtFileInput = (event) => {
     const files = event.target.files;
@@ -33,7 +27,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
       reader.onload = (e) => {
         const content = e.target.result;
         setUploadedTxtFiles((prevTxtFiles) => [...prevTxtFiles, { name: file.name, content }]);
-        saveTxtFiles([...uploadedTxtFiles, { name: file.name, content }]);
+        handleSaveTxtFiles(formId, { name: file.name, content });
         
       };
       reader.readAsText(file);
@@ -77,7 +71,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
       reader.onload = (e) => {
         const src = e.target.result;
         setUploadedPhotos((prevImageFiles) => [...prevImageFiles, { name: file.name, src }]);
-        savePhotos([...uploadedPhotos, { name: file.name, src }]);
+        handleSavePhotos(formId, { name: file.name, src });
       };
       reader.readAsDataURL(file);
     });
@@ -107,6 +101,15 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
     setUploadedPhotos((prevPhotos) => [...prevPhotos, ...uploaded]);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      setClassNames(classNames);
+    }
+  };
+
+  const handleBlur = () => {
+    setClassNames(classNames);
+  };
 
   const capturePhoto = () => {
     const capturedPhoto = webcamRef.current.getScreenshot();
@@ -150,15 +153,28 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
             </div>
           </div>
           <div className="horizontal-line"></div>
+          <Grid item xs={12} >
+          <TextField
+            fullWidth
+            label="Введите имена классов через запятую"
+            variant="outlined"
+            value={classNames}
+            onChange={e => setClassNamesLocal(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+            placeholder="Пример: Класс1, Класс2, Класс3"
+          />
+        </Grid>
           <div className="horizontal-btns">
             <label className={'btn'} htmlFor="uploadInput">Загрузить фото <UploadAltIcon fontSize='small'/></label>
             <input
               ref={inputRef}
               id="uploadInput"
               type="file"
-              accept="image/*"
+              accept="image/jpeg"
               onChange={handleImageFileInput}
               style={{ display: 'none' }}
+              multiple
             />
           </div>
           <div
@@ -189,6 +205,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
               accept=".txt"
               onChange={handleTxtFileInput}
               style={{ display: 'none' }}
+              multiple
             />
           </div>
           <div

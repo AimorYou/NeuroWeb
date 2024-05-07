@@ -87,7 +87,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
           {showCamera && (
             <div>
               <Webcam ref={webcamRef} className="webcam" />
-              <button className={'btn'} onMouseDown={startCapture} onMouseUp={stopCapture} onClick={() => handleSavePhotos(formId, capturedPhotos)}>
+              <button className='btn' onMouseDown={startCapture} onMouseUp={stopCapture} onClick={() => handleSavePhotos(formId, capturedPhotos)}>
                 Сфотографировать
               </button>
             </div>
