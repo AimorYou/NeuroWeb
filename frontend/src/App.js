@@ -7,6 +7,7 @@ import ChoosePretrainedOrNot from './pages/ChoosePretrainedOrNot';
 import ChoosePretrainedModel from './pages/ChoosePretrainedModel';
 import ChooseModel from './pages/ChooseModel';
 import ChooseCVModel from './pages/ChooseCVModel';
+import ChooseNLPModel from './pages/ChooseNLPModel';
 
 import FAQPage from './pages/FAQPage'
 import TeamPage from './pages/TeamPage'
@@ -29,6 +30,7 @@ import { FaceRecognition } from './pages/FaceRecognition';
 import { ImageDetection } from './pages/ImageDetection';
 // NLP
 import { Audio } from './pages/Audio';
+import { TextClassification } from './pages/TextClassification';
 // Classical ML
 import Tables  from './pages/Tables';
 
@@ -44,6 +46,7 @@ function App() {
           <Route path='/pretrained-models' element={<ChoosePretrainedModel/>} />
           <Route path='/models-to-train' element={<ChooseModel/>} />
           <Route path='/cv-models' element={<ChooseCVModel/>} />
+          <Route path='/nlp-models' element={<ChooseNLPModel/>} />
 
           <Route path='/faq' element={<FAQPage/>} />
           <Route path='/team' element={<TeamPage/>} />
@@ -65,6 +68,7 @@ function App() {
           <Route path="/image-detection" element={<ImageDetection />} />
 
           <Route path="/audio" element={<Audio />} />
+          <Route path="/text" element={<TextClassification />} />
 
           <Route path="/tables" element={<Tables />} />
           

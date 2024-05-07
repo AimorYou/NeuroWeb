@@ -153,14 +153,13 @@ const ImageDetectionForm = () => {
     console.log(uploadedTxtFiles)
 
    uploadedPhotos.forEach((uploadedPhoto) => {
-      const blob = new Blob([uploadedPhoto.photos], { type: 'image/jpg' });
+      const blob = new Blob([uploadedPhoto.photos.content], { type: 'image/jpg' });
       const file = new File([blob], `${uploadedPhoto.photos.name}`, { type: 'image/jpg' });
       formData.append(`files`, file);
   });
 
   uploadedTxtFiles.forEach((uploadedTxtFile) => {
-    console.log(uploadedTxtFile.txtFiles.name)
-      const blob = new Blob([uploadedTxtFile.txtFiles], { type: 'text/plain' });
+      const blob = new Blob([uploadedTxtFile.txtFiles.content], { type: 'text/plain' });
       const file = new File([blob], `${uploadedTxtFile.txtFiles.name}`, { type: 'text/plain' });
       formData.append(`files`, file);
   });
