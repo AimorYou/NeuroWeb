@@ -152,19 +152,16 @@ const ImageDetectionForm = () => {
     console.log(uploadedPhotos)
     console.log(uploadedTxtFiles)
 
-   // Добавляем каждое фото в FormData
    uploadedPhotos.forEach((uploadedPhoto) => {
-      // Преобразуем base64-код в Blob
-      const blob = new Blob([uploadedPhoto.photos]);
-      // Создаем файл из Blob и присваиваем уникальное имя
-      const file = new File([blob], `photo_${uploadedPhoto}.jpg`, { type: 'image/jpg' });
-      // Добавляем файл в FormData
+      const blob = new Blob([uploadedPhoto.photos], { type: 'image/jpg' });
+      const file = new File([blob], `${uploadedPhoto.photos.name}`, { type: 'image/jpg' });
       formData.append(`files`, file);
   });
 
   uploadedTxtFiles.forEach((uploadedTxtFile) => {
+    console.log(uploadedTxtFile.txtFiles.name)
       const blob = new Blob([uploadedTxtFile.txtFiles], { type: 'text/plain' });
-      const file = new File([blob], `txt_${uploadedTxtFile}.txt`, { type: 'text/plain' });
+      const file = new File([blob], `${uploadedTxtFile.txtFiles.name}`, { type: 'text/plain' });
       formData.append(`files`, file);
   });
 
