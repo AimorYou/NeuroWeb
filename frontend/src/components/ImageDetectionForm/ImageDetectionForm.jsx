@@ -115,7 +115,7 @@ const ImageDetectionForm = () => {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/face-recognition/predict/1')
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1')
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -145,31 +145,21 @@ const ImageDetectionForm = () => {
   };
 
   function dataURItoBlob(dataURI) {
-    // Разделяем dataURI на две части: метаданные и base64-код
     const splitDataURI = dataURI.split(',');
-    // Получаем тип данных изображения из метаданных
     const type = splitDataURI[0].split(':')[1].split(';')[0];
-    // Получаем base64-код изображения
     const byteString = atob(splitDataURI[1]);
-    // Создаем массив, куда будем записывать бинарные данные изображения
     const arrayBuffer = new ArrayBuffer(byteString.length);
     const intArray = new Uint8Array(arrayBuffer);
-    // Заполняем массив бинарными данными изображения
     for (let i = 0; i < byteString.length; i++) {
         intArray[i] = byteString.charCodeAt(i);
     }
-    // Создаем Blob из бинарных данных и возвращаем
     return new Blob([arrayBuffer], { type: type });
 }
 
 
   const sendJSON = async () => {
 
-    // Формируем данные для отправки на бэкенд
     const formData = new FormData();
-
-    console.log(uploadedPhotos)
-    console.log(uploadedTxtFiles)
 
    uploadedPhotos.forEach((uploadedPhoto) => {
       const blob = dataURItoBlob(uploadedPhoto.photos.src);
@@ -182,9 +172,6 @@ const ImageDetectionForm = () => {
       const file = new File([blob], `${uploadedTxtFile.txtFiles.name}`, { type: 'text/plain' });
       formData.append(`files`, file);
   });
-
-  console.log("HERE")
-  console.log(formData.values().next().value.toString())
 
   for (const pair of formData.entries()) {
     console.log(pair[0], pair[1]);
@@ -221,6 +208,12 @@ console.log(classNamesParam)
     }
   }, [videoStopped]);
 
+  useEffect(() => {
+    if (showCamera) {
+      runFaceDetectorModel();
+    }
+  }, [showCamera, classMapping]);
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -253,20 +246,6 @@ console.log(classNamesParam)
                   <div className="toggle-switch"></div>
                 </label>
                 <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
-                <div className="names-text">
-                <label style={{ color: 'white' }}>Распознанные люди:</label>
-                    {recognizedPeople.length > 0 ? (
-                      <ul>
-                        {recognizedPeople.map((person, index) => (
-                          <div key={index}>{person}</div>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div>Никого</div>
-                    )}
-
-                  </div>
-
               </div>
             )}
             {!showCamera && (
