@@ -48,7 +48,36 @@ class TextClassification:
 
         return X_train, X_test, y_train, y_test
 
+    def prepare_split_data(self, df_train, df_test, text_col="text", target_col="category"):
+
+        self.cls_mapping = dict(enumerate(df_train[target_col].astype("category").cat.categories))
+
+        df_train["label"] = df_train[target_col].astype("category").cat.codes
+        df_test["label"] = df_test[target_col].astype("category").cat.codes
+
+        dataset_train = Dataset.from_pandas(df_train[[text_col, "label"]])
+        dataset_test = Dataset.from_pandas(df_test[[text_col, "label"]])
+
+        dataset = DatasetDict()
+        dataset['train'] = dataset_train
+        dataset['test'] = dataset_test
+
+        dataset_encoded = dataset.map(self._tokenize, batched=True, batch_size=64)
+
+        dataset_encoded.set_format("torch", columns=["input_ids", "attention_mask", "label"])
+        dataset_hidden = dataset_encoded.map(self._extract_hidden_states, batched=True, batch_size=64)
+
+        X_train = np.array(dataset_hidden["train"]["hidden state"])
+        X_test = np.array(dataset_hidden["test"]["hidden state"])
+        y_train = np.array(dataset_hidden["train"]["label"])
+        y_test = np.array(dataset_hidden["test"]["label"])
+
+        return X_train, X_test, y_train, y_test
+
     def fit(self, X_train, X_test, y_train, y_test):
+
+        if self.cls_mapping is None:
+            raise Exception("You need to prepare your data first")
 
         lr_clf = LogisticRegression(max_iter=3000)
         lr_clf.fit(X_train, y_train)
@@ -58,9 +87,6 @@ class TextClassification:
         return lr_clf.score(X_test, y_test)
 
     def predict(self, text: str):
-
-        if self.cls_mapping is None:
-            raise Exception("You need to prepare your data first")
 
         if self.clf is None:
             raise Exception("You need to train your model first")
@@ -92,10 +118,10 @@ if __name__ == "__main__":
 
     emotions = load_dataset("emotion", trust_remote_code=True)
     emotions.set_format("pandas")
-    df_test = emotions["train"][:].head(100)  # Take a small part for testing
+    df_emotions = emotions["train"][:].head(100)  # Take a small part for testing
 
     text_clf = TextClassification(gpu_flg=True, language="EN")
-    X_train, X_test, y_train, y_test = text_clf.prepare_data(df_test,
+    X_train, X_test, y_train, y_test = text_clf.prepare_data(df_emotions,
                                                              text_col="text",
                                                              target_col="label",
                                                              test_size=0.2)

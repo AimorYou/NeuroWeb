@@ -1,3 +1,4 @@
+import json
 import os
 import io
 import yaml
@@ -10,15 +11,15 @@ from ultralytics import YOLO
 
 class Detector:
     colors = [
-        "RGB(255, 0, 0)",     # Red
-        "RGB(0, 255, 0)",     # Green
-        "RGB(0, 0, 255)",     # Blue
-        "RGB(255, 255, 0)",   # Yellow
-        "RGB(255, 0, 255)",   # Magenta
-        "RGB(0, 255, 255)",   # Cyan
-        "RGB(128, 0, 128)",   # Purple
-        "RGB(0, 128, 128)",   # Teal
-        "RGB(128, 128, 0)",   # Olive
+        "RGB(255, 0, 0)",  # Red
+        "RGB(0, 255, 0)",  # Green
+        "RGB(0, 0, 255)",  # Blue
+        "RGB(255, 255, 0)",  # Yellow
+        "RGB(255, 0, 255)",  # Magenta
+        "RGB(0, 255, 255)",  # Cyan
+        "RGB(128, 0, 128)",  # Purple
+        "RGB(0, 128, 128)",  # Teal
+        "RGB(128, 128, 0)",  # Olive
         "RGB(128, 128, 128)"  # Gray
     ]
 
@@ -61,9 +62,15 @@ class Detector:
 
             # self._handle_json(json_data, uid)
             self._train_model(uid)
+            self._save_model(uid)
         elif mode == "inference":
-            self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/train/weights/best.pt")  # FIXME: Fix path
-            self.class_names = names
+            # self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/train/weights/best.pt")  # FIXME: Fix path
+            self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/detection_{uid}.pt")
+            with open(f"./app/computer_vision/resources/user_{uid}/detection_params_{uid}.json", "r") as f:
+                params = json.load(f)
+            # self.class_names = names
+            self.class_names = params["class_names"]
+            self.hyperparams = params["hyperparams"]
         else:
             raise Exception("Unknown mode! Avialable modes are train and inference")
 
@@ -124,6 +131,15 @@ class Detector:
             with open(os.path.abspath(f"{os.curdir}/data/val/labels/{i}.txt"), "w") as f:
                 f.write(self.data["labels"][i])
 
+    def _save_model(self, uid):
+        self.model.save(f"./app/computer_vision/resources/user_{uid}/detection_{uid}.pt")  # test
+        save_parameters = {
+            "hyperparams": self.hyperparams,
+            "class_names": self.class_names
+        }
+        with open(f"./app/computer_vision/resources/user_{uid}/detection_params_{uid}.json", "w") as f:
+            json.dump(save_parameters, f)
+
     def _train_model(self, uid: str) -> None:
         """
         Method trains the specified yolo model (nano/small/medium)
@@ -140,6 +156,8 @@ class Detector:
                          batch=self.hyperparams["batch_size"],
                          epochs=self.hyperparams["n_epochs"],
                          project=f"./app/computer_vision/resources/user_{uid}/")
+
+
 
     def predict(self, image_b64: str, debug: bool = False):
         """
