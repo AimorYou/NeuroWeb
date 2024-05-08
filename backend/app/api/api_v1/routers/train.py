@@ -42,19 +42,19 @@ async def get():
 
 
 @r.post("/classification/train-model")
-async def train(json_data: dict, user_id: str):
+async def train_classification(json_data: dict, user_id: str):
     class_mapping = train_model(json_data=json_data, user_id=user_id)
     return {200: "OK", "class_mapping": class_mapping}
 
 
 @r.post("/classification/predict")
-async def train(json_data: dict, user_id: str):
+async def predict_classification(json_data: dict, user_id: str):
     prediction = predict(image=json_data["image"], user_id=user_id)
     return {200: "OK", "prediction": prediction}
 
 
 @r.websocket("/ws/classification/predict/{user_id}")
-async def classification(websocket: WebSocket, user_id):
+async def predict_classification_ws(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
         with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
@@ -76,7 +76,7 @@ async def classification(websocket: WebSocket, user_id):
 
 
 @r.post("/face-recognition/train-model")
-async def train(json_data: dict, user_id: str):
+async def train_recognizer(json_data: dict, user_id: str):
     recognizer = Recognizer(json_data=json_data)
     if recognizer.success:
         recognizer.dump_model(user_id=user_id)
@@ -92,7 +92,7 @@ async def train(json_data: dict, user_id: str):
 
 
 @r.websocket("/ws/face-recognition/predict/{user_id}")
-async def classification(websocket: WebSocket, user_id):
+async def recognize_face(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
         with open(f"./app/computer_vision/resources/user_{user_id}/model_rec.pkl", "rb") as f:
@@ -112,7 +112,7 @@ async def classification(websocket: WebSocket, user_id):
 
 
 @r.post("/detection/train-model")
-async def train(
+async def train_detection(
         files: List[UploadFile] = Form(),
         user_id: str = Query(),
         names: list[str] = Query(),
@@ -132,7 +132,7 @@ async def train(
 
 
 @r.websocket("/ws/detection/predict/{user_id}")
-async def classification(websocket: WebSocket, user_id, names: list[str]):
+async def detect(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
         hyperparameters = {
@@ -141,6 +141,7 @@ async def classification(websocket: WebSocket, user_id, names: list[str]):
             "batch_size": 16,
             "n_epochs": 35
         }  # Научиться получать из запроса
+        names = ["Abyssinian"]
         detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="inference")
         while True:
             data = await websocket.receive_text()
@@ -163,6 +164,10 @@ def _create_directories(user_id: str, names: list[str]):
     # clear existing directories
     if os.path.exists(f"./app/computer_vision/resources/user_{user_id}/yolo_data"):
         shutil.rmtree(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
+        for _dir in os.listdir(f"./app/computer_vision/resources/user_{user_id}"):
+            if "train" in _dir:
+                shutil.rmtree(f"./app/computer_vision/resources/user_{user_id}/{_dir}")
+
 
     try:
         os.mkdir(f"./app/computer_vision/resources/user_{user_id}/yolo_data")
