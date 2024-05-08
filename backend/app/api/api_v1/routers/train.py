@@ -132,7 +132,7 @@ async def train(
 
 
 @r.websocket("/ws/detection/predict/{user_id}")
-async def classification(websocket: WebSocket, user_id, names: list[str], ):
+async def classification(websocket: WebSocket, user_id, names: list[str]):
     await manager.connect(websocket)
     try:
         hyperparameters = {

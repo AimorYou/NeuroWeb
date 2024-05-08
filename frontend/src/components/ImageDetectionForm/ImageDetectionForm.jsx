@@ -6,9 +6,11 @@ import { Photo } from './Photo';
 import './ImageDetectionForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
+import { drawMesh } from "./utilities";
 
 const ImageDetectionForm = () => {
   const webcamRef = useRef(null);
+  const canvasRef = useRef(null);
   const [forms, setForms] = useState([{ id: 1, name: 'Имя 1', photos: [] }]);
   const [formIdCounter, setFormIdCounter] = useState(2);
   const [showCamera, setShowCamera] = useState(false);
@@ -114,8 +116,9 @@ const ImageDetectionForm = () => {
       // Set video width
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
+      const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`).join('&');
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1')
+      var socket = new WebSocket(`ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1&${classNamesParam}`)
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -129,14 +132,11 @@ const ImageDetectionForm = () => {
 
       // getWebSocket().onmessage 
       socket.onmessage = function (event) {
-        var predictions = JSON.parse(event.data);
-        var recognizedPeople = predictions.recognized_people;
-
-        if (predictions.recognized_flg && recognizedPeople.length > 0) {
-          setRecognizedPeople(recognizedPeople);
-        } else {
-          setRecognizedPeople([]);
-        }
+        var predictions = JSON.parse(event.data)
+        var bbox = predictions[0]["coordinates"]
+        var name = predictions[0]["cls"]
+        const ctx = canvasRef.current.getContext("2d");
+        requestAnimationFrame(()=>{drawMesh(predictions, ctx)});
       };
 
 
