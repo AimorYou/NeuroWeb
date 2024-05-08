@@ -324,3 +324,16 @@ touch-action: manipulation;
   margin-right: 5px;
 }
 
+.class-names-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.class-names-form input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}

@@ -40,34 +40,7 @@ const ImageDetectionForm = () => {
   };
 
 
-  const deleteForm = formId => {
-    setForms(prevForms => prevForms.filter(form => form.id !== formId));
-  };
 
-  const renameForm = (formId, newName) => {
-    setForms(prevForms => {
-      return prevForms.map(form => {
-        if (form.id === formId) {
-          return { ...form, name: newName };
-        }
-        return form;
-      });
-    });
-  };
-
-
-  const TakePhoto = formId => {
-    const capturedPhoto = webcamRef.current.getScreenshot();
-
-    setForms(prevForms => {
-      return prevForms.map(form => {
-        if (form.id === formId) {
-          form.photos.push(capturedPhoto);
-        }
-        return form;
-      });
-    });
-  };
 
   const deletePhoto = (formId, photoIndex) => {
     setForms(prevForms => {
@@ -123,8 +96,7 @@ const ImageDetectionForm = () => {
       var apiCall = {
         event: "localhost:subscribe",
         data: {
-          'image': imageSrc,
-          'class_mapping': classMapping
+          'image': imageSrc
         },
       };
       socket.onopen = () => socket.send(JSON.stringify(apiCall))
@@ -136,10 +108,8 @@ const ImageDetectionForm = () => {
         var bbox = predictions[0]["coordinates"]
         var name = predictions[0]["cls"]
         const ctx = canvasRef.current.getContext("2d");
-        requestAnimationFrame(()=>{drawMesh(predictions, ctx)});
+        requestAnimationFrame(() => { drawMesh(predictions, ctx) });
       };
-
-
 
     }
   };
@@ -151,35 +121,35 @@ const ImageDetectionForm = () => {
     const arrayBuffer = new ArrayBuffer(byteString.length);
     const intArray = new Uint8Array(arrayBuffer);
     for (let i = 0; i < byteString.length; i++) {
-        intArray[i] = byteString.charCodeAt(i);
+      intArray[i] = byteString.charCodeAt(i);
     }
     return new Blob([arrayBuffer], { type: type });
-}
+  }
 
 
   const sendJSON = async () => {
 
     const formData = new FormData();
 
-   uploadedPhotos.forEach((uploadedPhoto) => {
+    uploadedPhotos.forEach((uploadedPhoto) => {
       const blob = dataURItoBlob(uploadedPhoto.photos.src);
       const file = new File([blob], `${uploadedPhoto.photos.name}`, { type: 'image/jpg' });
       formData.append(`files`, file);
-  });
+    });
 
-  uploadedTxtFiles.forEach((uploadedTxtFile) => {
+    uploadedTxtFiles.forEach((uploadedTxtFile) => {
       const blob = new Blob([uploadedTxtFile.txtFiles.content], { type: 'text/plain' });
       const file = new File([blob], `${uploadedTxtFile.txtFiles.name}`, { type: 'text/plain' });
       formData.append(`files`, file);
-  });
+    });
 
-  for (const pair of formData.entries()) {
-    console.log(pair[0], pair[1]);
-}
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
-const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`).join('&');
+    const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`).join('&');
 
-console.log(classNamesParam)
+    console.log(classNamesParam)
     // Отправляем данные на бэкенд
     const apiUrl = `http://0.0.0.0:8888/api/cv/train/detection/train-model?user_id=1&${classNamesParam}`; // как посылать uid
     try {
@@ -212,7 +182,9 @@ console.log(classNamesParam)
     if (showCamera) {
       runFaceDetectorModel();
     }
-  }, [showCamera, classMapping]);
+  }, [showCamera]);
+
+  const disableButtons = uploadedPhotos.length < 1 || uploadedTxtFiles.length < 1 || classNames.length < 1;
 
   return (
     <React.Fragment>
@@ -225,13 +197,13 @@ console.log(classNamesParam)
             {forms.map(form => (
               <div key={form.id}>
                 {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
-                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} handleSaveTxtFiles={handleSaveTxtFiles} setClassNames={setClassNames} TakePhoto={() => TakePhoto(form.id)} />
+                <Camera formId={form.id} formName={form.name} handleSavePhotos={handleSavePhotos} handleSaveTxtFiles={handleSaveTxtFiles} setClassNames={setClassNames} />
               </div>
             ))}
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
+            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
@@ -246,6 +218,21 @@ console.log(classNamesParam)
                   <div className="toggle-switch"></div>
                 </label>
                 <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
+                <canvas
+                  ref={canvasRef}
+                  style={{
+                    position: "absolute",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    left: 0,
+                    right: 760,
+                    top: 120,
+                    textAlign: "center",
+                    zindex: 9,
+                    width: 640,
+                    height: 480,
+                  }}
+                />
               </div>
             )}
             {!showCamera && (

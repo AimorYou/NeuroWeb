@@ -5,7 +5,7 @@ import { TextField, Button, Typography, Container, Grid } from '@mui/material';
 import React, { useRef, useState, useEffect } from 'react';
 import './Camera.css';
 
-const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, handleSaveTxtFiles, setClassNames  }) => {
+const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, handleSaveTxtFiles, setClassNames }) => {
   const webcamRef = useRef(null);
   const inputRef = useRef(null);
   const txtInputRef = useRef(null);
@@ -28,7 +28,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
         const content = e.target.result;
         setUploadedTxtFiles((prevTxtFiles) => [...prevTxtFiles, { name: file.name, content }]);
         handleSaveTxtFiles(formId, { name: file.name, content });
-        
+
       };
       reader.readAsText(file);
     });
@@ -153,20 +153,18 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
             </div>
           </div>
           <div className="horizontal-line"></div>
-          <Grid item xs={12} >
-          <TextField
-            fullWidth
-            label="Введите имена классов через запятую"
-            variant="outlined"
-            value={classNames}
-            onChange={e => setClassNamesLocal(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
-            placeholder="Пример: Класс1, Класс2, Класс3"
-          />
-        </Grid>
+          <div className="class-names-form">
+            <input
+              type="text"
+              value={classNames}
+              onChange={e => setClassNamesLocal(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
+              placeholder="Введите имена через запятую"
+            />
+          </div>
           <div className="horizontal-btns">
-            <label className={'btn'} htmlFor="uploadInput">Загрузить фото <UploadAltIcon fontSize='small'/></label>
+            <label className={'btn'} htmlFor="uploadInput">Загрузить фото <UploadAltIcon fontSize='small' /></label>
             <input
               ref={inputRef}
               id="uploadInput"
@@ -188,7 +186,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
           </div>
           <div className="photo-container">
             <div className="uploaded-files">
-            <h3>Загруженные изображения:</h3>
+              <h3>Загруженные изображения:</h3>
               {uploadedPhotos.map((file, index) => (
                 <div key={index} className="image-container">
                   <li>{file.name}</li>
@@ -197,7 +195,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
             </div>
           </div>
           <div className="horizontal-btns">
-            <label className={'btn'} htmlFor="uploadTxtInput">Загрузить .txt <UploadAltIcon fontSize='small'/></label>
+            <label className={'btn'} htmlFor="uploadTxtInput">Загрузить .txt <UploadAltIcon fontSize='small' /></label>
             <input
               ref={txtInputRef}
               id="uploadTxtInput"
@@ -220,9 +218,9 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
           </div>
           <div className="uploaded-files">
             <h3>Загруженные файлы .txt:</h3>
-              {uploadedTxtFiles.map((file, index) => (
-                <li key={index}>{file.name}</li>
-              ))}
+            {uploadedTxtFiles.map((file, index) => (
+              <li key={index}>{file.name}</li>
+            ))}
           </div>
         </div>
       </div>
