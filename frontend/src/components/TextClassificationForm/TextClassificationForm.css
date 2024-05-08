@@ -87,6 +87,7 @@ text-align: center;
 margin: 10px;
 }
 
+.classify-btn,
 .train-model-btn {
   display: inline-flex;
   background-color: #6C58E9;
@@ -98,7 +99,7 @@ margin: 10px;
   font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
-  width: 160px;
+  width: 170px;
   height: 30px;
   padding: 20px;
   margin: 30px;
@@ -110,6 +111,7 @@ margin: 10px;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  justify-content: space-evenly;
 }
 
 .export-model-btn {
@@ -138,10 +140,11 @@ margin: 10px;
   justify-content: space-evenly;
 }
 
+.classify-btn:hover,
 .train-model-btn:hover,
 .export-model-btn:hover
 {
-opacity: 0.8;
+opacity: 0.7;
 }
 
 .horizontal-line {
@@ -287,3 +290,26 @@ color: #fff;
   color: #fff;
 }
 
+.text-classification-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-input {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
+
+.result {
+  font-size: 16px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #007bff; /* Цвет рамки */
+  border-radius: 4px;
+}

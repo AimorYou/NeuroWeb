@@ -45,10 +45,7 @@
     box-sizing: border-box;
 }
 
-.photo-item img {
-    max-width: 100%;
-    height: auto;
-}
+
 
 .photo-item button {
     display: block;
@@ -169,12 +166,8 @@
 
 .class-text {
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
     margin-bottom:  -20px;
-}
-
-.class-text:hover {
-    color: #cbc5ed;
 }
 
 .class-edit-btn {
@@ -209,3 +202,126 @@
   -webkit-user-select: none;
   touch-action: manipulation;
 }
+
+.drop-area {
+    color: #fff;
+    border: 2px dashed #cccccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .drag-over {
+    background-color: #887be0;
+  }
+  
+  .photo-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .photo-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .photo-item img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 5px;
+  }
+  
+  .btn {
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #6C58E9;
+    color: white;
+    border: 0.8px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    opacity: 0.8;
+    background-color: #887be0;
+  }
+  
+  .more-btn {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .more-btn .dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .more-btn .dropdown .dropdown-item {
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  
+  .more-btn .dropdown .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .uploaded-images {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .uploaded-images-text {
+    color: #fff;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 14px;
+  }
+  
+  .image-container {
+    color: #fff;
+    font-size: 12px;
+  }
+  
+  
+  .image-container li {
+    color: #fff;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+
+  .uploaded-files {
+    margin-top: 20px;
+  }
+  
+  .uploaded-files h3 {
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  
+  .uploaded-files ul {
+    list-style: none;
+    color: #fff;
+  }
+  
+  .uploaded-files li {
+    color: #fff;
+    margin-top: 5px;
+    font-size: 14px;
+    margin: 10px;
+  }
+  
+  .uploaded-files li::before {
+    content: "📄"; /* Иконка файла */
+    margin-right: 5px;
+  }
+  
+  

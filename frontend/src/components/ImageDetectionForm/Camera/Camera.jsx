@@ -197,7 +197,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
             </div>
           </div>
           <div className="horizontal-btns">
-            <label className={'btn'} htmlFor="uploadInput">Загрузить .txt <UploadAltIcon fontSize='small'/></label>
+            <label className={'btn'} htmlFor="uploadTxtInput">Загрузить .txt <UploadAltIcon fontSize='small'/></label>
             <input
               ref={txtInputRef}
               id="uploadTxtInput"
