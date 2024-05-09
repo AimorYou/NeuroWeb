@@ -60,6 +60,16 @@ function Pricing() {
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
+            <PricingCard to='/detection'>
+              <PricingCardInfo>
+              <PricingCardIcon src={Detect} />
+                <PricingCardPlan>Классификация текстов</PricingCardPlan>
+                <PricingCardFeatures>
+                  <PricingCardFeature>Модель обнаруживает и локализует объекты на изображениях, позволяя идентифицировать их положение и границы</PricingCardFeature>
+                </PricingCardFeatures>
+                <Button primary>Выбрать</Button>
+              </PricingCardInfo>
+            </PricingCard>
           </PricingContainer>
         </PricingWrapper>
       </AdvantagesSection>

@@ -17,9 +17,10 @@ async def get():
 
 @r.post("/classification/train-model")
 async def train(
-        file: UploadFile,
+        file: UploadFile = Form(),
         user_id: str = Query()
 ):
+    
     s = str(file.file.read(), 'utf-8')
     data = StringIO(s)
     df = pd.read_csv(data)
@@ -43,5 +44,10 @@ async def train(
 async def predict_classification(json_data: dict, user_id: str):
     txt = json_data["text"]
     text_clf = pickle.loads(storage.get_object(f"user_{user_id}/text_clf.pt"))
-    return text_clf.predict(txt)
+    prediction = text_clf.predict(txt)
+    print(prediction)
+    return {
+        200: "OK",
+        "result": prediction,
+        }
 

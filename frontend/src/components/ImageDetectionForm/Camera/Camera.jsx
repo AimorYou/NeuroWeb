@@ -142,10 +142,18 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
     updatedPhotos.splice(index, 1);
     setUploadedPhotos(updatedPhotos);
   };
+
+  const deleteAllPhotos = () => {
+    setUploadedPhotos([]);
+  };
   const deleteUploadedTxtFile = (index) => {
     const updatedTxtFiles = [...uploadedTxtFiles];
     updatedTxtFiles.splice(index, 1);
     setUploadedTxtFiles(updatedTxtFiles);
+  };
+
+  const deleteAllTxtFiles = () => {
+    setUploadedTxtFiles([]);
   };
 
 
@@ -205,6 +213,9 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
                   ))}
                 </ul>
               </div>
+              {uploadedPhotos.length > 0 && (
+                   <button className='btn' onClick={deleteAllPhotos}>Удалить все фото</button>
+                )}
             </div>
           </div>
           <div className="horizontal-btns">
@@ -243,6 +254,9 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
                 ))}
               </ul>
             </div>
+            {uploadedTxtFiles.length > 0 && (
+                <button className='btn' onClick={deleteAllTxtFiles}>Удалить все файлы</button>
+              )}
           </div>
         </div>
       </div>

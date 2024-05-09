@@ -3,7 +3,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
-import './TextClassificationForm.css';
+import './TextClassification.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 

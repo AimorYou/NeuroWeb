@@ -6,6 +6,8 @@ import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './Camera.css';
 import Dropdown from 'react-multilevel-dropdown';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import RenameForm from './RenameForm'; // Путь к RenameForm
 
 const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos }) => {
@@ -15,6 +17,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
   const [showCamera, setShowCamera] = useState(false);
   const [showRenameForm, setShowRenameForm] = useState(false);
   const [newName, setNewName] = useState(formName);
+  const [hoveredPhoto, setHoveredPhoto] = useState(null);
 
   const capturePhoto = () => {
     const capturedPhoto = webcamRef.current.getScreenshot();
@@ -40,6 +43,10 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
     setCapturedPhotos(updatedPhotos);
   };
 
+  const deleteAllPhotos = () => {
+    setCapturedPhotos([]);
+  };
+
   const renameClass = (newName) => {
     // Обновляем имя класса
     renameForm(formId, newName);
@@ -50,12 +57,12 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
     return (
       <div className='more-btn'>
         <div>
-        <Dropdown
-          title=<MoreVertIcon/>
-          className="more-btn">
+          <Dropdown
+            title=<MoreVertIcon />
+            className="more-btn">
             <Dropdown.Item onClick={() => setShowRenameForm(true)}>Переименовать класс</Dropdown.Item>
             <Dropdown.Item onClick={() => delForm(formId)}>Удалить класс</Dropdown.Item>
-        </Dropdown>
+          </Dropdown>
         </div>
       </div>
     )
@@ -65,24 +72,24 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
     <React.Fragment>
       <div className="horizontal">
         <div className="card">
-        <div className="horizontal-className" onClick={() => setShowRenameForm(true)}>
-          <div className="class-text">
-            {showRenameForm ? (
-              <RenameForm 
-                initialValue={formName} 
-                onSubmit={renameClass} 
-              />
-            ) : (
-              `${formName}`
-            )}
+          <div className="horizontal-className" onClick={() => setShowRenameForm(true)}>
+            <div className="class-text">
+              {showRenameForm ? (
+                <RenameForm
+                  initialValue={formName}
+                  onSubmit={renameClass}
+                />
+              ) : (
+                `${formName}`
+              )}
+            </div>
+            <div className='class-edit-btn'><ModeEditIcon fontSize='small' /></div>
           </div>
-          <div className='class-edit-btn'><ModeEditIcon fontSize='small'/></div>
-          </div>
-          <MenuBar/>
+          <MenuBar />
           <div className="horizontal-line"></div>
           <div className="horizontal-btns">
-            <button className='camera-upload-photo' onClick={() => setShowCamera(!showCamera)}><CameraAltIcon/></button>
-            <button className='camera-upload-photo'><UploadAltIcon/></button>
+            <button className='camera-upload-photo' onClick={() => setShowCamera(!showCamera)}><CameraAltIcon /></button>
+            <button className='camera-upload-photo'><UploadAltIcon /></button>
           </div>
           {showCamera && (
             <div>
@@ -90,13 +97,24 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
               <button className='btn' onMouseDown={startCapture} onMouseUp={stopCapture} onClick={() => handleSavePhotos(formId, capturedPhotos)}>
                 Сфотографировать
               </button>
+              <div className="horizontal-btns">
+                <button className='btn' onClick={deleteAllPhotos}>Удалить все фото</button>
+              </div>
             </div>
           )}
           <div className="photo-container">
             {capturedPhotos.map((photo, index) => (
-              <div key={index} className="photo-item">
-                <img src={photo.photo} alt={`Photo ${index}`} />
-                {/* <button className='btn' onClick={() => deletePhoto(index)}>Удалить</button> */}
+              <div key={index} className="photo-item" onMouseEnter={() => setHoveredPhoto(index)} onMouseLeave={() => setHoveredPhoto(null)}>
+                <img src={photo.photo} alt={`Photo ${index}`} style={{ position: 'relative' }} />
+                {hoveredPhoto === index && (
+                  <IconButton
+                    onClick={() => deletePhoto(index)}
+                    size="small"
+                    sx={{ position: 'relative', top: -56, right: 0, color: 'white' }}
+                  >
+                    <DeleteIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                )}
               </div>
             ))}
           </div>
