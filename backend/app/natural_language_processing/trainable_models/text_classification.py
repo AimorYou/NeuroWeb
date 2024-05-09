@@ -1,7 +1,9 @@
 import torch
+import pickle
 import numpy as np
 import pandas as pd
 from datasets import Dataset
+from s3.storage import Storage
 from sklearn.model_selection import train_test_split
 
 from transformers import DistilBertModel
@@ -11,6 +13,11 @@ from sklearn.linear_model import LogisticRegression
 distilbert_mapping = {
     "EN": "distilbert-base-uncased",
     "RU": "DmitryPogrebnoy/distilbert-base-russian-cased"
+}
+
+storage_mapping = {
+    "EN": "text_classification_model.pkl",
+    "RU": "rusentitweet_model.pkl"
 }
 
 
@@ -23,6 +30,7 @@ class TextClassification:
             raise Exception(f"You have been passed unknown language (Only {'/'.join(available_langs)} are available)")
 
         self.model = DistilBertModel.from_pretrained(distilbert_mapping[language]).to(self.device)
+        # self.model = pickle.loads(storage.get_object(storage_mapping[language]))
         self.tokenizer = DistilBertTokenizer.from_pretrained(distilbert_mapping[language])
 
         self.cls_mapping = None
@@ -127,4 +135,4 @@ if __name__ == "__main__":
                                                              test_size=0.2)
     test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test)
     print(f"Given accuracy on test part: {test_accuracy}")
-    text_clf.predict("I hate everything")
+    print(text_clf.predict("I hate everything"))

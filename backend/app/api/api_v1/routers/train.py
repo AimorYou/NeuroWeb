@@ -2,7 +2,7 @@ from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile, Form,
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
 from db.schemas import JSONValidation
-from typing import Any, List
+from typing import List
 from computer_vision.trainable_models.classification import train_model, predict, _predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
 from computer_vision.trainable_models.image_detection import Detector
