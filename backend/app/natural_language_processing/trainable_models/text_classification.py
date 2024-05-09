@@ -3,12 +3,13 @@ import pickle
 import numpy as np
 import pandas as pd
 from datasets import Dataset
-from s3.storage import Storage
+from s3.storage import storage
 from sklearn.model_selection import train_test_split
 
 from transformers import DistilBertModel
 from transformers import DistilBertTokenizer
 from sklearn.linear_model import LogisticRegression
+
 
 distilbert_mapping = {
     "EN": "distilbert-base-uncased",
@@ -136,3 +137,7 @@ if __name__ == "__main__":
     test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test)
     print(f"Given accuracy on test part: {test_accuracy}")
     print(text_clf.predict("I hate everything"))
+
+
+# model_eng = pickle.loads(storage.get_object(storage_mapping["EN"]))
+# model_rus = pickle.loads(storage.get_object(storage_mapping["RU"]))

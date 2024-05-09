@@ -1,13 +1,12 @@
 from natural_language_processing.trainable_models.text_classification import TextClassification
 from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile, Form, Query
-from s3.storage import Storage
+from s3.storage import storage
 from typing import Any, List
 from io import StringIO
 import pandas as pd
 import pickle
 
 train_nlp_router = r = APIRouter()
-storage = Storage()
 
 
 @r.get("/")

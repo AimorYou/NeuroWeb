@@ -22,6 +22,8 @@ class Storage:
         self.s3.put_object(Bucket=self.bucket_name, Key=key, Body=_object)
 
 
+storage = Storage()
+
 # # Создать новый бакет
 # s3.create_bucket(Bucket='bucket-name')
 
@@ -46,7 +48,6 @@ class Storage:
 # get_object_response = s3.get_object(Bucket='neuro-web', Key='rusentitweet_model.pkl')
 # print(get_object_response['Body'].read())
 
-# storage = Storage()
 # model = pickle.loads(storage.get_object("test-model"))
 # print(model)
 # model.eval()

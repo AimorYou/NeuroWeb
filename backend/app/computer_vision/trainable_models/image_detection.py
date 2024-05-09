@@ -1,8 +1,12 @@
 import json
 import os
 import io
+import pickle
+
 import yaml
 import base64
+
+from s3.storage import storage
 
 import numpy as np
 from PIL import Image

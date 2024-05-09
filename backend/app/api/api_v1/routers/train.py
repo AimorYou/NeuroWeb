@@ -2,6 +2,7 @@ from fastapi import WebSocket, WebSocketDisconnect, APIRouter, UploadFile, Form,
 # from fastapi.responses import HTMLResponse
 # from draw import draw, add_bounding_boxes
 from db.schemas import JSONValidation
+from s3.storage import storage
 from typing import List
 from computer_vision.trainable_models.classification import train_model, predict, _predict
 from computer_vision.trainable_models.faces_recognition import Recognizer
@@ -57,6 +58,8 @@ async def predict_classification(json_data: dict, user_id: str):
 async def predict_classification_ws(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
+        # model = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pt"))
+        # class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
         with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
             model = pickle.load(f)
         with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
@@ -97,6 +100,7 @@ async def recognize_face(websocket: WebSocket, user_id):
     try:
         with open(f"./app/computer_vision/resources/user_{user_id}/model_rec.pkl", "rb") as f:
             recognizer = pickle.load(f)
+        # recognizer = pickle.loads(storage.get_object(f"user_{user_id}/face-recognition/model_rec.pkl"))
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)

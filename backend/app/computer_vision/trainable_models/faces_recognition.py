@@ -4,6 +4,8 @@ import base64
 import pickle
 from typing import List, Union
 
+from s3.storage import storage
+
 import numpy as np
 from PIL import Image
 import face_recognition
@@ -97,6 +99,7 @@ class Recognizer:
         path = f"./app/computer_vision/resources/user_{user_id}/" + path
         with open(path, "wb") as model_rec:
             pickle.dump(self, model_rec)
+        # storage.put_object(pickle.dumps(self), f"user_{user_id}/face-recognition/model_rec.pkl")
 
 
 if __name__ == "__main__":

@@ -16,6 +16,7 @@ from torch.nn import functional as F
 import torch.nn.functional as nnf
 import matplotlib.pyplot as plt
 import pytorch_lightning as pl
+from s3.storage import storage
 from PIL import Image
 from tqdm import tqdm
 from torch import nn
@@ -192,6 +193,9 @@ def train_model(json_data: dict, user_id: str):
 
     with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "w") as f:
         json.dump(class_mapping, f)
+
+    # storage.put_object(pickle.dumps(model), f"user_{user_id}/classification/classification_{user_id}.pt")
+    # storage.put_object(json.dumps(class_mapping), f"user_{user_id}/classification/classification_mapping_{user_id}.json")
 
     return class_mapping
 
