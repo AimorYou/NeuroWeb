@@ -337,3 +337,13 @@ touch-action: manipulation;
   border-radius: 5px;
   font-size: 16px;
 }
+
+.file-list-container {
+  max-height: 200px; /* Устанавливаем максимальную высоту списка */
+  overflow-y: auto; /* Устанавливаем прокрутку по вертикали */
+}
+
+.file-list {
+  list-style-type: lower-greek; /* Убираем маркеры списка */
+  padding: 0; /* Убираем внутренние отступы */
+}

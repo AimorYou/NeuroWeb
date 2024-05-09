@@ -70,7 +70,7 @@ const ImageDetectionForm = () => {
     setInterval(() => {
       // detect(model);
       detect("")
-    }, 1000);
+    }, 2000);
 
   }
 
@@ -91,7 +91,10 @@ const ImageDetectionForm = () => {
       webcamRef.current.video.height = videoHeight;
       const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`).join('&');
 
-      var socket = new WebSocket(`ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1&${classNamesParam}`)
+      canvasRef.current.width = videoWidth;
+      canvasRef.current.height = videoHeight;
+
+      var socket = new WebSocket(`ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1`)
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -104,11 +107,16 @@ const ImageDetectionForm = () => {
 
       // getWebSocket().onmessage 
       socket.onmessage = function (event) {
-        var predictions = JSON.parse(event.data)
-        var bbox = predictions[0]["coordinates"]
-        var name = predictions[0]["cls"]
-        const ctx = canvasRef.current.getContext("2d");
-        requestAnimationFrame(() => { drawMesh(predictions, ctx) });
+        console.log(event.data)
+        try {
+          var predictions = JSON.parse(event.data)
+          var bbox = predictions[0]["coordinates"]
+          var name = predictions[0]["cls"]
+          const ctx = canvasRef.current.getContext("2d");
+          requestAnimationFrame(() => { drawMesh(predictions, ctx) });
+        } catch (error) {
+          console.log(error)
+        }
       };
 
     }
@@ -182,7 +190,7 @@ const ImageDetectionForm = () => {
     if (showCamera) {
       runFaceDetectorModel();
     }
-  }, [showCamera]);
+  }, [showCamera], []);
 
   const disableButtons = uploadedPhotos.length < 1 || uploadedTxtFiles.length < 1 || classNames.length < 1;
 
@@ -212,27 +220,38 @@ const ImageDetectionForm = () => {
             <div className='horizontal-line' />
             {showCamera && (
               <div>
-                <label className="toggle">
-                  <span className="toggle-label">{freezeCamera ? "Выкл" : "Вкл"}</span>
-                  <input className="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera} />
-                  <div className="toggle-switch"></div>
-                </label>
-                <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
+                <Webcam
+                  ref={webcamRef}
+                  style={{
+                    position: "relative",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    left: 0,
+                    right: 600,
+                    top: 0,
+                    textAlign: "center",
+                    zIndex: 9, 
+                    width: 400,
+                    height: 300,
+                  }}
+                />
+
                 <canvas
                   ref={canvasRef}
                   style={{
                     position: "absolute",
                     marginLeft: "auto",
                     marginRight: "auto",
-                    left: 0,
-                    right: 760,
-                    top: 120,
+                    left: 1060,
+                    right: 0,
+                    top: 350,
                     textAlign: "center",
-                    zindex: 9,
-                    width: 640,
-                    height: 480,
+                    zIndex: 9,
+                    width: 380,
+                    height: 280,
                   }}
                 />
+
               </div>
             )}
             {!showCamera && (

@@ -1,6 +1,8 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UploadAltIcon from '@mui/icons-material/Upload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
 import { TextField, Button, Typography, Container, Grid } from '@mui/material';
 import React, { useRef, useState, useEffect } from 'react';
 import './Camera.css';
@@ -140,7 +142,11 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
     updatedPhotos.splice(index, 1);
     setUploadedPhotos(updatedPhotos);
   };
-
+  const deleteUploadedTxtFile = (index) => {
+    const updatedTxtFiles = [...uploadedTxtFiles];
+    updatedTxtFiles.splice(index, 1);
+    setUploadedTxtFiles(updatedTxtFiles);
+  };
 
 
   return (
@@ -187,11 +193,18 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
           <div className="photo-container">
             <div className="uploaded-files">
               <h3>Загруженные изображения:</h3>
-              {uploadedPhotos.map((file, index) => (
-                <div key={index} className="image-container">
-                  <li>{file.name}</li>
-                </div>
-              ))}
+              <div className="file-list-container">
+                <ul className="file-list">
+                  {uploadedPhotos.map((file, index) => (
+                    <li key={index}>
+                      {file.name}
+                      <IconButton onClick={() => deleteUploadedPhoto(index)} size="small" sx={{ color: 'white' }}>
+                        <DeleteIcon sx={{ fontSize: 22 }} />
+                      </IconButton>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
           <div className="horizontal-btns">
@@ -218,9 +231,18 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
           </div>
           <div className="uploaded-files">
             <h3>Загруженные файлы .txt:</h3>
-            {uploadedTxtFiles.map((file, index) => (
-              <li key={index}>{file.name}</li>
-            ))}
+            <div className="file-list-container">
+              <ul className="file-list">
+                {uploadedTxtFiles.map((file, index) => (
+                  <li key={index}>
+                    {file.name}
+                    <IconButton onClick={() => deleteUploadedTxtFile(index)} size="small" sx={{ color: 'white' }}>
+                      <DeleteIcon sx={{ fontSize: 22 }} />
+                    </IconButton>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

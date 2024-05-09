@@ -50,11 +50,16 @@ function App() {
      
 
       socket.onmessage = function(event) {
-        var predictions = JSON.parse(event.data)
-        var bbox = predictions[0]["coordinates"]
-        var name = predictions[0]["cls"]
-        const ctx = canvasRef.current.getContext("2d");
-        requestAnimationFrame(()=>{drawMesh(predictions, ctx)});
+        console.log(event.data)
+        try {
+          var predictions = JSON.parse(event.data)
+          var bbox = predictions[0]["coordinates"]
+          var name = predictions[0]["cls"]
+          const ctx = canvasRef.current.getContext("2d");
+          requestAnimationFrame(() => { drawMesh(predictions, ctx) });
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
   };

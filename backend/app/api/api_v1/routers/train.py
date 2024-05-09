@@ -141,8 +141,7 @@ async def detect(websocket: WebSocket, user_id):
             "batch_size": 16,
             "n_epochs": 35
         }  # Научиться получать из запроса
-        names = ["Abyssinian"]
-        detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="inference")
+        detector = Detector(names=[], uid=user_id, hyperparameters=hyperparameters, mode="inference")
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)

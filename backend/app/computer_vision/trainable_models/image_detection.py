@@ -11,16 +11,16 @@ from ultralytics import YOLO
 
 class Detector:
     colors = [
-        "RGB(255, 0, 0)",  # Red
-        "RGB(0, 255, 0)",  # Green
-        "RGB(0, 0, 255)",  # Blue
-        "RGB(255, 255, 0)",  # Yellow
-        "RGB(255, 0, 255)",  # Magenta
-        "RGB(0, 255, 255)",  # Cyan
-        "RGB(128, 0, 128)",  # Purple
-        "RGB(0, 128, 128)",  # Teal
-        "RGB(128, 128, 0)",  # Olive
-        "RGB(128, 128, 128)"  # Gray
+        [255, 0, 0],  # Red
+        [0, 255, 0],  # Green
+        [0, 0, 255],  # Blue
+        [255, 255, 0],  # Yellow
+        [255, 0, 255],  # Magenta
+        [0, 255, 255],  # Cyan
+        [128, 0, 128],  # Purple
+        [0, 128, 128],  # Teal
+        [128, 128, 0],  # Olive
+        [128, 128, 128]  # Gray
     ]
 
     def __init__(self, names: list[str], uid: str, hyperparameters: dict, mode: str = "train") -> None:
@@ -64,8 +64,8 @@ class Detector:
             self._train_model(uid)
             self._save_model(uid)
         elif mode == "inference":
-            # self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/train/weights/best.pt")  # FIXME: Fix path
-            self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/detection_{uid}.pt")
+            self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/train/weights/best.pt")  # FIXME: Fix path
+            # self.model = YOLO(f"./app/computer_vision/resources/user_{uid}/detection_{uid}.pt")
             with open(f"./app/computer_vision/resources/user_{uid}/detection_params_{uid}.json", "r") as f:
                 params = json.load(f)
             # self.class_names = names
@@ -176,7 +176,7 @@ class Detector:
         boxes_info = yolo_results[0].boxes
         for idx, cls_prediction in enumerate(boxes_info.cls):
             bbox_info = {
-                "cls": self.class_names[int(cls_prediction.item())][0],
+                "cls": self.class_names[int(cls_prediction.item())],
                 "conf": round(boxes_info.conf[idx].item(), 2),
                 "coordinates": boxes_info.xyxy[idx].tolist(),
                 "color": self.colors[int(cls_prediction.item())]
