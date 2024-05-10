@@ -2,14 +2,12 @@ from fastapi import FastAPI, Depends
 from starlette.requests import Request
 import uvicorn
 
-# from natural_language_processing.trainable_models.text_classification import TextClassification
-
 from api.api_v1.routers.users import users_router
 from api.api_v1.routers.auth import auth_router
 from api.api_v1.routers.pre_trained import cv_router
 from api.api_v1.routers.train import train_router
 from api.api_v1.routers.train_nlp import train_nlp_router
-# from api.api_v1.routers.pre_trained_nlp import nlp_router
+from api.api_v1.routers.pre_trained_nlp import nlp_router
 from core import config
 from db.session import SessionLocal
 from core.auth import get_current_active_user
@@ -51,7 +49,7 @@ app.include_router(
 )
 app.include_router(auth_router, prefix="/api", tags=["auth"])
 app.include_router(cv_router, prefix="/api/cv", tags=["cv"])
-# app.include_router(nlp_router, prefix="/api/nlp", tags=["nlp"])
+app.include_router(nlp_router, prefix="/api/nlp", tags=["nlp"])
 app.include_router(train_router, prefix="/api/cv/train", tags=["train"])
 app.include_router(train_nlp_router, prefix="/api/nlp/train", tags=["train"])
 
@@ -62,5 +60,4 @@ def test_json(req: JSONValidation):
 
 
 if __name__ == "__main__":
-    # TextClassification = TextClassification
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)
