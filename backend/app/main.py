@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends
 from starlette.requests import Request
 import uvicorn
 
+# from natural_language_processing.trainable_models.text_classification import TextClassification
+
 from api.api_v1.routers.users import users_router
 from api.api_v1.routers.auth import auth_router
 from api.api_v1.routers.pre_trained import cv_router
@@ -60,4 +62,5 @@ def test_json(req: JSONValidation):
 
 
 if __name__ == "__main__":
+    # TextClassification = TextClassification
     uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)
