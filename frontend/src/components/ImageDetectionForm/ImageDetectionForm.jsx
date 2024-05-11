@@ -53,15 +53,6 @@ const ImageDetectionForm = () => {
     });
   };
 
-  const toggleFreezeCamera = () => {
-    setFreezeCamera(prevState => !prevState);
-    if (socket) {
-      socket.close();
-      setSocket(null);
-    }
-    // Останавливаем видео, если оно не остановлено; иначе, запускаем его
-    setVideoStopped(prevState => !prevState);
-  };
 
   const runFaceDetectorModel = async () => {
 
@@ -70,7 +61,7 @@ const ImageDetectionForm = () => {
     setInterval(() => {
       // detect(model);
       detect("")
-    }, 2000);
+    }, 800);
 
   }
 
@@ -79,7 +70,9 @@ const ImageDetectionForm = () => {
       !freezeCamera &&
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
+      webcamRef.current.video.readyState === 4 &&
+      socket &&
+      socket.readyState === WebSocket.OPEN
     ) {
       // Get Video Properties
       const video = webcamRef.current.video;
@@ -94,7 +87,6 @@ const ImageDetectionForm = () => {
       canvasRef.current.width = videoWidth;
       canvasRef.current.height = videoHeight;
 
-      var socket = new WebSocket(`ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1`)
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -102,7 +94,7 @@ const ImageDetectionForm = () => {
           'image': imageSrc
         },
       };
-      socket.onopen = () => socket.send(JSON.stringify(apiCall))
+      socket.send(JSON.stringify(apiCall));
       // getWebSocket().send(JSON.stringify(apiCall))
 
       // getWebSocket().onmessage 
@@ -170,6 +162,8 @@ const ImageDetectionForm = () => {
       console.log('Response:', response.data);
 
       setShowCamera(true);
+      const socket = new WebSocket(`ws://0.0.0.0:8888/api/cv/train/ws/detection/predict/1`)
+      setSocket(socket);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -191,6 +185,14 @@ const ImageDetectionForm = () => {
       runFaceDetectorModel();
     }
   }, [showCamera], []);
+
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
 
   const disableButtons = uploadedPhotos.length < 1 || uploadedTxtFiles.length < 1 || classNames.length < 1;
 
@@ -244,7 +246,7 @@ const ImageDetectionForm = () => {
                     marginRight: "auto",
                     left: 1060,
                     right: 0,
-                    top: 350,
+                    top: 50,
                     textAlign: "center",
                     zIndex: 9,
                     width: 380,

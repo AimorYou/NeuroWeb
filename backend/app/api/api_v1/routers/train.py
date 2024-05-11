@@ -58,12 +58,12 @@ async def predict_classification(json_data: dict, user_id: str):
 async def predict_classification_ws(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
-        # model = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pt"))
-        # class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
-        with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
-            model = pickle.load(f)
-        with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
-            class_mapping = json.load(f)
+        model = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pt"))
+        class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
+        # with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
+        #     model = pickle.load(f)
+        # with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
+        #     class_mapping = json.load(f)
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)
@@ -98,9 +98,9 @@ async def train_recognizer(json_data: dict, user_id: str):
 async def recognize_face(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
-        with open(f"./app/computer_vision/resources/user_{user_id}/model_rec.pkl", "rb") as f:
-            recognizer = pickle.load(f)
-        # recognizer = pickle.loads(storage.get_object(f"user_{user_id}/face-recognition/model_rec.pkl"))
+        # with open(f"./app/computer_vision/resources/user_{user_id}/model_rec.pkl", "rb") as f:
+        #     recognizer = pickle.load(f)
+        recognizer = pickle.loads(storage.get_object(f"user_{user_id}/face-recognition/model_rec.pkl"))
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)

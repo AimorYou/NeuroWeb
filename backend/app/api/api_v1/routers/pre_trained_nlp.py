@@ -39,8 +39,8 @@ async def get():
 
 
 @r.post("/predict")
-def classification(json_data: dict, lang: str = "EN"):
+def classification(json_data: dict, lang: str = "RU"):
     text = json_data["text"]
     model = models[lang]
     prediction = predict(model, text, lang)
-    return {"prediction": prediction}
+    return {"result": prediction}

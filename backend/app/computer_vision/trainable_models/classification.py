@@ -185,17 +185,17 @@ def train_model(json_data: dict, user_id: str):
     class_mapping = {k: v for k, v in enumerate(json_data["classes"].keys())}
     print(class_mapping)
 
-    if not os.path.exists(f"./app/computer_vision/resources/user_{user_id}"):
-        os.mkdir(f"./app/computer_vision/resources/user_{user_id}")
+    # if not os.path.exists(f"./app/computer_vision/resources/user_{user_id}"):
+    #     os.mkdir(f"./app/computer_vision/resources/user_{user_id}")
 
-    with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "wb") as f:
-        pickle.dump(model, f)
+    # with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "wb") as f:
+    #     pickle.dump(model, f)
 
-    with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "w") as f:
-        json.dump(class_mapping, f)
+    # with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "w") as f:
+    #     json.dump(class_mapping, f)
 
-    # storage.put_object(pickle.dumps(model), f"user_{user_id}/classification/classification_{user_id}.pt")
-    # storage.put_object(json.dumps(class_mapping), f"user_{user_id}/classification/classification_mapping_{user_id}.json")
+    storage.put_object(pickle.dumps(model), f"user_{user_id}/classification/classification_{user_id}.pt")
+    storage.put_object(json.dumps(class_mapping), f"user_{user_id}/classification/classification_mapping_{user_id}.json")
 
     return class_mapping
 

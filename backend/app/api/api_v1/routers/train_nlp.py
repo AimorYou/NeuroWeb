@@ -5,6 +5,7 @@ from typing import Any, List
 from io import StringIO
 import pandas as pd
 import pickle
+import json
 
 train_nlp_router = r = APIRouter()
 
@@ -75,11 +76,14 @@ async def predict_classification(json_data: dict, user_id: str):
 @r.websocket("/ws/classification/{user_id}")
 async def classification(websocket: WebSocket, user_id):
     await manager.connect(websocket)
+    print("connected")
     try:
         text_clf = pickle.loads(storage.get_object(f"user_{user_id}/text_clf.pt"))
         while True:
-            data = await websocket.receive()
-            text = data.get("text")
+            data = await websocket.receive_text()
+            data = json.loads(data)
+            print(f"data = {data}")
+            txt = data.get("text", "")
             prediction = text_clf.predict(txt)
             print(prediction)
 
