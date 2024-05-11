@@ -27,7 +27,14 @@ class Detector:
         [128, 128, 128]  # Gray
     ]
 
-    def __init__(self, names: list[str], uid: str, hyperparameters: dict, mode: str = "train") -> None:
+    def __init__(self, names: list[str],
+                 uid: str,
+                 model_size: str = "nano",
+                 train_size: float = 0.7,
+                 batch_size: int = 16,
+                 n_epochs: int = 35,
+                 gpu_flg: bool = False,
+                 mode: str = "train") -> None:
         """
         This class works in two modes:
             train: Constructor parses input json containing data in YOLOv8 format and creates dir for training.
@@ -42,17 +49,16 @@ class Detector:
                     "labels": [label_1, label_2, label_3], # strings
                     "images": [image_1, image_2, image_3]  # base 64 encoded images
                 }
-            },
-            "hyperparameters": {
-                "model": "nano", # nano/small/medium,
-                "train_size": 0.7,
-                "batch_size": 16,
-                "n_epochs": 35
             }
         }
 
         :param json_data: input json with data for training from the backend
         :param uid: name of the user directory
+        :param model_size: YOLO model size (nano, small, medium)
+        :param train_size: proportion of images for training (from 0 to 1)
+        :param batch_size: number of images in batch (2, 4, 8, 16, 32, 64)
+        :param n_epochs: Number of epochs (1..50)
+        :param gpu_flg: GPU usage (not implemented yet)
         :param mode: inference/train
         """
         if len(names) > len(self.colors):
@@ -61,7 +67,11 @@ class Detector:
         if mode == "train":
             # self.data = json_data["classes"]["data"]
             self.class_names = names
-            self.hyperparams = hyperparameters
+            self.model_size = model_size
+            self.train_size = train_size
+            self.batch_size = batch_size
+            self.n_epochs = n_epochs
+            self.gpu_flg = gpu_flg
             self.model = None
 
             # self._handle_json(json_data, uid)
@@ -74,7 +84,12 @@ class Detector:
                 params = json.load(f)
             # self.class_names = names
             self.class_names = params["class_names"]
-            self.hyperparams = params["hyperparams"]
+            self.class_names = names
+            self.model_size = model_size
+            self.train_size = train_size
+            self.batch_size = batch_size
+            self.n_epochs = n_epochs
+            self.gpu_flg = gpu_flg
         else:
             raise Exception("Unknown mode! Avialable modes are train and inference")
 
@@ -115,7 +130,7 @@ class Detector:
             raise Exception("Provided labels don't match images")
 
         data_len = len(self.data["labels"])
-        train_len = round(data_len * self.hyperparams["train_size"])
+        train_len = round(data_len * self.train_size)
 
         for i in range(train_len):
             image_b64 = self.data["images"][i]
@@ -138,7 +153,11 @@ class Detector:
     def _save_model(self, uid):
         self.model.save(f"./app/computer_vision/resources/user_{uid}/detection_{uid}.pt")  # test
         save_parameters = {
-            "hyperparams": self.hyperparams,
+            "model_size": self.model_size,
+            "train_size": self.train_size,
+            "batch_size": self.batch_size,
+            "n_epochs": self.n_epochs,
+            "gpu_flg": self.gpu_flg,
             "class_names": self.class_names
         }
         with open(f"./app/computer_vision/resources/user_{uid}/detection_params_{uid}.json", "w") as f:
@@ -153,15 +172,13 @@ class Detector:
             "small": "yolov8s.pt",
             "medium": "yolov8m.pt"
         }
-        model_name = YOLO_models_mapping[self.hyperparams["model"]]
+        model_name = YOLO_models_mapping[self.model_size]
         self.model = YOLO(f"./app/computer_vision/resources/{model_name}")
 
         self.model.train(data=f"./app/computer_vision/resources/user_{uid}/yolo_data/data.yaml",
-                         batch=self.hyperparams["batch_size"],
-                         epochs=self.hyperparams["n_epochs"],
+                         batch=self.batch_size,
+                         epochs=self.n_epochs,
                          project=f"./app/computer_vision/resources/user_{uid}/")
-
-
 
     def predict(self, image_b64: str, debug: bool = False):
         """
