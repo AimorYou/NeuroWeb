@@ -92,7 +92,7 @@ async def detection(websocket: WebSocket):
             data = json.loads(data)
             imageByt64 = data['data']['image'].split(',')[1]
 
-            yolo_prediction = get_bbox_prediction(img)
+            yolo_prediction = get_bbox_prediction(imageByt64)
 
             await manager.send_json(yolo_prediction, websocket)
     except WebSocketDisconnect:

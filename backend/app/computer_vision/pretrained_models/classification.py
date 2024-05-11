@@ -1,9 +1,12 @@
 import json
 import os
+import io
 
 import torch
+import base64
 from PIL import Image
-from torch.nn.functional import InterpolationMode
+import torchvision.transforms as transforms
+from torchvision.transforms import InterpolationMode
 from torchvision.models import efficientnet_v2_l, EfficientNet_V2_L_Weights
 
 

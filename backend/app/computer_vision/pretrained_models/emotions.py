@@ -1,7 +1,9 @@
+import base64
 import json
 import os
 
 from fer import FER
+import numpy as np
 import warnings
 import cv2
 

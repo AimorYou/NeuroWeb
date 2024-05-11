@@ -5,6 +5,7 @@ from db.schemas import JSONValidation
 from s3.storage import storage
 from typing import List
 from computer_vision.trainable_models.classification import train_model, predict, _predict
+from computer_vision.trainable_models.image_classification import ImageClassification
 from computer_vision.trainable_models.faces_recognition import Recognizer
 from computer_vision.trainable_models.image_detection import Detector
 import pickle
@@ -42,10 +43,20 @@ async def get():
     return {200: "OK"}
 
 
+# @r.post("/classification/train-model")
+# async def train_classification(json_data: dict, user_id: str):
+#     class_mapping = train_model(json_data=json_data, user_id=user_id)
+#     return {200: "OK", "class_mapping": class_mapping}
+
 @r.post("/classification/train-model")
 async def train_classification(json_data: dict, user_id: str):
-    class_mapping = train_model(json_data=json_data, user_id=user_id)
-    return {200: "OK", "class_mapping": class_mapping}
+    hyperparameters = json_data.get("hyperparameters", {})
+    image_clf = ImageClassification(json_data, **hyperparameters)
+    image_clf.fit(max_epochs=10)
+    with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.pkl", "wb") as f:
+        pickle.dump(image_clf, f)
+    # storage.put_object(pickle.dumps(image_clf), f"user_{user_id}/classification/classification_{user_id}.pkl")
+    return {200: "OK"}
 
 
 @r.post("/classification/predict")
@@ -60,10 +71,10 @@ async def predict_classification_ws(websocket: WebSocket, user_id):
     try:
         # model = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pt"))
         # class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
-        with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
-            model = pickle.load(f)
-        with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
-            class_mapping = json.load(f)
+        with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.pkl", "rb") as f:
+            image_clf = pickle.load(f)
+        # with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
+        #     class_mapping = json.load(f)
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)
@@ -71,9 +82,10 @@ async def predict_classification_ws(websocket: WebSocket, user_id):
             img = data['data']['image'].split(',')[1]
             # class_mapping = data['data']["class_mapping"]
 
-            clf_prediction = _predict(model, img, class_mapping)
-
-            await manager.send_json(clf_prediction, websocket)
+            # clf_prediction = _predict(model, img, class_mapping)
+            pred_class_mapped, cls_probs_mapped = image_clf.predict(img)
+            print(cls_probs_mapped)
+            await manager.send_json(cls_probs_mapped, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 

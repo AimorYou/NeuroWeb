@@ -1,5 +1,7 @@
+import base64
 import json
 import os
+import io
 
 from PIL import Image
 from ultralytics import YOLO

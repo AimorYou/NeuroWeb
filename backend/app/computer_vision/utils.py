@@ -5,8 +5,10 @@ import io
 from torchvision.models import efficientnet_v2_s, EfficientNet_V2_S_Weights
 from torchvision.models import efficientnet_v2_m, EfficientNet_V2_M_Weights
 from torchvision.models import efficientnet_v2_l, EfficientNet_V2_L_Weights
+from torchvision.transforms import InterpolationMode
 from torch.utils.data import Dataset, DataLoader
 from torchmetrics.functional import accuracy
+import pytorch_lightning as pl
 from PIL import Image
 from torch import nn
 import torch
@@ -20,6 +22,7 @@ class CustomDataset(Dataset):
 
         for class_name, images in json_data["classes"].items():
             for img_base64 in images:
+                img_base64 = img_base64.split(',')[1]
                 img_bytes = base64.b64decode(img_base64)
                 img = Image.open(io.BytesIO(img_bytes))
                 self.data.append((img, class_name))

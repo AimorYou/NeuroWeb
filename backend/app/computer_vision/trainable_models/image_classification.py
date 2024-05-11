@@ -1,4 +1,5 @@
 import base64
+import copy
 import io
 
 from torch.utils.data import Dataset, DataLoader
@@ -8,6 +9,8 @@ import pytorch_lightning as pl
 from PIL import Image
 from torch import nn
 import torch
+
+from computer_vision.utils import image_clf_models_params, CvModule, CustomDataset
 
 
 class ImageClassification:
@@ -33,7 +36,7 @@ class ImageClassification:
         self.trained_model = CvModule(self.model, self.num_classes).to(self.device)
 
         trainer = pl.Trainer(
-            accelerator=device,
+            accelerator=str(self.device),
             max_epochs=max_epochs
         )
 
