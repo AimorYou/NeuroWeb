@@ -3,32 +3,35 @@ import os
 
 import torch
 from PIL import Image
-from torchvision.models import resnet18, ResNet18_Weights
-from torchvision.models import resnet152, ResNet152_Weights
+from torch.nn.functional import InterpolationMode
+from torchvision.models import efficientnet_v2_l, EfficientNet_V2_L_Weights
 
+
+img_clf_model = efficientnet_v2_l(weights=EfficientNet_V2_L_Weights.IMAGENET1K_V1)
+img_clf_model.eval()
 
 with open(os.path.join(os.path.dirname(__file__), "../resources/imagenet_cls_mapping.json"), "r") as f:
     imagenet_cls_mapping = json.loads(f.read())
 
 
-def get_clf_prediction(image, torch_model=resnet152, torch_weights=ResNet152_Weights.DEFAULT):
+def get_clf_prediction(image_b64):
+    preprocess = transforms.Compose([
+            transforms.Resize(480, interpolation=InterpolationMode.BICUBIC),
+            transforms.CenterCrop(480),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+    ])
 
-    # Apply transforms to the input image
-    preprocess = torch_weights.transforms()
-    image_transformed = preprocess(image).unsqueeze(0)
-
-    # Initialize the model
-    model = torch_model(weights=torch_weights)
-    model.eval()
-
-    predicted_class = torch.argmax(model(image_transformed))
+    image_transformed = preprocess(Image.open(io.BytesIO(base64.b64decode(image_b64)))).unsqueeze(0)
+    with torch.no_grad():
+        predicted_class = torch.argmax(img_clf_model(image_transformed))
 
     return imagenet_cls_mapping[str(predicted_class.item())][1]
 
 
 if __name__ == "__main__":
+    with open(os.path.join(os.path.dirname(__file__), "imageToSave.jpg"), "rb") as f:
+        raw_img = f.read()
+    img_b64 = base64.b64encode(raw_img)
 
-    img = Image.open(os.path.join(os.path.dirname(__file__), "imageToSave.png"))
-
-    print(get_clf_prediction(img, resnet18, ResNet18_Weights.DEFAULT))
-    print(get_clf_prediction(img, resnet152, ResNet152_Weights.DEFAULT))
+    print(get_clf_prediction(img_b64))

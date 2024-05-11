@@ -1,78 +1,45 @@
-import math
-import os
-import random
+import base64
 import sys
+import io
 
-import matplotlib.pyplot as plt
-import numpy as np
-import pytorch_lightning as pl
-import torch
-import torchvision
-import torchvision.transforms as transforms
+from torchvision.models import efficientnet_v2_s, EfficientNet_V2_S_Weights
+from torchvision.models import efficientnet_v2_m, EfficientNet_V2_M_Weights
+from torchvision.models import efficientnet_v2_l, EfficientNet_V2_L_Weights
+from torch.utils.data import Dataset, DataLoader
+from torchmetrics.functional import accuracy
 from PIL import Image
 from torch import nn
-from torch.nn import functional as F
-from torch.utils.data import DataLoader, Dataset
-from torchmetrics.functional import accuracy
-from torchvision.datasets import ImageFolder
-from tqdm import tqdm
-from torchvision.transforms import Compose, Normalize, Resize, ToTensor
-from torchvision.models import resnet18, ResNet18_Weights
-from torchvision.models import resnet152, ResNet152_Weights
-
-LAST_BLOCK_MAPPING = {
-    resnet18: "layer4.1",
-    resnet152: "layer4.2"
-}
+import torch
 
 
-def get_gpu_flag():
-    return torch.cuda.is_available()
+class CustomDataset(Dataset):
+    def __init__(self, json_data, class_mapping, transform=None):
+        self.data = []
+        self.transform = transform
+        self.class_mapping = class_mapping
 
+        for class_name, images in json_data["classes"].items():
+            for img_base64 in images:
+                img_bytes = base64.b64decode(img_base64)
+                img = Image.open(io.BytesIO(img_bytes))
+                self.data.append((img, class_name))
 
-def seed_everything(seed):
-    # Фискирует максимум сидов.
-    # Это понадобится, чтобы сравнение оптимизаторов было корректным
-    random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.backends.cudnn.deterministic = True
+    def __len__(self):
+        return len(self.data)
 
+    def __getitem__(self, idx):
+        img, class_name = self.data[idx]
+        if self.transform:
+            img = self.transform(img)
 
-def prepare_model(torch_model=resnet18,
-                  torch_weights=ResNet18_Weights,
-                  num_classes=2,
-                  train_strategy="last_block"):
-
-    model = torch_model(weights=torch_weights, num_classes=1000)
-
-    for param in model.parameters():
-        param.requires_grad = False
-
-    model.fc = nn.Linear(2048, num_classes)
-
-    if train_strategy == "last_block":
-        for layer_name, layer_param in model.named_parameters():
-            last_layer_name = LAST_BLOCK_MAPPING[torch_model]
-            if last_layer_name in layer_name:
-                layer_param.requires_grad = True
-    elif train_strategy == "last_layer":
-        model.fc.requires_grad = True
-    elif train_strategy == "whole_network":
-        for _, layer_param in model.named_parameters():
-            layer_param.requires_grad = True
-    else:
-        raise Exception("Incorrect train_strategy. There are three options: last_layer and last_block, whole_network")
-
-    return model
+        return img, self.class_mapping[class_name]
 
 
 class CvModule(pl.LightningModule):
-    def __init__(self, model) -> None:
+    def __init__(self, model, num_classes) -> None:
         super().__init__()
         self.model = model
+        self.num_classes = num_classes
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
         self.loss = nn.CrossEntropyLoss()
@@ -89,64 +56,43 @@ class CvModule(pl.LightningModule):
         images, target = train_batch
         preds = self.forward(images)
         loss = self.loss(preds, target)
-        acc = accuracy(torch.argmax(preds, dim=-1).long(), target.long())
+        acc = accuracy(torch.argmax(preds, dim=-1).long(),
+                       target.long(), task="multiclass",
+                       num_classes=self.num_classes)
+
         self.log("train_accuracy", acc, prog_bar=True)
         self.log("train_loss", loss, prog_bar=True)
+        self.log("batch_idx", batch_idx, prog_bar=True)
+
         return loss
 
-    def validation_step(self, val_batch, batch_idx) -> None:
-        images, target = val_batch
-        preds = self.forward(images)
-        loss = self.loss(preds, target)
-        acc = accuracy(torch.argmax(preds, dim=-1).long(), target.long())
-        self.log("val_loss", loss, prog_bar=True)
-        self.log("accuracy", acc, prog_bar=True)
 
-
-def transform_to_dataloader(param_1, param_2, param_3):
-    """
-    :param param_1:
-    :param param_2:
-    :param param_3:
-    :return int:
-    """
-
-    train_transform = Compose(
-        [
-            transforms.RandomRotation(degrees=15),
-            transforms.RandomVerticalFlip(),
-            transforms.RandomHorizontalFlip(),
-            ToTensor(),
-            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-        ])
-    val_transform = Compose(
-        [
-            ToTensor(),
-            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-        ])
-
-    train_dataset = ImageFolder('/content/dataset/dataset/train', transform=train_transform)
-    val_dataset = ImageFolder('/content/dataset/dataset/val', transform=val_transform)
-    # REPLACE ./dataset/dataset WITH THE FOLDER WHERE YOU DOWNLOADED AND UNZIPPED THE DATASET
-
-    train_dataloader = DataLoader(train_dataset, batch_size=256, shuffle=True)  # YOUR CODE HERE
-    val_dataloader = DataLoader(val_dataset, batch_size=256)  # YOUR CODE HERE
-
-    return 123
-
-
-if __name__ == "__main__":
-    test_model = prepare_model(resnet18, ResNet18_Weights)
-
-    torch.cuda.empty_cache()
-    device = "cuda:0" if torch.cuda.is_available() else "cpu"
-
-    model2 = CvModule(test_model).to(device)  # YOUR CODE HERE
-    trainer2 = pl.Trainer(
-        accelerator="cpu",
-        max_epochs=20
-    )
-    trainer2.fit(model2, train_dataloader, val_dataloader)
-
-    print(seed_everything(123456))
-    print(torch.cuda.is_available())
+image_clf_models_params = {
+    "small": {
+        "model": efficientnet_v2_s(weights=EfficientNet_V2_S_Weights.IMAGENET1K_V1, num_classes=1000),
+        "last_layer_name": "features.7",
+        "resize_size": 384,
+        "crop_size": 384,
+        "mean": (0.485, 0.456, 0.406),
+        "std": (0.229, 0.224, 0.225),
+        "interpolation": InterpolationMode.BILINEAR
+    },
+    "medium": {
+        "model": efficientnet_v2_m(weights=EfficientNet_V2_M_Weights.IMAGENET1K_V1, num_classes=1000),
+        "last_layer_name": "features.8",
+        "resize_size": 480,
+        "crop_size": 480,
+        "mean": (0.485, 0.456, 0.406),
+        "std": (0.229, 0.224, 0.225),
+        "interpolation": InterpolationMode.BILINEAR
+    },
+    "large": {
+        "model": efficientnet_v2_l(weights=EfficientNet_V2_L_Weights.IMAGENET1K_V1, num_classes=1000),
+        "last_layer_name": "features.8",
+        "resize_size": 480,
+        "crop_size": 480,
+        "mean": (0.5, 0.5, 0.5),
+        "std": (0.5, 0.5, 0.5),
+        "interpolation": InterpolationMode.BICUBIC
+    }
+}
