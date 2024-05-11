@@ -23,7 +23,7 @@ class ImageClassification:
         self.cls_mapping = dict(enumerate(json_data["classes"].keys()))
         self.num_classes = len(self.cls_mapping)
 
-        self.model_params = models_params[model_size]
+        self.model_params = image_clf_models_params[model_size]
         self.dataloader = self.json_to_dataloader(json_data, batch_size, augmentation_flg)
         self.model = self.prepare_model(train_strategy)
 
