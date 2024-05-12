@@ -16,30 +16,31 @@ class Recognizer:
     face_names: List[str]
     face_encodings: List[np.ndarray]
 
-    def __init__(self, json_data: dict) -> None:
+    def __init__(self,
+                 json_data: dict,
+                 num_jitters: int = 1,
+                 tolerance: float = 0.6,
+                 model_size: str = "small") -> None:
         """
         Constructor parses input json containing known faces and generates encodings for them
 
         :param json_data: input json from backend
+        :param num_jitters: how many times to re-sample the face when calculating encoding
+        :param model_size: which model to use. “large” or “small”
+        :param tolerance: threshold for matching a person to a particular person (from 0 to 1)
         """
+        self.num_jitters = num_jitters
+        self.model_size = model_size
+        self.tolerance = tolerance
+
         self.face_images = []
         self.face_names = []
         self.success = True
         self.failed_on = ""
+
         self._handle_json(json_data=json_data)
         self.face_encodings = []
-        for face_image, face_name in zip(self.face_images, self.face_names):
-            # Take only first face occurance
-            face_encoding = face_recognition.face_encodings(face_image,
-                                                            num_jitters=1,
-                                                            # How many times to re-sample the face when calculating encoding
-                                                            model='small')  # which model to use. “large” or “small”
-            if face_encoding:
-                self.face_encodings.append(face_encoding[0])
-            else:
-                self.success = False
-                self.failed_on = face_name
-                break
+        self._encode_faces()
 
     def _handle_json(self, json_data: dict):
         """
@@ -57,11 +58,27 @@ class Recognizer:
                 self.face_names.append(class_name)
                 self.face_images.append(img_np)
 
-    def recognize(self, frame: str) -> dict[str, Union[bool, list]]:
+    def _encode_faces(self) -> None:
+        """
+        Method encodes faces and fills self.face_encodings list
+        """
+        for face_image, face_name in zip(self.face_images, self.face_names):
+            # Take only first face occurance
+            face_encoding = face_recognition.face_encodings(face_image,
+                                                            num_jitters=self.num_jitters,
+                                                            model=self.model_size)
+            if face_encoding:
+                self.face_encodings.append(face_encoding[0])
+            else:
+                self.success = False
+                self.failed_on = face_name
+                break
+
+    def recognize(self, image_b64: str) -> dict[str, Union[bool, list]]:
         """
         Method recognizes known people from the given frame
 
-        :param frame: cv2 Image
+        :param image_b64: image in base64 format
         :return: final answer
         """
         json_out = {
@@ -69,13 +86,13 @@ class Recognizer:
             "recognized_people": []
         }
 
-        img_bytes = base64.b64decode(frame)
+        img_bytes = base64.b64decode(image_b64)
         img_pil = Image.open(io.BytesIO(img_bytes))
         frame = np.array(img_pil)
 
         encodings = face_recognition.face_encodings(frame)
         for enc in encodings:
-            matches = face_recognition.compare_faces(self.face_encodings, enc, tolerance=0.6)
+            matches = face_recognition.compare_faces(self.face_encodings, enc, tolerance=self.tolerance)
 
             match_idx = None
             for idx, match in enumerate(matches):
@@ -109,8 +126,4 @@ if __name__ == "__main__":
     rec = Recognizer(face_rec_json)
 
     test_image = "base64_image"
-    img_bytes = base64.b64decode(test_image)
-    img_pil = Image.open(io.BytesIO(img_bytes))
-    img_np = np.array(img_pil)
-
-    print(rec.recognize(img_np))  # {'recognized_flg': True, 'recognized_people': ['Арсений Пивоваров', 'Софья Мосина']}
+    print(rec.recognize(test_image))  # {'recognized_flg': True, 'recognized_people': ['Арсений П', 'Софья М']}

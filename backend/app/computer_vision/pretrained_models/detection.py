@@ -1,5 +1,7 @@
+import base64
 import json
 import os
+import io
 
 from PIL import Image
 from ultralytics import YOLO
@@ -34,7 +36,8 @@ yolo_mapping = [("person", (67, 161, 255)), ("bicycle", (19, 222, 24)), ("car", 
                 ("hair drier", (119, 24, 48)), ("toothbrush", (73, 8, 110))]
 
 
-def get_bbox_prediction(image, debug=False):
+def get_bbox_prediction(image_b64, debug=False):
+    image = Image.open(io.BytesIO(base64.b64decode(image_b64)))
     yolo_results = yolo_model.predict(image, verbose=debug)
     structured_result = {}
 
@@ -52,7 +55,9 @@ def get_bbox_prediction(image, debug=False):
 
 
 if __name__ == "__main__":
-    img = Image.open(os.path.join(os.path.dirname(__file__), "imageToSave.png"))
-    results = get_bbox_prediction(img, debug=True)
+    with open(os.path.join(os.path.dirname(__file__), "imageToSave.jpg"), "rb") as f:
+        raw_img = f.read()
+    img_b64 = base64.b64encode(raw_img)
 
+    results = get_bbox_prediction(img_b64, debug=True)
     print(json.dumps(results, indent=4))

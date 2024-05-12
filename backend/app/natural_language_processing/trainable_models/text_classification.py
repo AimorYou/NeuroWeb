@@ -23,7 +23,9 @@ storage_mapping = {
 
 
 class TextClassification:
-    def __init__(self, gpu_flg=True, language="EN"):
+    def __init__(self,
+                 gpu_flg=True,
+                 language="EN"):
         self.device = torch.device("cuda" if torch.cuda.is_available() and gpu_flg else "cpu")
 
         available_langs = list(distilbert_mapping.keys())
@@ -37,18 +39,18 @@ class TextClassification:
         self.cls_mapping = None
         self.clf = None
 
-    def prepare_data(self, df, text_col="text", target_col="category", test_size=0.2):
+    def prepare_data(self, df, text_col="text", target_col="category", batch_size=64, train_size=0.2):
 
         self.cls_mapping = dict(enumerate(df[target_col].astype("category").cat.categories))
 
         df["label"] = df[target_col].astype("category").cat.codes
         dataset = (Dataset.from_pandas(df[[text_col, "label"]])
-                   .train_test_split(test_size=test_size))
+                   .train_test_split(train_size=train_size))
 
-        dataset_encoded = dataset.map(self._tokenize, batched=True, batch_size=64)
+        dataset_encoded = dataset.map(self._tokenize, batched=True, batch_size=batch_size)
 
         dataset_encoded.set_format("torch", columns=["input_ids", "attention_mask", "label"])
-        dataset_hidden = dataset_encoded.map(self._extract_hidden_states, batched=True, batch_size=64)
+        dataset_hidden = dataset_encoded.map(self._extract_hidden_states, batched=True, batch_size=batch_size)
 
         X_train = np.array(dataset_hidden["train"]["hidden state"])
         X_test = np.array(dataset_hidden["test"]["hidden state"])
@@ -57,7 +59,7 @@ class TextClassification:
 
         return X_train, X_test, y_train, y_test
 
-    def prepare_split_data(self, df_train, df_test, text_col="text", target_col="category"):
+    def prepare_split_data(self, df_train, df_test, text_col="text", target_col="category", batch_size=64):
 
         self.cls_mapping = dict(enumerate(df_train[target_col].astype("category").cat.categories))
 
@@ -71,10 +73,10 @@ class TextClassification:
         dataset['train'] = dataset_train
         dataset['test'] = dataset_test
 
-        dataset_encoded = dataset.map(self._tokenize, batched=True, batch_size=64)
+        dataset_encoded = dataset.map(self._tokenize, batched=True, batch_size=batch_size)
 
         dataset_encoded.set_format("torch", columns=["input_ids", "attention_mask", "label"])
-        dataset_hidden = dataset_encoded.map(self._extract_hidden_states, batched=True, batch_size=64)
+        dataset_hidden = dataset_encoded.map(self._extract_hidden_states, batched=True, batch_size=batch_size)
 
         X_train = np.array(dataset_hidden["train"]["hidden state"])
         X_test = np.array(dataset_hidden["test"]["hidden state"])
@@ -83,12 +85,12 @@ class TextClassification:
 
         return X_train, X_test, y_train, y_test
 
-    def fit(self, X_train, X_test, y_train, y_test):
+    def fit(self, X_train, X_test, y_train, y_test, max_iter=3000):
 
         if self.cls_mapping is None:
             raise Exception("You need to prepare your data first")
 
-        lr_clf = LogisticRegression(max_iter=3000)
+        lr_clf = LogisticRegression(max_iter=max_iter)
         lr_clf.fit(X_train, y_train)
 
         self.clf = lr_clf
@@ -131,10 +133,11 @@ if __name__ == "__main__":
 
     text_clf = TextClassification(gpu_flg=True, language="EN")
     X_train, X_test, y_train, y_test = text_clf.prepare_data(df_emotions,
+                                                             batch_size=64,
                                                              text_col="text",
                                                              target_col="label",
-                                                             test_size=0.2)
-    test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test)
+                                                             train_size=0.8)
+    test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test, max_iter=3000)
     print(f"Given accuracy on test part: {test_accuracy}")
     print(text_clf.predict("I hate everything"))
 
