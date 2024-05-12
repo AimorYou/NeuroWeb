@@ -1,1 +1,1 @@
-export { default as TextClassificationForm } from './TextClassification'
+export { default as TextClassification } from './TextClassification'

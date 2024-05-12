@@ -166,7 +166,7 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos, h
             <h3>Загруженный файл .csv:</h3>
             {uploadedTxtFile && (
               <div>
-                <span>{uploadedTxtFile.name}</span>
+                <li>{uploadedTxtFile.name}</li>
               </div>
             )}
           </div>

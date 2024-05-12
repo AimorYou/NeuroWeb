@@ -60,7 +60,7 @@ function Pricing() {
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/detection'>
+            <PricingCard to='/text-classification'>
               <PricingCardInfo>
               <PricingCardIcon src={Detect} />
                 <PricingCardPlan>Классификация текстов</PricingCardPlan>

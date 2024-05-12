@@ -138,6 +138,7 @@
     justify-content: space-evenly;
   }
 
+.advanced-options-btn:hover,
 .train-model-btn:hover,
 .export-model-btn:hover
 {
@@ -169,7 +170,7 @@
 
 .preview-progress-bars {
   flex: 1;
-  margin-left: 60px; /* Расстояние между камерой и прогресс-барами */
+  margin-left: 60px; 
 }
 
 *,
@@ -237,3 +238,116 @@ body {
   top: 2px;
   color: #fff;
 }
+
+.advanced-options-btn {
+  background-color: #6C58E9;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 10px 20px;
+  margin-top: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.advanced-options-content {
+  background-color: #6C58E9;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  color: #6C58E9;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.advanced-options-content select {
+  background-color: #6C58E9;
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  margin-top: 5px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+
+.advanced-options {
+  margin-bottom: 10px;
+}
+
+.advanced-options select {
+  color: #fff;
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+
+.advanced-options-btn:hover .fa-chevron-up,
+.advanced-options-btn:hover .fa-chevron-down {
+    color: #fff;
+}
+
+.advanced-options-content select:hover,
+.advanced-options-content select:focus {
+  outline: none;
+  background-color: #a296f6; 
+}
+
+.select-container {
+  display: flex;
+  align-items: center;
+}
+
+.name-and-hint {
+  display: flex;
+  align-items: center;
+}
+
+.tooltip {
+  color: #fff;
+  position: relative;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: #612DCA;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip svg {
+  font-size: 12px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.param-label {
+  color: white;
+  margin-top: 5px;
+  font-size: 12px;
+}
+

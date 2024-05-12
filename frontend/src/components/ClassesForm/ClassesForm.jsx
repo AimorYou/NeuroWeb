@@ -1,6 +1,8 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './ClassesForm.css';
@@ -9,15 +11,37 @@ import axios from 'axios';
 
 const ClassesForm = () => {
   const webcamRef = useRef(null);
-  const [forms, setForms] = useState([{ id: 1, name: 'Класс 1', photos: [] }, { id: 2, name: 'Класс 2', photos: [] }]);
+  const [forms, setForms] = useState([
+    { id: 1, name: 'Класс 1', photos: [] },
+    { id: 2, name: 'Класс 2', photos: [] }
+  ]);
   const [formIdCounter, setFormIdCounter] = useState(3);
   const [showCamera, setShowCamera] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [capturedPhotos, setCapturedPhotos] = useState([]);
-  const [classMapping, setClassMapping] = useState({});
   const [freezeCamera, setFreezeCamera] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [classMapping, setClassMapping] = useState({});
   const [videoStopped, setVideoStopped] = useState(false);
+  const [batchSize, setBatchSize] = useState(2);
+  const [modelSize, setModelSize] = useState('small');
+  const [trainStrategy, setTrainStrategy] = useState('last_layer and last_block');
+  const [augmentationFlag, setAugmentationFlag] = useState(true);
+  const [gpuFlag, setGpuFlag] = useState(true);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const hyperParametersDescription = {
+    batchSize: `Размер пакета для обучения. Определяет, сколько примеров данных будет обработано за одну итерацию.
+      Размер пакета - один из важнейших гиперпараметров в обучении глубокому обучению, который представляет собой количество образцов, используемых в одном прямом и обратном проходе через сеть, и оказывает непосредственное влияние на точность и вычислительную эффективность процесса обучения. Размер партии можно рассматривать как компромисс между точностью и скоростью. Большие объемы партий могут ускорить процесс обучения, но могут привести к снижению точности и чрезмерной подгонке, в то время как меньшие объемы партий могут обеспечить более высокую точность, но могут быть вычислительно дорогими и отнимать много времени.
+      Размер партии также может повлиять на сходимость модели, то есть повлиять на процесс оптимизации и скорость обучения модели. Небольшие партии могут быть более восприимчивы к случайным колебаниям обучающих данных, в то время как большие партии более устойчивы к этим колебаниям, но могут сходиться медленнее.
+      Важно отметить, что не существует универсального ответа, когда речь идет о выборе размера партии, поскольку идеальный размер зависит от нескольких факторов, включая размер обучающего набора данных, сложность модели и доступные вычислительные ресурсы.`,
+    modelSize: `Размер модели для обучения. Определяет, какой размер модели будет использоваться.
+      Размер модели определяет количество параметров в нейронной сети, что влияет на ее сложность и производительность. Большие модели могут иметь большее количество параметров, что может привести к более высокой точности, но также требует больше вычислительных ресурсов. Маленькие модели могут быть более компактными и быстрыми, но могут иметь меньшую точность.`,
+    trainStrategy: `Стратегия обучения. Определяет, какие части сети будут обучены.
+      Стратегия обучения определяет, какие части нейронной сети будут обучены в процессе. Это может быть обучение только последнего слоя, последнего блока или всей сети. Каждая стратегия имеет свои преимущества и недостатки, и выбор стратегии зависит от конкретной задачи и требований.`,
+    augmentationFlag: `Флаг аугментации данных. Указывает, будет ли применяться аугментация данных в процессе обучения.
+      Аугментация данных - это техника, при которой обучающие изображения модифицируются с целью создания новых образцов данных. Это может помочь улучшить обобщающую способность модели и сделать ее менее подверженной переобучению.`,
+    gpuFlag: `Использование GPU для обучения. Указывает, будет ли обучение выполняться на GPU.
+      GPU обладает большей вычислительной мощностью по сравнению с CPU и может значительно ускорить процесс обучения нейронных сетей, особенно для крупных моделей и больших объемов данных. Однако это требует наличия совместимого с GPU оборудования и дополнительной конфигурации.`
+  };
 
 
   const addForm = () => {
@@ -41,7 +65,6 @@ const ClassesForm = () => {
     });
   };
 
-  
   const TakePhoto = formId => {
     const capturedPhoto = webcamRef.current.getScreenshot();
 
@@ -68,66 +91,53 @@ const ClassesForm = () => {
 
   const toggleFreezeCamera = () => {
     setFreezeCamera(prevState => !prevState);
-    if (socket) {
-      socket.close();
-      setSocket(null);
-    }
-    // Останавливаем видео, если оно не остановлено; иначе, запускаем его
-    setVideoStopped(prevState => !prevState); 
+
+    setVideoStopped(prevState => !prevState);
   };
 
   const runFaceDetectorModel = async () => {
-
-    // const model = await blazeface.load()
-    console.log("FaceDetection Model is Loaded..") 
+    console.log("FaceDetection Model is Loaded..")
     setInterval(() => {
-      // detect(model);
       detect("")
-    }, 1000);
- 
-  }
+    }, 100);
+  };
 
-  const detect = async() => {
+  const detect = async () => {
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
+      webcamRef.current.video.readyState === 4 &&
+      socket &&
+      socket.readyState === WebSocket.OPEN
     ) {
-      // Get Video Properties
       const video = webcamRef.current.video;
       const videoWidth = webcamRef.current.video.videoWidth;
       const videoHeight = webcamRef.current.video.videoHeight;
-
-      // Set video width
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1')
-      var imageSrc = webcamRef.current.getScreenshot()
+      var imageSrc = webcamRef.current.getScreenshot();
       var apiCall = {
         event: "localhost:subscribe",
-        data: { 
+        data: {
           'image': imageSrc,
           'class_mapping': classMapping
         },
       };
-      socket.onopen = () => socket.send(JSON.stringify(apiCall))
-      // getWebSocket().send(JSON.stringify(apiCall))
-      
-      // getWebSocket().onmessage 
-      socket.onmessage = function(event) {
+      socket.send(JSON.stringify(apiCall));
+
+      socket.onmessage = function (event) {
         var predictions = JSON.parse(event.data)
         forms.forEach(form => {
           var element = document.getElementById(form.name);
           if (element) {
-            element.value = Math.round(predictions[form.name]*100);
+            element.value = Math.round(predictions[form.name] * 100);
           } else {
             console.error(`Element with id ${form.name} not found`);
           }
         });
         console.log(predictions);
       }
-      
     }
   };
 
@@ -141,117 +151,215 @@ const ClassesForm = () => {
         return form;
       });
     });
-
-    // Log forms with photos for testing
     console.log(forms);
   };
 
 
-  const sendJSON = async() => {
+  const sendJSON = async () => {
     const classPhotos = forms.reduce((accumulator, form) => {
       accumulator[form.name] = form.photos;
       return accumulator;
     }, {});
-    
-    const obj = { classes: classPhotos};
+
+    const hyperparameters = {
+      batch_size: batchSize,
+      model_size: modelSize,
+      train_strategy: trainStrategy,
+      augmentation_flg: augmentationFlag,
+      gpu_flg: gpuFlag
+    };
+
+    const obj = { classes: classPhotos, hyperparameters };
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = 'captured_photos.json';
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-    // URL.revokeObjectURL(url);
 
-    // Send classPhotos to the server or further processing
     console.log(classPhotos);
-    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/classification/train-model?user_id=1'; // как посылать uid
+    const apiUrl = 'http://0.0.0.0:8888/api/cv/train/classification/train-model?user_id=1';
 
-      try {
-        // Make a POST request to your backend server with the JSON data
-        const response = await axios.post(apiUrl, blob, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-        console.log('Response:', response.data);
-        if (response.data && response.data.class_mapping) {
-          console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
-          setClassMapping(response.data.class_mapping)
-        } else {
-          console.log('Error: No class mapping received');
+    try {
+      const response = await axios.post(apiUrl, blob, {
+        headers: {
+          'Content-Type': 'application/json',
         }
-        setShowCamera(true)
-      } catch (error) {
-        console.error('Error:', error);
+      });
+      console.log('Response:', response.data);
+      if (response.data && response.data.class_mapping) {
+        console.log('Updating classMapping:', response.data.class_mapping);
+        setClassMapping(response.data.class_mapping);
+        const socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1');
+        setSocket(socket);
+      } else {
+        console.log('Error: No class mapping received');
       }
-      
-      
+      setShowCamera(true)
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  useEffect(()=>{runFaceDetectorModel()}, [classMapping]);
+  useEffect(() => {
+    runFaceDetectorModel();
+  }, [classMapping]);
+
+
+
   useEffect(() => {
     if (webcamRef.current) {
       if (videoStopped) {
-        webcamRef.current.video.pause(); // Приостанавливаем видео
+        webcamRef.current.video.pause();
       } else {
-        webcamRef.current.video.play(); // Запускаем видео
+        webcamRef.current.video.play();
       }
     }
   }, [videoStopped]);
 
+
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
+
   const disableButtons = forms.length < 2 || forms.some(form => form.photos.length === 0);
+
+  const formatDescription = (description) => {
+    return description.split('\n').map((paragraph, index) => (
+      <React.Fragment key={index}>
+        <p>{paragraph}</p>
+        {index !== description.split('\n').length - 1 && <br />} {/* Добавляем <br />, если это не последний абзац */}
+      </React.Fragment>
+    ));
+  };
+
+  const renderDescriptionTooltip = (paramName) => {
+    return (
+      <div className="tooltip">
+        <FontAwesomeIcon icon={faQuestionCircle} className="question-icon" />
+        <span className="tooltiptext">{formatDescription(hyperParametersDescription[paramName])}</span>
+      </div>
+    );
+  };
 
   return (
     <React.Fragment>
       <div className='text-to-show'>
-          Функционал обучения собственных моделей на мобильных устройствах не доступен. Переключитесь, пожалуйста, на ПК.
+        Функционал обучения собственных моделей на мобильных устройствах не доступен. Переключитесь, пожалуйста, на ПК.
       </div>
       <div className="hide">
-      <div className='horizontal'>
-      <div>
-      {forms.map(form => (
-        <div key={form.id}>
-          {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
-          <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)}/>
-        </div>
-      ))}
-      <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
-      </div>
-      <div className='train-model-card'>
-        <div className='heading'>Обучение</div>
-        <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
-      </div>
-          <div className='preview-model-card'>
-              <div className='preview'>Превью
-              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon/>Экспортировать модель</button>
+        <div className='horizontal'>
+          <div>
+            {forms.map(form => (
+              <div key={form.id}>
+                <Camera formId={form.id} formName={form.name} renameForm={renameForm} delForm={deleteForm} handleSavePhotos={handleSavePhotos} TakePhoto={() => TakePhoto(form.id)} />
               </div>
-                <div className='horizontal-line' />
-                {showCamera && (
-                  <div>
-                    <label className="toggle">
-                        <span className="toggle-label">{freezeCamera ? "Выкл" : "Вкл"}</span>
-                        <input class="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera}/>
-                        <div className="toggle-switch"></div>
-                      </label>
-                    <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
-                    <div className="preview-progress-bars">
-                      {forms.map(form => (
-                        <div key={form.id}>
-                          <label style={{color:'white'}}>{form.name} </label>
-                          <progress id={form.name} value={0} max={100} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {!showCamera && (
-                <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>
-                )}
+            ))}
+            <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
           </div>
-      </div>
+          <div className='train-model-card'>
+            <div className='heading'>Обучение</div>
+            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <div className='horizontal-line' />
+            <div className="advanced-options">
+              <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>
+              {showOptions && (
+                <div className="advanced-options-content">
+                  <div className='name-and-hint'>
+                    <label htmlFor="batchSize" className="param-label">Размер пакета</label>
+                    {renderDescriptionTooltip('batchSize')}
+                  </div>
+
+                  <div className="select-container">
+                    <select id="batchSize" onChange={(e) => setBatchSize(Number(e.target.value))}>
+                      <option value={2}>2</option>
+                      <option value={4}>4</option>
+                      <option value={8}>8</option>
+                      <option value={16}>16</option>
+                      <option value={32}>32</option>
+                      <option value={64}>64</option>
+                    </select>
+
+                  </div>
+                  <div className='name-and-hint'>
+                    <label htmlFor="modelSize" className="param-label">Размер модели</label>
+                    {renderDescriptionTooltip('modelSize')}
+                  </div>
+
+                  <div className="select-container">
+                    <select id="modelSize" onChange={(e) => setModelSize(e.target.value)}>
+                      <option value="small">Small</option>
+                      <option value="medium">Medium</option>
+                      <option value="large">Large</option>
+                    </select>
+                  </div>
+                  <div className='name-and-hint'>
+                    <label htmlFor="trainStrategy" className="param-label">Стратегия обучения</label>
+                    {renderDescriptionTooltip('trainStrategy')}
+                  </div>
+
+                  <div className="select-container">
+                    <select id="trainStrategy" onChange={(e) => setTrainStrategy(e.target.value)}>
+                      <option value="last_layer">Last Layer</option>
+                      <option value="last_block">Last Block</option>
+                      <option value="whole_network">Whole Network</option>
+                    </select>
+
+                  </div>
+                  <div className='name-and-hint'>
+                    <label htmlFor="augmentationFlag" className="param-label">Aугментация данных</label>
+                    {renderDescriptionTooltip('augmentationFlag')}
+                  </div>
+
+                  <div className="select-container">
+                    <select id="augmentationFlag" onChange={(e) => setAugmentationFlag(e.target.value === 'True')}>
+                      <option value={true}>True</option>
+                      <option value={false}>False</option>
+                    </select>
+
+                  </div>
+                  <div className='name-and-hint'>
+                    <label htmlFor="gpuFlag" className="param-label">GPU для обучения</label>
+                    {renderDescriptionTooltip('gpuFlag')}
+                  </div>
+                  <div className="select-container">
+                    <select id="gpuFlag" onChange={(e) => setGpuFlag(e.target.value === 'True')}>
+                      <option value={true}>True</option>
+                      <option value={false}>False</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className='preview-model-card'>
+            <div className='preview'>Превью
+              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
+            </div>
+            <div className='horizontal-line' />
+            {showCamera && (
+              <div>
+                <label className="toggle">
+                  <span className="toggle-label">{freezeCamera ? "Выкл" : "Вкл"}</span>
+                  <input className="toggle-checkbox" type="checkbox" onClick={toggleFreezeCamera} />
+                  <div className="toggle-switch"></div>
+                </label>
+                <Webcam ref={webcamRef} className="webcam" />
+                <div className="preview-progress-bars">
+                  {forms.map(form => (
+                    <div key={form.id}>
+                      <label style={{ color: 'white' }}>{form.name} </label>
+                      <progress id={form.name} value={0} max={100} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!showCamera && (
+              <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>
+            )}
+          </div>
+        </div>
       </div>
     </React.Fragment>
   );

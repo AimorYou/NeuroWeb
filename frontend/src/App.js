@@ -24,6 +24,7 @@ import CLML from './pages/CLML';
 import Classification from './pages/Classification';
 import Emotions from './pages/Emotions';
 import Detection from './pages/Detection';
+import TextClassificationPretrained from './pages/TextClassificationPretrained/TextClassificationPretrained';
 // CV
 import { Classes } from './pages/Classes';
 import { FaceRecognition } from './pages/FaceRecognition';
@@ -62,6 +63,7 @@ function App() {
           <Route path='/classification' element={<Classification/>} />
           <Route path='/emotions' element={<Emotions/>} />
           <Route path='/detection' element={<Detection/>} />
+          <Route path='/text-classification' element={<TextClassificationPretrained/>} />
 
           <Route path="/classes" element={<Classes />} />
           <Route path="/face-recognition" element={<FaceRecognition />} />

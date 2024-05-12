@@ -1,5 +1,6 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
@@ -9,10 +10,11 @@ import axios from 'axios';
 
 const TextClassificationForm = () => {
   const [forms, setForms] = useState([{ id: 1, name: 'Имя 1', photos: [] }]);
-  const [showCamera, setShowCamera] = useState(false);
-  const [inputText, setInputText] = useState('');
+  const [showCamera, setShowCamera] = useState(true);
+  const [inputText, setInputText] = useState('я не люблю пиписины');
   const [classificationResult, setClassificationResult] = useState('');
   const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
+  const [socket, setSocket] = useState(null);
 
   const handleSaveTxtFiles = (formId, txtFiles) => {
     setUploadedTxtFiles((prevTxtFiles) => [
@@ -21,48 +23,76 @@ const TextClassificationForm = () => {
     ]);
   };
 
-
   const handleTextChange = (e) => {
     setInputText(e.target.value);
   };
 
-  const handleClassify = async () => {
-    try {
-      const response = await axios.post('http://0.0.0.0:8888/api/nlp/train/classification/predict?user_id=1', { text: inputText });
-      setClassificationResult(response.data.result);
-      console.log(response.data.result)
-    } catch (error) {
-      console.error('Error:', error);
-    }
+
+  const runFaceDetectorModel = async () => {
+    console.log("FaceDetection Model is Loaded..") 
+    setInterval(() => {
+      detect("")
+    }, 1000);
   };
 
+  const detect = async() => {
+
+    
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      var apiCall = {
+        event: "localhost:subscribe",
+        data: {
+          text: "inputText"
+        },
+      };
+      socket.send(JSON.stringify(apiCall));
+    } else {
+      console.error("WebSocket is not open yet.");
+    }
+    
+  };
+  
+
   const sendJSON = async () => {
-
     const formData = new FormData();
-
     uploadedTxtFiles.forEach((uploadedTxtFile) => {
       const blob = new Blob([uploadedTxtFile.txtFiles.content], { type: 'text/csv' });
       const file = new File([blob], `${uploadedTxtFile.txtFiles.name}`, { type: 'text/csv' });
-      console.log(file)
       formData.append(`file`, file);
-  });
+    });
 
- 
     const apiUrl = `http://0.0.0.0:8888/api/nlp/train/classification/train-model?user_id=1`; // как посылать uid
     try {
-
       const response = await axios.post(apiUrl, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         }
       });
       console.log('Response:', response.data);
-      setShowCamera(true)
+      setShowCamera(true);
+      const socket = new WebSocket('ws://0.0.0.0:8888/api/nlp/train/ws/classification/1');
+      setSocket(socket);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
+  const handleClassify = () => {
+    detect();
+  };
+
+  useEffect(() => {
+    runFaceDetectorModel();
+  }, []);
+
+  // useEffect(() => {
+  //   return () => {
+  //     if (socket) {
+  //       socket.close();
+  //     }
+  //   };
+  // }, [socket]);
 
   return (
     <React.Fragment>
@@ -74,7 +104,6 @@ const TextClassificationForm = () => {
           <div>
             {forms.map(form => (
               <div key={form.id}>
-                {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
                 <Camera formId={form.id} formName={form.name} handleSaveTxtFiles={handleSaveTxtFiles}/>
               </div>
             ))}
@@ -97,11 +126,10 @@ const TextClassificationForm = () => {
                   onChange={handleTextChange}
                 />
                 <button className='classify-btn' onClick={handleClassify}>Классифицировать</button>
-                {classificationResult && (
-                  <div className='result'>{classificationResult}</div>
+                {(
+                  <div className='result'>Результат классификации - </div>
                 )}
               </div>
-
             )}
             {!showCamera && (
               <div className='preview-text'>Вы должны обучить модель слева, прежде чем сможете просмотреть ее здесь.</div>

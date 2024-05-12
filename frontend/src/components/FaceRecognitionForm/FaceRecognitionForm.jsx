@@ -82,11 +82,7 @@ const FaceRecognitionForm = () => {
 
   const toggleFreezeCamera = () => {
     setFreezeCamera(prevState => !prevState);
-    if (socket) {
-      socket.close();
-      setSocket(null);
-    }
-    // Останавливаем видео, если оно не остановлено; иначе, запускаем его
+    
     setVideoStopped(prevState => !prevState);
   };
 
@@ -97,7 +93,7 @@ const FaceRecognitionForm = () => {
     setInterval(() => {
       // detect(model);
       detect("")
-    }, 1000);
+    }, 100);
 
   }
 
@@ -106,7 +102,9 @@ const FaceRecognitionForm = () => {
       !freezeCamera &&
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
+      webcamRef.current.video.readyState === 4 &&
+      socket &&
+      socket.readyState === WebSocket.OPEN
     ) {
       // Get Video Properties
       const video = webcamRef.current.video;
@@ -117,7 +115,6 @@ const FaceRecognitionForm = () => {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/face-recognition/predict/1')
       var imageSrc = webcamRef.current.getScreenshot()
       var apiCall = {
         event: "localhost:subscribe",
@@ -126,7 +123,7 @@ const FaceRecognitionForm = () => {
           'class_mapping': classMapping
         },
       };
-      socket.onopen = () => socket.send(JSON.stringify(apiCall))
+      socket.send(JSON.stringify(apiCall));
       // getWebSocket().send(JSON.stringify(apiCall))
 
       // getWebSocket().onmessage 
@@ -193,13 +190,12 @@ const FaceRecognitionForm = () => {
       });
       console.log('Response:', response.data);
       if (response.data && response.data.status == 200) {
-        // console.log('Updating classMapping:', response.data.class_mapping); // Log before updating
-        // setClassMapping(response.data.class_mapping)
+        const socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/face-recognition/predict/1')
+        setSocket(socket);
         setShowCamera(true)
       } else {
         console.log("Error", response.data.message);
         setPopupMessage(response.data.message);
-        // window
       }
       
     } catch (error) {
@@ -234,6 +230,14 @@ const FaceRecognitionForm = () => {
       }
     }
   }, [videoStopped]);
+
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
 
   const disableButtons = forms.length < 1 || forms.some(form => form.photos.length === 0);
 
