@@ -69,14 +69,14 @@ async def predict_classification(json_data: dict, user_id: str):
 async def predict_classification_ws(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
-        image_clf = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pkl"))
-        class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
+        # image_clf = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pkl"))
+        # class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
         # with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.sav", "rb") as f:
         #     model = pickle.load(f)
         # model = pickle.loads(storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pt"))
         # class_mapping = json.loads(storage.get_object(f"user_{user_id}/classification/classification_mapping_{user_id}.json"))
-        # with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.pkl", "rb") as f:
-        #     image_clf = pickle.load(f)
+        with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.pkl", "rb") as f:
+            image_clf = pickle.load(f)
 
         # with open(f"./app/computer_vision/resources/user_{user_id}/classification_mapping_{user_id}.json", "r") as f:
         #     class_mapping = json.load(f)

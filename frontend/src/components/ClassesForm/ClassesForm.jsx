@@ -23,7 +23,7 @@ const ClassesForm = () => {
   const [videoStopped, setVideoStopped] = useState(false);
   const [batchSize, setBatchSize] = useState(2);
   const [modelSize, setModelSize] = useState('small');
-  const [trainStrategy, setTrainStrategy] = useState('last_layer and last_block');
+  const [trainStrategy, setTrainStrategy] = useState('last_layer');
   const [augmentationFlag, setAugmentationFlag] = useState(true);
   const [gpuFlag, setGpuFlag] = useState(true);
   const [showOptions, setShowOptions] = useState(false);
@@ -99,16 +99,14 @@ const ClassesForm = () => {
     console.log("FaceDetection Model is Loaded..")
     setInterval(() => {
       detect("")
-    }, 100);
+    }, 1000);
   };
 
   const detect = async () => {
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4 &&
-      socket &&
-      socket.readyState === WebSocket.OPEN
+      webcamRef.current.video.readyState === 4
     ) {
       const video = webcamRef.current.video;
       const videoWidth = webcamRef.current.video.videoWidth;
@@ -116,15 +114,16 @@ const ClassesForm = () => {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
+      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1');
       var imageSrc = webcamRef.current.getScreenshot();
       var apiCall = {
         event: "localhost:subscribe",
         data: {
-          'image': imageSrc,
-          'class_mapping': classMapping
+          'image': imageSrc
         },
       };
-      socket.send(JSON.stringify(apiCall));
+      socket.onopen = () => socket.send(JSON.stringify(apiCall))
+      // socket.send(JSON.stringify(apiCall));
 
       socket.onmessage = function (event) {
         var predictions = JSON.parse(event.data)
@@ -169,7 +168,7 @@ const ClassesForm = () => {
       gpu_flg: gpuFlag
     };
 
-    const obj = { classes: classPhotos, hyperparameters };
+    const obj = { classes: classPhotos};
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
 
@@ -183,11 +182,8 @@ const ClassesForm = () => {
         }
       });
       console.log('Response:', response.data);
-      if (response.data && response.data.class_mapping) {
-        console.log('Updating classMapping:', response.data.class_mapping);
-        setClassMapping(response.data.class_mapping);
-        const socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1');
-        setSocket(socket);
+      if (response.data) {
+
       } else {
         console.log('Error: No class mapping received');
       }
@@ -199,7 +195,7 @@ const ClassesForm = () => {
 
   useEffect(() => {
     runFaceDetectorModel();
-  }, [classMapping]);
+  }, []);
 
 
 
