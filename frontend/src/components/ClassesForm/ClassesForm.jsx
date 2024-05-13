@@ -106,7 +106,9 @@ const ClassesForm = () => {
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
+      webcamRef.current.video.readyState === 4 &&
+      socket &&
+      socket.readyState === WebSocket.OPEN
     ) {
       const video = webcamRef.current.video;
       const videoWidth = webcamRef.current.video.videoWidth;
@@ -114,7 +116,6 @@ const ClassesForm = () => {
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      var socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1');
       var imageSrc = webcamRef.current.getScreenshot();
       var apiCall = {
         event: "localhost:subscribe",
@@ -122,8 +123,8 @@ const ClassesForm = () => {
           'image': imageSrc
         },
       };
-      socket.onopen = () => socket.send(JSON.stringify(apiCall))
-      // socket.send(JSON.stringify(apiCall));
+      // socket.onopen = () => socket.send(JSON.stringify(apiCall))
+      socket.send(JSON.stringify(apiCall));
 
       socket.onmessage = function (event) {
         var predictions = JSON.parse(event.data)
@@ -183,19 +184,22 @@ const ClassesForm = () => {
       });
       console.log('Response:', response.data);
       if (response.data) {
-
+        const socket = new WebSocket('ws://0.0.0.0:8888/api/cv/train/ws/classification/predict/1');
+        setSocket(socket);
+        setShowCamera(true)
       } else {
         console.log('Error: No class mapping received');
       }
-      setShowCamera(true)
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
   useEffect(() => {
-    runFaceDetectorModel();
-  }, []);
+    if (showCamera) {
+      runFaceDetectorModel();
+    }
+  }, [showCamera]);
 
 
 
