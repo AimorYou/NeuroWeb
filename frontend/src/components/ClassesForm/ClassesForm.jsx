@@ -24,8 +24,8 @@ const ClassesForm = () => {
   const [batchSize, setBatchSize] = useState(2);
   const [modelSize, setModelSize] = useState('small');
   const [trainStrategy, setTrainStrategy] = useState('last_layer');
-  const [augmentationFlag, setAugmentationFlag] = useState(true);
-  const [gpuFlag, setGpuFlag] = useState(true);
+  const [augmentationFlag, setAugmentationFlag] = useState(false);
+  const [gpuFlag, setGpuFlag] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
 
   const hyperParametersDescription = {
@@ -168,11 +168,11 @@ const ClassesForm = () => {
       gpu_flg: gpuFlag
     };
 
-    const obj = { classes: classPhotos};
+    const obj = { classes: classPhotos, hyperparameters: hyperparameters};
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
 
-    console.log(classPhotos);
+    console.log(json);
     const apiUrl = 'http://0.0.0.0:8888/api/cv/train/classification/train-model?user_id=1';
 
     try {
@@ -309,8 +309,8 @@ const ClassesForm = () => {
 
                   <div className="select-container">
                     <select id="augmentationFlag" onChange={(e) => setAugmentationFlag(e.target.value === 'True')}>
-                      <option value={true}>True</option>
                       <option value={false}>False</option>
+                      <option value={true}>True</option>
                     </select>
 
                   </div>
@@ -320,8 +320,8 @@ const ClassesForm = () => {
                   </div>
                   <div className="select-container">
                     <select id="gpuFlag" onChange={(e) => setGpuFlag(e.target.value === 'True')}>
-                      <option value={true}>True</option>
                       <option value={false}>False</option>
+                      <option value={true}>True</option>
                     </select>
                   </div>
                 </div>
