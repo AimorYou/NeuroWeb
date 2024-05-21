@@ -13,8 +13,17 @@ import dill
 #     "RU": model_ru
 # }
 
+ru_senti_mapping = {
+    "positive": "Позитивный",
+    "neutral": "нейтральный",
+    "negative": "негативный",
+    "speech": "речевой акт",
+    "skip": "пропуск"
+}
+
 
 def predict(model, txt, lang="EN"):
     # model = models[lang]
     prediction = model.predict(txt)
-    return prediction
+
+    return ru_senti_mapping[prediction]
