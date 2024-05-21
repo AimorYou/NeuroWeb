@@ -1,6 +1,9 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Slider from '@mui/material/Slider';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './FaceRecognitionForm.css';
@@ -31,6 +34,16 @@ const FaceRecognitionForm = () => {
   const [videoStopped, setVideoStopped] = useState(false);
   const [recognizedPeople, setRecognizedPeople] = useState([]);
   const [popupMessage, setPopupMessage] = useState("");
+  const [numJitters, setNumJitters] = useState(1);
+  const [modelSize, setModelSize] = useState('small');
+  const [tolerance, setTolerance] = useState(0.6);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const hyperParametersDescription = {
+    numJitters: `Сколько раз перепробовать лицо при расчете кодирования. (От 1 до 10)`,
+    modelSize: `Какую модель использовать: "large" или "small"`,
+    tolerance: `Порог для сопоставления человека с определенным человеком. (От 0 до 1)`,
+  };
 
 
 
@@ -82,7 +95,7 @@ const FaceRecognitionForm = () => {
 
   const toggleFreezeCamera = () => {
     setFreezeCamera(prevState => !prevState);
-    
+
     setVideoStopped(prevState => !prevState);
   };
 
@@ -165,6 +178,12 @@ const FaceRecognitionForm = () => {
       return accumulator;
     }, {});
 
+    const hyperparameters = {
+      num_jitters: numJitters,
+      model_size: modelSize,
+      tolerance: tolerance
+    };
+
     const obj = { classes: classPhotos };
     const json = JSON.stringify(obj, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
@@ -197,7 +216,7 @@ const FaceRecognitionForm = () => {
         console.log("Error", response.data.message);
         setPopupMessage(response.data.message);
       }
-      
+
     } catch (error) {
       console.error('Error:', error);
     }
@@ -218,8 +237,8 @@ const FaceRecognitionForm = () => {
       runFaceDetectorModel();
     }
   }, [showCamera, classMapping]);
-   
-  
+
+
 
   useEffect(() => {
     if (webcamRef.current) {
@@ -241,6 +260,24 @@ const FaceRecognitionForm = () => {
 
   const disableButtons = forms.length < 1 || forms.some(form => form.photos.length === 0);
 
+  const formatDescription = (description) => {
+    return description.split('\n').map((paragraph, index) => (
+      <React.Fragment key={index}>
+        <p>{paragraph}</p>
+        {index !== description.split('\n').length - 1 && <br />} {/* Добавляем <br />, если это не последний абзац */}
+      </React.Fragment>
+    ));
+  };
+
+  const renderDescriptionTooltip = (paramName) => {
+    return (
+      <div className="tooltip">
+        <FontAwesomeIcon icon={faQuestionCircle} className="question-icon" />
+        <span className="tooltiptext">{formatDescription(hyperParametersDescription[paramName])}</span>
+      </div>
+    );
+  };
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -249,7 +286,7 @@ const FaceRecognitionForm = () => {
       <div className="hide">
         <div className='horizontal'>
           <div>
-          {popupMessage && <Popup message={popupMessage} onClose={() => setPopupMessage("")} />}
+            {popupMessage && <Popup message={popupMessage} onClose={() => setPopupMessage("")} />}
             {forms.map(form => (
               <div key={form.id}>
                 {/* <Photo photos={form.photos} formId={form.id} deletePhoto={deletePhoto} /> */}
@@ -261,6 +298,56 @@ const FaceRecognitionForm = () => {
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
             <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <div className='horizontal-line' />
+            <div className="advanced-options">
+              <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>
+              {showOptions && (
+                <div className="advanced-options-content">
+                  <div className='name-and-hint'>
+                    <label htmlFor="numEpochs" className="param-label">Количество джиттеров</label>
+                    {renderDescriptionTooltip('numJitters')}
+                  </div>
+                  <Slider
+                          id="numJitters"
+                          value={numJitters}
+                          onChange={(event, newValue) => setNumJitters(newValue)}
+                          aria-labelledby="numJitters"
+                          step={1}
+                          min={1}
+                          max={10}
+                          valueLabelDisplay="auto"
+                          sx={{ color: 'white' }}
+                        />
+
+                  <div className='name-and-hint'>
+                    <label htmlFor="numEpochs" className="param-label">Толерантность</label>
+                    {renderDescriptionTooltip('tolerance')}
+                  </div>
+                  <Slider
+                          id="tolerance"
+                          value={tolerance}
+                          onChange={(event, newValue) => setTolerance(newValue)}
+                          aria-labelledby="tolerance"
+                          step={0.1}
+                          min={0}
+                          max={1}
+                          valueLabelDisplay="auto"
+                          sx={{ color: 'white' }}
+                        />
+                  <div className='name-and-hint'>
+                    <label htmlFor="modelSize" className="param-label">Размер модели</label>
+                    {renderDescriptionTooltip('modelSize')}
+                  </div>
+
+                  <div className="select-container">
+                    <select id="modelSize" onChange={(e) => setModelSize(e.target.value)}>
+                      <option value="small">Small</option>
+                      <option value="large">Large</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
@@ -276,18 +363,18 @@ const FaceRecognitionForm = () => {
                 </label>
                 <Webcam ref={webcamRef} className="webcam" /> {/* Добавление класса для камеры */}
                 <div className="names-text">
-                <label style={{ color: 'white' }}>Распознанные люди:</label>
-                    {recognizedPeople.length > 0 ? (
-                      <ul>
-                        {recognizedPeople.map((person, index) => (
-                          <div key={index}>{person}</div>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div>Никого</div>
-                    )}
+                  <label style={{ color: 'white' }}>Распознанные люди:</label>
+                  {recognizedPeople.length > 0 ? (
+                    <ul>
+                      {recognizedPeople.map((person, index) => (
+                        <div key={index}>{person}</div>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div>Никого</div>
+                  )}
 
-                  </div>
+                </div>
 
               </div>
             )}

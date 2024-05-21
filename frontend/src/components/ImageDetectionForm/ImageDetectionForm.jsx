@@ -1,6 +1,9 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Slider from '@mui/material/Slider';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './ImageDetectionForm.css';
@@ -24,6 +27,26 @@ const ImageDetectionForm = () => {
   const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
   const [classNames, setClassNames] = useState('');
+  const [batchSize, setBatchSize] = useState(16);
+  const [numEpochs, setNumEpochs] = useState(35);
+  const [trainSize, setTrainSize] = useState(0.7);
+  const [modelSize, setModelSize] = useState('nano');
+  const [augmentationFlag, setAugmentationFlag] = useState(false);
+  const [gpuFlag, setGpuFlag] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const hyperParametersDescription = {
+    batchSize: `Размер пакета для обучения. Определяет, сколько примеров данных будет обработано за одну итерацию.
+      Размер пакета - один из важнейших гиперпараметров в обучении глубокому обучению, который представляет собой количество образцов, используемых в одном прямом и обратном проходе через сеть, и оказывает непосредственное влияние на точность и вычислительную эффективность процесса обучения. Размер партии можно рассматривать как компромисс между точностью и скоростью. Большие объемы партий могут ускорить процесс обучения, но могут привести к снижению точности и чрезмерной подгонке, в то время как меньшие объемы партий могут обеспечить более высокую точность, но могут быть вычислительно дорогими и отнимать много времени.
+      Размер партии также может повлиять на сходимость модели, то есть повлиять на процесс оптимизации и скорость обучения модели. Небольшие партии могут быть более восприимчивы к случайным колебаниям обучающих данных, в то время как большие партии более устойчивы к этим колебаниям, но могут сходиться медленнее.
+      Важно отметить, что не существует универсального ответа, когда речь идет о выборе размера партии, поскольку идеальный размер зависит от нескольких факторов, включая размер обучающего набора данных, сложность модели и доступные вычислительные ресурсы.`,
+    trainSize: `Пропорция изображений для обучения. (От 0 до 1)`,
+    numEpochs: `Количество эпох для обучения. Определяет, сколько раз модель будет проходить через весь обучающий набор данных.`,
+    modelSize: `Размер модели для обучения. Определяет, какой размер модели будет использоваться.
+      Размер модели определяет количество параметров в нейронной сети, что влияет на ее сложность и производительность. Большие модели могут иметь большее количество параметров, что может привести к более высокой точности, но также требует больше вычислительных ресурсов. Маленькие модели могут быть более компактными и быстрыми, но могут иметь меньшую точность.`,
+    gpuFlag: `Использование GPU для обучения. Указывает, будет ли обучение выполняться на GPU.
+      GPU обладает большей вычислительной мощностью по сравнению с CPU и может значительно ускорить процесс обучения нейронных сетей, особенно для крупных моделей и больших объемов данных. Однако это требует наличия совместимого с GPU оборудования и дополнительной конфигурации.`
+  };
 
   const handleSavePhotos = (formId, photos) => {
     setUploadedPhotos((prevPhotos) => [
@@ -143,6 +166,12 @@ const ImageDetectionForm = () => {
       formData.append(`files`, file);
     });
 
+    // formData.append('batchSize', batchSize);
+    // formData.append('numEpochs', numEpochs);
+    // formData.append('trainSize', trainSize);
+    // formData.append('modelSize', modelSize);
+    // formData.append('gpuFlag', gpuFlag);
+
     for (const pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
@@ -196,6 +225,24 @@ const ImageDetectionForm = () => {
 
   const disableButtons = uploadedPhotos.length < 1 || uploadedTxtFiles.length < 1 || classNames.length < 1;
 
+  const formatDescription = (description) => {
+    return description.split('\n').map((paragraph, index) => (
+      <React.Fragment key={index}>
+        <p>{paragraph}</p>
+        {index !== description.split('\n').length - 1 && <br />} {/* Добавляем <br />, если это не последний абзац */}
+      </React.Fragment>
+    ));
+  };
+
+  const renderDescriptionTooltip = (paramName) => {
+    return (
+      <div className="tooltip">
+        <FontAwesomeIcon icon={faQuestionCircle} className="question-icon" />
+        <span className="tooltiptext">{formatDescription(hyperParametersDescription[paramName])}</span>
+      </div>
+    );
+  };
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -214,6 +261,81 @@ const ImageDetectionForm = () => {
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
             <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <div className='horizontal-line' />
+            <div className="advanced-options">
+              <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>
+              {showOptions && (
+                <div className="advanced-options-content">
+                  <div className='name-and-hint'>
+                    <label htmlFor="modelSize" className="param-label">Размер модели</label>
+                    {renderDescriptionTooltip('modelSize')}
+                  </div>
+                  <div className="select-container">
+                    <select id="modelSize" onChange={(e) => setModelSize(e.target.value)}>
+                      <option value="nano">Nano</option>
+                      <option value="small">Small</option>
+                      <option value="medium">Medium</option>
+                    </select>
+                  </div>
+
+                  <div className='name-and-hint'>
+                    <label htmlFor="trainSize" className="param-label">Пропорция</label>
+                    {renderDescriptionTooltip('trainSize')}
+                  </div>
+                  <Slider
+                    id="trainSize"
+                    value={trainSize}
+                    onChange={(event, newValue) => setTrainSize(newValue)}
+                    aria-labelledby="trainSize"
+                    step={0.1}
+                    min={0}
+                    max={1}
+                    valueLabelDisplay="auto"
+                    sx={{ color: 'white' }}
+                  />
+                  <div className='name-and-hint'>
+                    <label htmlFor="batchSize" className="param-label">Размер батча</label>
+                    {renderDescriptionTooltip('batchSize')}
+                  </div>
+
+                  <div className="select-container">
+                    <select id="batchSize" onChange={(e) => setBatchSize(Number(e.target.value))}>
+                      <option value={16}>16</option>
+                      <option value={2}>2</option>
+                      <option value={4}>4</option>
+                      <option value={8}>8</option>
+                      <option value={32}>32</option>
+                      <option value={64}>64</option>
+                    </select>
+                  </div>
+
+                  <div className='name-and-hint'>
+                    <label htmlFor="numEpochs" className="param-label">Количество эпох</label>
+                    {renderDescriptionTooltip('numEpochs')}
+                  </div>
+                  <Slider
+                    id="numEpochs"
+                    value={numEpochs}
+                    onChange={(e, newValue) => setNumEpochs(newValue)}
+                    min={1}
+                    max={50}
+                    valueLabelDisplay="auto"
+                    sx={{ color: 'white' }}
+                  />
+
+                  <div className='name-and-hint'>
+                    <label htmlFor="gpuFlag" className="param-label">GPU для обучения</label>
+                    {renderDescriptionTooltip('gpuFlag')}
+                  </div>
+                  <div className="select-container">
+                    <select id="gpuFlag" onChange={(e) => setGpuFlag(e.target.value === 'True')}>
+                      <option value={false}>False</option>
+                      <option value={true}>True</option>
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
@@ -232,7 +354,7 @@ const ImageDetectionForm = () => {
                     right: 600,
                     top: 0,
                     textAlign: "center",
-                    zIndex: 9, 
+                    zIndex: 9,
                     width: 400,
                     height: 300,
                   }}
