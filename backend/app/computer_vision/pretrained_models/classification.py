@@ -29,7 +29,7 @@ def get_clf_prediction(image_b64):
     with torch.no_grad():
         predicted_class = torch.argmax(img_clf_model(image_transformed))
 
-    return imagenet_cls_mapping[str(predicted_class.item())][1]
+    return imagenet_cls_mapping[str(predicted_class.item())]
 
 
 if __name__ == "__main__":

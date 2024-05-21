@@ -10,6 +10,15 @@ import cv2
 
 warnings.filterwarnings("ignore")
 detector = FER()
+fer_mapping = {
+    "angry": "злость",
+    "disgust": "отвращение",
+    "fear": "страх",
+    "happy": "радость",
+    "sad": "грусть",
+    "surprise": "удивление",
+    "neutral": "нейтральный"
+}
 
 
 def get_fer_prediction(image_b64, debug=False):
@@ -23,8 +32,13 @@ def get_fer_prediction(image_b64, debug=False):
     np_arr = np.fromstring(base64.b64decode(image_b64), np.uint8)
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-    fer_results = detector.detect_emotions(image)[0]
+    fer_results = detector.detect_emotions(image)
+    if not fer_results:
+        return {}
+
+    fer_results = fer_results[0]
     fer_results["box"] = fer_results["box"].tolist()
+    fer_results["emotions"] = {fer_mapping[k]: v for k, v in fer_results["emotions"].items()}
     fer_results["emotion"] = max(fer_results["emotions"], key=fer_results["emotions"].get)
 
     return fer_results
