@@ -14,7 +14,7 @@ import dill
 # }
 
 ru_senti_mapping = {
-    "positive": "Позитивный",
+    "positive": "позитивный",
     "neutral": "нейтральный",
     "negative": "негативный",
     "speech": "речевой акт",
