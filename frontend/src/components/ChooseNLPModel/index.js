@@ -28,7 +28,7 @@ function Pricing() {
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Выберите модель копьютерного зрения</PricingHeading>
+          <PricingHeading>Выберите модель обработки естественного языка</PricingHeading>
           <PricingContainer>
             <PricingCard to='/text'>
               <PricingCardInfo>
@@ -36,16 +36,6 @@ function Pricing() {
                 <PricingCardPlan>Классификация текстов</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель идентифицирует и классифицирует объекты на основе их характеристик, обучаясь на размеченных данных</PricingCardFeature>
-                </PricingCardFeatures>
-                <Button primary>Выбрать</Button>
-              </PricingCardInfo>
-            </PricingCard>
-            <PricingCard to='/audio'>
-              <PricingCardInfo>
-              <PricingCardIcon src={Emotion} />
-                <PricingCardPlan>Классификация аудио</PricingCardPlan>
-                <PricingCardFeatures>
-                  <PricingCardFeature>Модель анализирует лицевые выражения, определяя эмоциональное состояние на основе распознанных паттернов</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>

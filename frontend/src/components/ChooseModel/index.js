@@ -5,9 +5,9 @@ import { GiCrystalBars } from 'react-icons/gi';
 import { GiCutDiamond, GiRock } from 'react-icons/gi';
 import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
-import Classify from '../../assets/images/classify.JPG'
-import Emotion from '../../assets/images/emotion.JPG'
-import Detect from '../../assets/images/detect.JPG'
+import Classify from '../../assets/images/images.jpg'
+import Emotion from '../../assets/images/texts.jpg'
+import Detect from '../../assets/images/tablesStreamlit.jpg'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -28,7 +28,7 @@ function Pricing() {
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Выберите модель</PricingHeading>
+          <PricingHeading>Выберите область работы</PricingHeading>
           <PricingContainer>
             <PricingCard to='/cv-models'>
               <PricingCardInfo>

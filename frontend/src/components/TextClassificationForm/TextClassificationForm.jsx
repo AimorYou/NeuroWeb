@@ -10,8 +10,8 @@ import axios from 'axios';
 
 const TextClassificationForm = () => {
   const [forms, setForms] = useState([{ id: 1, name: 'Имя 1', photos: [] }]);
-  const [showCamera, setShowCamera] = useState(true);
-  const [inputText, setInputText] = useState('я не люблю пиписины');
+  const [showCamera, setShowCamera] = useState(false);
+  const [inputText, setInputText] = useState('');
   const [classificationResult, setClassificationResult] = useState('');
   const [uploadedTxtFiles, setUploadedTxtFiles] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -82,9 +82,11 @@ const TextClassificationForm = () => {
     detect();
   };
 
-  useEffect(() => {
-    runFaceDetectorModel();
-  }, []);
+  // useEffect(() => {
+  //   if (showCamera) {
+  //     runFaceDetectorModel();
+  //   }
+  // }, [showCamera]);
 
   // useEffect(() => {
   //   return () => {

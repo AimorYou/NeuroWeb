@@ -8,6 +8,7 @@ import { IconContext } from 'react-icons/lib';
 import Classify from '../../assets/images/classify.JPG'
 import Emotion from '../../assets/images/emotion.JPG'
 import Detect from '../../assets/images/detect.JPG'
+import Text from '../../assets/images/text.jpg'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -62,7 +63,7 @@ function Pricing() {
             </PricingCard>
             <PricingCard to='/text-classification'>
               <PricingCardInfo>
-              <PricingCardIcon src={Detect} />
+              <PricingCardIcon src={Text} />
                 <PricingCardPlan>Классификация текстов</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель обнаруживает и локализует объекты на изображениях, позволяя идентифицировать их положение и границы</PricingCardFeature>

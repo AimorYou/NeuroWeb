@@ -50,7 +50,7 @@ async def train(
     X_train, X_test, y_train, y_test = text_clf.prepare_data(df,
                                                              text_col="text",
                                                              target_col="label",
-                                                             test_size=0.2)
+                                                             train_size=0.2)
     test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test)
     print(test_accuracy)
     storage.put_object(pickle.dumps(text_clf), f"user_{user_id}/text_clf.pt")
