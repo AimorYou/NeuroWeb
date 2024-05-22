@@ -9,6 +9,7 @@ import { Photo } from './Photo';
 import './ClassesForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
+import ExportModelModal from './ExportModelModal';
 
 const ClassesForm = () => {
   const webcamRef = useRef(null);
@@ -29,6 +30,8 @@ const ClassesForm = () => {
   const [augmentationFlag, setAugmentationFlag] = useState(false);
   const [gpuFlag, setGpuFlag] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modelDownloadUrl, setModelDownloadUrl] = useState('');
 
   const hyperParametersDescription = {
     batchSize: `Размер пакета для обучения. Определяет, сколько примеров данных будет обработано за одну итерацию.
@@ -246,6 +249,17 @@ const ClassesForm = () => {
     );
   };
 
+  const handleExportModel = () => {
+    // Generate model download URL and show modal
+    const downloadUrl = 'http://example.com/path_to_model'; // Replace with actual URL generation logic
+    setModelDownloadUrl(downloadUrl);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -350,7 +364,7 @@ const ClassesForm = () => {
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
-              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
+              <button className='export-model-btn' onClick={handleExportModel} ><IosShareIcon />Экспортировать модель</button>
             </div>
             <div className='horizontal-line' />
             {showCamera && (
@@ -377,6 +391,11 @@ const ClassesForm = () => {
           </div>
         </div>
       </div>
+      <ExportModelModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        modelDownloadUrl={modelDownloadUrl}
+      />
     </React.Fragment>
   );
 };

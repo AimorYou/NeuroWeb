@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react'
 import { useNavigate } from "react-router-dom";
+import { useUser } from '../../context/UserContext';
 import {
   Container,
   FormWrap,
@@ -13,16 +14,17 @@ import {
   Text
 } from './RegistrationElements';
 
-import {UserContext} from '../../context/UserContext';
+
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmationPassword, setConfirmationPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [, setToken] = useContext(UserContext);
+  const { setUser } = useUser();
+
   const navigate = useNavigate();
-  const submitRegistration = async () => {
+  const submitRegistration = async (e) => {
     try {
     console.log("Clicked")
     const formData = new FormData();
@@ -44,12 +46,13 @@ const Register = () => {
     if (!response.ok) {
       setErrorMessage(data.detail);
     } else {
-      setToken(data.access_token)
+      setUser({ email });
+      navigate("/");
     }
     }
     catch (err) {
       console.log(err)
-      navigate("/");
+      
     }
 
   };
@@ -66,6 +69,18 @@ const Register = () => {
     }
   };
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfPasswordChange = (e) => {
+    setConfirmationPassword(e.target.value);
+  };
+
   const emailPlaceholder = 'Введите почту';
   const passwordPlaceholder = 'Введите пароль';
   const passwordConfPlaceholder = 'Подтвердите пароль';
@@ -80,17 +95,17 @@ const Register = () => {
               <FormInput type='email'
               placeholder={emailPlaceholder}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               required/>
               <FormInput type='password'
               placeholder={passwordPlaceholder}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               required />
               <FormInput type='password'
               placeholder={passwordConfPlaceholder}
               value={confirmationPassword}
-              onChange={(e) => setConfirmationPassword(e.target.value)}
+              onChange={handleConfPasswordChange}
               required />
               <FormButton type='submit'>Продолжить</FormButton>
             </Form>

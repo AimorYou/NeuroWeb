@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { UserProvider } from '../src/context/UserContext';
 import MainPage from './pages/MainPage';
 import SigninPage from './pages/SigninPage';
 import ChoosePretrainedOrNot from './pages/ChoosePretrainedOrNot';
@@ -38,6 +39,7 @@ import Tables  from './pages/Tables';
 function App() {
   return (
     <div className="App">
+      <UserProvider>
       <BrowserRouter>
         <Routes>
           <Route index element={<MainPage/>} />
@@ -77,6 +79,7 @@ function App() {
 
         </Routes>
       </BrowserRouter>
+      </UserProvider>
     </div>
   );
 }
