@@ -143,7 +143,7 @@ async def train_detection(
     _fill_directories(files, user_id, train_size)
 
     hyperparameters = {
-        "model": "nano",  # nano/small/medium,
+        "model_size": "nano",  # nano/small/medium,
         "train_size": 0.7,
         "batch_size": 16,
         "n_epochs": 35
