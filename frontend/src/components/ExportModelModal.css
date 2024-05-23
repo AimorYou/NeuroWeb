@@ -1,0 +1,92 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #666aed;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  width: 80%;
+  max-width: 800px;
+  min-height: 600px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+}
+
+.code-container {
+  position: relative;
+  min-height: 400px;
+  overflow-y: auto;
+  background: #383847;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: left;
+  color: white;
+  margin: 10px 0;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  background: transparent;
+  color: #fff;
+  z-index: 1010;
+}
+
+.download-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #666aed;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  border: 1px solid #fff;
+  transition: background 0.3s, color 0.3s;
+}
+
+.download-btn:hover {
+  background: #5a24c8;
+  color: #fff;
+}
+
+.download-btn:active {
+  background: #4d1db5;
+  color: #fff;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  z-index: 1010;
+}
+
+.close-icon {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}

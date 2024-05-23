@@ -7,6 +7,7 @@ import Slider from '@mui/material/Slider';
 import { Camera } from './Camera';
 import { Photo } from './Photo';
 import './FaceRecognitionForm.css';
+import ExportModelModal from '../ExportModelModal';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 
@@ -38,6 +39,8 @@ const FaceRecognitionForm = () => {
   const [modelSize, setModelSize] = useState('small');
   const [tolerance, setTolerance] = useState(0.6);
   const [showOptions, setShowOptions] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modelDownloadUrl, setModelDownloadUrl] = useState('');
 
   const hyperParametersDescription = {
     numJitters: `Сколько раз перепробовать лицо при расчете кодирования. (От 1 до 10)`,
@@ -278,6 +281,27 @@ const FaceRecognitionForm = () => {
     );
   };
 
+  const handleExportModel = () => {
+    // Generate model download URL and show modal
+    const downloadUrl = 'http://example.com/path_to_model';
+    setModelDownloadUrl(downloadUrl);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const codeExample = `
+  import tensorflow as tf
+  
+  # Load the model
+  model = tf.keras.models.load_model('path/to/your/model')
+  
+  # Use the model for predictions
+  predictions = model.predict(your_data)
+    `;
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -351,7 +375,7 @@ const FaceRecognitionForm = () => {
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью
-              <button className='export-model-btn' disabled={classPhotos.length > 0 ? true : false}><IosShareIcon />Экспортировать модель</button>
+              <button className='export-model-btn' onClick={handleExportModel}><IosShareIcon />Экспортировать модель</button>
             </div>
             <div className='horizontal-line' />
             {showCamera && (
@@ -384,6 +408,12 @@ const FaceRecognitionForm = () => {
           </div>
         </div>
       </div>
+      <ExportModelModal
+        show={showModal}
+        onClose={closeModal}
+        modelDownloadUrl="/path/to/model.h5"
+        codeExample={codeExample}
+      />
     </React.Fragment>
   );
 };

@@ -58,7 +58,6 @@ export const PricingCard = styled(Link)`
   margin: 24px;
   text-align: center;
   
-
   &:hover {
     transform: scale(1.06);
     transition: all 0.3s ease-out;
@@ -96,15 +95,6 @@ export const PricingCardPlan = styled.h3`
   font-size: 20px;
 `;
 
-export const PricingCardCost = styled.h4`
-  font-size: 40px;
-`;
-
-export const PricingCardLength = styled.p`
-  font-size: 14px;
-  margin-bottom: 24px;
-`;
-
 export const PricingCardFeatures = styled.ul`
   margin: 16px 0 32px;
   list-style: none;
@@ -118,3 +108,36 @@ export const PricingCardFeature = styled.li`
   margin-bottom: 10px;
   text-align: center;
 `;
+
+export const PlaceholderCard = styled.div`
+  background: #242424;
+  border: 2px dashed #7258e9;
+  width: 400px;
+  height: 500px;
+  border-radius: 10px;
+  margin: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 6px 20px rgba(114, 88, 233, 0.2);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(114, 88, 233, 0.4);
+  }
+
+  @media screen and (max-width: 960px) {
+    width: 90%;
+  }
+`;
+
+export const PlaceholderText = styled.h3`
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+`;
+

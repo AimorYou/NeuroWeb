@@ -9,7 +9,7 @@ import { Photo } from './Photo';
 import './ClassesForm.css';
 import Webcam from 'react-webcam';
 import axios from 'axios';
-import ExportModelModal from './ExportModelModal';
+import ExportModelModal from '../ExportModelModal';
 
 const ClassesForm = () => {
   const webcamRef = useRef(null);
@@ -260,6 +260,16 @@ const ClassesForm = () => {
     setShowModal(false);
   };
 
+  const codeExample = `
+  import tensorflow as tf
+  
+  # Load the model
+  model = tf.keras.models.load_model('path/to/your/model')
+  
+  # Use the model for predictions
+  predictions = model.predict(your_data)
+    `;
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -393,8 +403,9 @@ const ClassesForm = () => {
       </div>
       <ExportModelModal
         show={showModal}
-        onClose={() => setShowModal(false)}
-        modelDownloadUrl={modelDownloadUrl}
+        onClose={closeModal}
+        modelDownloadUrl="/path/to/model.h5"
+        codeExample={codeExample}
       />
     </React.Fragment>
   );

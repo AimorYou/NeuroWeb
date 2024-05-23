@@ -1,13 +1,7 @@
 import React from 'react';
 import { Button } from '../globalStyles';
-import { AiFillThunderbolt } from 'react-icons/ai';
-import { GiCrystalBars } from 'react-icons/gi';
-import { GiCutDiamond, GiRock } from 'react-icons/gi';
-import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
-import Classify from '../../assets/images/classify.JPG'
-import Emotion from '../../assets/images/emotion.JPG'
-import Detect from '../../assets/images/detect.JPG'
+import Classify from '../../assets/images/classify.JPG';
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -17,10 +11,10 @@ import {
   PricingCardInfo,
   PricingCardIcon,
   PricingCardPlan,
-  PricingCardCost,
-  PricingCardLength,
   PricingCardFeatures,
-  PricingCardFeature
+  PricingCardFeature,
+  PlaceholderCard,
+  PlaceholderText
 } from './ChooseNLPModelElements';
 
 function Pricing() {
@@ -32,7 +26,7 @@ function Pricing() {
           <PricingContainer>
             <PricingCard to='/text'>
               <PricingCardInfo>
-              <PricingCardIcon src={Classify} />
+                <PricingCardIcon src={Classify} />
                 <PricingCardPlan>Классификация текстов</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель идентифицирует и классифицирует объекты на основе их характеристик, обучаясь на размеченных данных</PricingCardFeature>
@@ -40,10 +34,14 @@ function Pricing() {
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
+            <PlaceholderCard>
+              <PlaceholderText>Скоро появятся новые модели</PlaceholderText>
+            </PlaceholderCard>
           </PricingContainer>
         </PricingWrapper>
       </AdvantagesSection>
     </IconContext.Provider>
   );
 }
+
 export default Pricing;
