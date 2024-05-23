@@ -149,7 +149,7 @@ async def train_detection(
         "n_epochs": 35
     }
 
-    detector = Detector(names=names, uid=user_id, hyperparameters=hyperparameters, mode="train")
+    detector = Detector(names=names, uid=user_id, mode="train", **hyperparameters)
 
 
 @r.websocket("/ws/detection/predict/{user_id}")
