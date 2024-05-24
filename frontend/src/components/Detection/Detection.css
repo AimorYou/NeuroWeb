@@ -1,11 +1,4 @@
-.Webcam {
-    padding-left: 50px;
-    
-}
-.Prediction {
-  font-size: 30px;
-  text-shadow: 0 0 3px #926850, 0 0 5px #060b0c;
-}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -18,7 +11,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #101021;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -39,4 +32,35 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.camera-container {
+  position: relative;
+  width: 640px;
+  height: 480px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.Webcam, .Canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.Prediction {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  text-shadow: 0 0 3px #926850, 0 0 5px #060b0c;
 }

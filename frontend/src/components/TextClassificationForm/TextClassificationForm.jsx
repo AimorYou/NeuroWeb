@@ -1,5 +1,5 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { Camera } from './Camera';
@@ -19,6 +19,39 @@ const TextClassificationForm = () => {
   const [showModal, setShowModal] = useState(false);
   const [modelDownloadUrl, setModelDownloadUrl] = useState('');
 
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const [socketUrl, setSocketUrl] = useState('ws://0.0.0.0:8888/api/nlp/train/ws/classification/1');
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      setMessageHistory((prev) => prev.concat(lastMessage));
+    }
+  }, [lastMessage, setMessageHistory]);
+
+  const handleClickSendMessage = useCallback(() => sendMessage(inputText), []);
+
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: 'Connecting',
+    [ReadyState.OPEN]: 'Open',
+    [ReadyState.CLOSING]: 'Closing',
+    [ReadyState.CLOSED]: 'Closed',
+    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+  }[readyState];
+
+  useEffect(() => {
+    if (socket) {
+      socket.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        if (message.event === 'classification_result') {
+          setClassificationResult(message.data);
+        }
+      };
+    }
+  }, [socket]);
+
   const handleSaveTxtFiles = (formId, txtFiles) => {
     setUploadedTxtFiles((prevTxtFiles) => [
       ...prevTxtFiles,
@@ -30,33 +63,6 @@ const TextClassificationForm = () => {
     setInputText(e.target.value);
   };
 
-
-  const runFaceDetectorModel = async () => {
-    console.log("FaceDetection Model is Loaded..") 
-    setInterval(() => {
-      detect("")
-    }, 1000);
-  };
-
-  const detect = async() => {
-
-    
-
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      var apiCall = {
-        event: "localhost:subscribe",
-        data: {
-          text: "inputText"
-        },
-      };
-      socket.send(JSON.stringify(apiCall));
-    } else {
-      console.error("WebSocket is not open yet.");
-    }
-    
-  };
-  
-
   const sendJSON = async () => {
     const formData = new FormData();
     uploadedTxtFiles.forEach((uploadedTxtFile) => {
@@ -65,7 +71,7 @@ const TextClassificationForm = () => {
       formData.append(`file`, file);
     });
 
-    const apiUrl = `http://0.0.0.0:8888/api/nlp/train/classification/train-model?user_id=1`; // как посылать uid
+    const apiUrl = `http://0.0.0.0:8888/api/nlp/train/classification/train-model?user_id=1`;
     try {
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -74,33 +80,32 @@ const TextClassificationForm = () => {
       });
       console.log('Response:', response.data);
       setShowCamera(true);
-      const socket = new WebSocket('ws://0.0.0.0:8888/api/nlp/train/ws/classification/1');
-      setSocket(socket);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
   const handleClassify = () => {
-    detect();
+    
+      const apiCall = {
+        event: "classify_text",
+        data: {
+          text: inputText,
+        },
+      };
+      socket.send(JSON.stringify(apiCall));
+   
   };
 
-  // useEffect(() => {
-  //   if (showCamera) {
-  //     runFaceDetectorModel();
-  //   }
-  // }, [showCamera]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (socket) {
-  //       socket.close();
-  //     }
-  //   };
-  // }, [socket]);
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
 
   const handleExportModel = () => {
-    // Generate model download URL and show modal
     const downloadUrl = 'http://example.com/path_to_model';
     setModelDownloadUrl(downloadUrl);
     setShowModal(true);
@@ -151,9 +156,9 @@ const TextClassificationForm = () => {
                   value={inputText}
                   onChange={handleTextChange}
                 />
-                <button className='classify-btn' onClick={handleClassify}>Классифицировать</button>
-                {(
-                  <div className='result'>Результат классификации - </div>
+                <button className='classify-btn' onClick={handleClickSendMessage}>Классифицировать</button>
+                {classificationResult && (
+                  <div className='result'>Результат классификации: {lastMessage}</div>
                 )}
               </div>
             )}

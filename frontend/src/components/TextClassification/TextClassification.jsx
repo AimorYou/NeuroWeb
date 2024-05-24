@@ -47,7 +47,7 @@ const TextClassificationForm = () => {
                 />
                 <button className='classify-btn' onClick={handleClassify}>Классифицировать</button>
                 {classificationResult && (
-                  <div className='result'>{classificationResult}</div>
+                  <div className='result'>Результат - {classificationResult}</div>
                 )}
               </div>
 

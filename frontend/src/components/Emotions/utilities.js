@@ -3,7 +3,7 @@ export const drawMesh = (predictions, ctx) => {
     const { box, emotion } = predictions;
     const [x, y, width, height] = box;
 
-    // Определение цвета в зависимости от эмоции
+
     let color;
     switch (emotion) {
       case 'angry':
@@ -31,14 +31,14 @@ export const drawMesh = (predictions, ctx) => {
         color = 'white';
     }
 
-    // Отрисовка прямоугольника с эмоцией
+
     ctx.beginPath();
     ctx.lineWidth = 5;
     ctx.strokeStyle = color;
     ctx.rect(x, y, width, height);
     ctx.stroke();
     
-    // Добавление текста с эмоцией
+  
     ctx.font = '20px Georgia';
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'center';

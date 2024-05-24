@@ -157,12 +157,12 @@ async def detect(websocket: WebSocket, user_id):
     await manager.connect(websocket)
     try:
         hyperparameters = {
-            "model": "nano",  # nano/small/medium,
+            "model_size": "nano",  # nano/small/medium,
             "train_size": 0.7,
             "batch_size": 16,
             "n_epochs": 35
         }  # Научиться получать из запроса
-        detector = Detector(names=[], uid=user_id, hyperparameters=hyperparameters, mode="inference")
+        detector = Detector(names=[], uid=user_id, mode="inference", **hyperparameters)
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)

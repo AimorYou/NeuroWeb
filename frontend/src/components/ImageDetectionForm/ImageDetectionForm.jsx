@@ -105,6 +105,7 @@ const ImageDetectionForm = () => {
       const videoWidth = webcamRef.current.video.videoWidth;
       const videoHeight = webcamRef.current.video.videoHeight;
 
+      console.log("qq")
       // Set video width
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
@@ -182,7 +183,7 @@ const ImageDetectionForm = () => {
     const classNamesParam = classNames.split(',').map(name => `names=${name.trim()}`).join('&');
 
     console.log(classNamesParam)
-    // Отправляем данные на бэкенд
+    
     const apiUrl = `http://0.0.0.0:8888/api/cv/train/detection/train-model?user_id=1&${classNamesParam}`; // как посылать uid
     try {
 

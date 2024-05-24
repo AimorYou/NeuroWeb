@@ -13,7 +13,6 @@ function Emotion() {
   const runFaceDetectorModel = async () => {
     console.log("FaceDetection Model is Loaded..");
 
-    // Открытие веб-сокета только если он еще не открыт
     if (!isWebSocketOpen.current) {
       socketRef.current = new WebSocket('ws://0.0.0.0:8888/api/cv/ws/emotions');
       socketRef.current.onopen = () => {
@@ -58,7 +57,6 @@ function Emotion() {
         data: { image: imageSrc },
       };
 
-      // Отправка данных через веб-сокет, если он открыт
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         socketRef.current.send(JSON.stringify(apiCall));
       }
