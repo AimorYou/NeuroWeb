@@ -97,7 +97,8 @@ async def predict_classification_ws(websocket: WebSocket, user_id):
 
 @r.post("/face-recognition/train-model")
 async def train_recognizer(json_data: dict, user_id: str):
-    recognizer = Recognizer(json_data=json_data)
+    hyperparameters = json_data.get("hyperparameters", {})
+    recognizer = Recognizer(json_data=json_data, **hyperparameters)
     if recognizer.success:
         recognizer.dump_model(user_id=user_id)
         return {
@@ -136,8 +137,7 @@ async def recognize_face(websocket: WebSocket, user_id):
 async def train_detection(
         files: List[UploadFile] = Form(),
         user_id: str = Query(),
-        names: list[str] = Query(),
-        train_size: float = Query(default=0.7)
+        names: list[str] = Query()
 ):
     _create_directories(user_id, names)
     _fill_directories(files, user_id, train_size)
