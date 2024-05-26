@@ -11,7 +11,16 @@ download_router = r = APIRouter()
 def download_cv_classification(user_id: str):
   image_clf = storage.get_object(f"user_{user_id}/classification/classification_{user_id}.pkl")
   if image_clf:
-    stream = io.BytesIO(image_clf)
-    return FileResponse(bytes(stream))
+    return Response(image_clf)
+  else:
+    return {500: "error"}
+
+
+@r.get("/cv/face-recognition/{user_id}")
+def download_cv_face_recognition(user_id: str):
+  model_rec = storage.get_object(f"user_{user_id}/face-recognition/model_rec.pkl")
+  if model_rec:
+    # stream = io.BytesIO(model_rec)
+    return Response(model_rec)
   else:
     return {500: "error"}
