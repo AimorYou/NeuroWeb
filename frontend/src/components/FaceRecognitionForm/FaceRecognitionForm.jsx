@@ -261,7 +261,7 @@ const FaceRecognitionForm = () => {
     };
   }, [socket]);
 
-  const disableButtons = forms.length < 1 || forms.some(form => form.photos.length === 0);
+  // const disableButtons = forms.length < 1 || forms.some(form => form.photos.length === 0);
 
   const formatDescription = (description) => {
     return description.split('\n').map((paragraph, index) => (
@@ -292,6 +292,8 @@ const FaceRecognitionForm = () => {
     setShowModal(false);
   };
 
+  const downloadEndpoint = 'http://0.0.0.0:8888/api/download/cv/face-recognition/1';
+
   const codeExample = `
   import tensorflow as tf
   
@@ -321,7 +323,7 @@ const FaceRecognitionForm = () => {
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
             <div className='horizontal-line' />
             <div className="advanced-options">
               <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>
@@ -410,9 +412,10 @@ const FaceRecognitionForm = () => {
       </div>
       <ExportModelModal
         show={showModal}
-        onClose={closeModal}
-        modelDownloadUrl="/path/to/model.h5"
+        onClose={() => setShowModal(false)}
+        modelDownloadUrl={modelDownloadUrl}
         codeExample={codeExample}
+        downloadEndpoint={downloadEndpoint}
       />
     </React.Fragment>
   );

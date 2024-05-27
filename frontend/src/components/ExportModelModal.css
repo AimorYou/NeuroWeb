@@ -90,3 +90,23 @@ pre {
   height: 24px;
   color: #fff;
 }
+
+.download-response {
+  margin-top: 15px;
+  width: 200px;
+  padding: 10px;
+  border-radius: 3px;
+  color: white;
+  background-color: #17a2b8;
+  text-align: center;
+  justify-content: center;
+}
+
+.download-response.error {
+  background-color: #dc3545;
+}
+
+/* Success message style */
+.download-response.success {
+  background-color: #28a745;
+}

@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 
 const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos }) => {
   const webcamRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [capturedPhotos, setCapturedPhotos] = useState([]);
   const [captureInterval, setCaptureInterval] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
@@ -53,6 +54,19 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
     setShowRenameForm(false);
   };
 
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    const fileArray = Array.from(files);
+
+    fileArray.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCapturedPhotos((prevPhotos) => [...prevPhotos, { photo: e.target.result }]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const MenuBar = () => {
     return (
       <div className='more-btn'>
@@ -82,7 +96,6 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
               ) : (
                 `${formName}`
               )}
-
             </div>
             <div className='class-edit-btn' onClick={() => setShowRenameForm(true)} ><ModeEditIcon fontSize='small' /></div>
           </div>
@@ -90,7 +103,15 @@ const CameraForm = ({ formId, formName, delForm, renameForm, handleSavePhotos })
           <div className="horizontal-line"></div>
           <div className="horizontal-btns">
             <button className='camera-upload-photo' onClick={() => setShowCamera(!showCamera)}><CameraAltIcon /></button>
-            <button className='camera-upload-photo'><UploadAltIcon /></button>
+            <button className='camera-upload-photo' onClick={() => fileInputRef.current.click()}><UploadAltIcon /></button>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
           </div>
           {showCamera && (
             <div>

@@ -229,7 +229,6 @@ const ClassesForm = () => {
     };
   }, [socket]);
 
-  const disableButtons = forms.length < 2 || forms.some(form => form.photos.length === 0);
 
   const formatDescription = (description) => {
     return description.split('\n').map((paragraph, index) => (
@@ -287,7 +286,7 @@ const ClassesForm = () => {
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <button className='train-model-btn' onClick={sendJSON} >Обучить модель</button>
             <div className='horizontal-line' />
             <div className="advanced-options">
               <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>
