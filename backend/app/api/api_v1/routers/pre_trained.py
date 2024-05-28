@@ -1,4 +1,4 @@
-from fastapi import WebSocket, WebSocketDisconnect, APIRouter=
+from fastapi import WebSocket, WebSocketDisconnect, APIRouter
 from computer_vision.pretrained_models.classification import get_clf_prediction
 from computer_vision.pretrained_models.detection import get_bbox_prediction
 from computer_vision.pretrained_models.emotions import get_fer_prediction
