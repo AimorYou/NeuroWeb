@@ -258,6 +258,8 @@ const ImageDetectionForm = () => {
     setShowModal(false);
   };
 
+  const downloadEndpoint = 'http://0.0.0.0:8888/api/download/cv/detection/1';
+
   const codeExample = `
   import tensorflow as tf
   
@@ -411,9 +413,10 @@ const ImageDetectionForm = () => {
       </div>
       <ExportModelModal
         show={showModal}
-        onClose={closeModal}
-        modelDownloadUrl="/path/to/model.h5"
+        onClose={() => setShowModal(false)}
+        modelDownloadUrl={modelDownloadUrl}
         codeExample={codeExample}
+        downloadEndpoint={downloadEndpoint}
       />
     </React.Fragment>
   );

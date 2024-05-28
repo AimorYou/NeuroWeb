@@ -234,7 +234,7 @@ const ClassesForm = () => {
     return description.split('\n').map((paragraph, index) => (
       <React.Fragment key={index}>
         <p>{paragraph}</p>
-        {index !== description.split('\n').length - 1 && <br />} {/* Добавляем <br />, если это не последний абзац */}
+        {index !== description.split('\n').length - 1 && <br />}
       </React.Fragment>
     ));
   };
@@ -249,8 +249,7 @@ const ClassesForm = () => {
   };
 
   const handleExportModel = () => {
-    // Generate model download URL and show modal
-    const downloadUrl = 'http://example.com/path_to_model'; // Replace with actual URL generation logic
+    const downloadUrl = 'http://example.com/path_to_model';
     setModelDownloadUrl(downloadUrl);
     setShowModal(true);
   };
@@ -258,6 +257,8 @@ const ClassesForm = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  const downloadEndpoint = 'http://0.0.0.0:8888/api/download/cv/classification/1';
 
   const codeExample = `
   import tensorflow as tf
@@ -402,9 +403,10 @@ const ClassesForm = () => {
       </div>
       <ExportModelModal
         show={showModal}
-        onClose={closeModal}
-        modelDownloadUrl="/path/to/model.h5"
+        onClose={() => setShowModal(false)}
+        modelDownloadUrl={modelDownloadUrl}
         codeExample={codeExample}
+        downloadEndpoint={downloadEndpoint}
       />
     </React.Fragment>
   );

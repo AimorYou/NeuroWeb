@@ -282,7 +282,6 @@ const FaceRecognitionForm = () => {
   };
 
   const handleExportModel = () => {
-    // Generate model download URL and show modal
     const downloadUrl = 'http://example.com/path_to_model';
     setModelDownloadUrl(downloadUrl);
     setShowModal(true);
