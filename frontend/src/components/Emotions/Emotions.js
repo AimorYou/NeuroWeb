@@ -4,6 +4,16 @@ import Webcam from "react-webcam";
 import { drawMesh } from "./utilities";
 import useWebSocket from 'react-use-websocket';
 
+const ferMapping = {
+  angry: "злость",
+  disgust: "отвращение",
+  fear: "страх",
+  happy: "радость",
+  sad: "грусть",
+  surprise: "удивление",
+  neutral: "нейтральный"
+};
+
 function Emotion() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -34,7 +44,6 @@ function Emotion() {
       detect();
     }, 500);
   };
-  
 
   const detect = async () => {
     if (
@@ -64,8 +73,11 @@ function Emotion() {
   };
 
   const updateEmotionLevels = (emotionLevels) => {
-    Object.keys(emotionLevels).forEach((emotion) => {
-      document.getElementById(emotion.charAt(0).toUpperCase() + emotion.slice(1)).value = Math.round(emotionLevels[emotion] * 100);
+    Object.entries(emotionLevels).forEach(([emotion, value]) => {
+      const progressElement = document.getElementById(ferMapping[emotion]);
+      if (progressElement) {
+        progressElement.value = Math.round(value * 100);
+      }
     });
   };
 
@@ -92,9 +104,9 @@ function Emotion() {
         />
       </div>
       <div className="prediction-container">
-        {['Angry', 'Neutral', 'Happy', 'Fear', 'Surprise', 'Sad', 'Disgust'].map((emotion) => (
-          <div key={emotion} className="emotion">
-            <label htmlFor={emotion} className={emotion.toLowerCase()}>{emotion}</label>
+        {Object.entries(ferMapping).map(([key, emotion]) => (
+          <div key={key} className="emotion">
+            <label htmlFor={emotion} className={key}>{emotion}</label>
             <progress id={emotion} value="0" max="100"></progress>
           </div>
         ))}
