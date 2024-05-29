@@ -5,13 +5,13 @@ import { drawMesh } from "./utilities";
 import useWebSocket from 'react-use-websocket';
 
 const ferMapping = {
-  angry: "злость",
-  disgust: "отвращение",
-  fear: "страх",
-  happy: "радость",
-  sad: "грусть",
-  surprise: "удивление",
-  neutral: "нейтральный"
+  angry: "Злость",
+  disgust: "Отвращение",
+  fear: "Страх",
+  happy: "Радость",
+  sad: "Грусть",
+  surprise: "Удивление",
+  neutral: "Нейтральный"
 };
 
 function Emotion() {
@@ -73,6 +73,11 @@ function Emotion() {
   };
 
   const updateEmotionLevels = (emotionLevels) => {
+    if (!emotionLevels || typeof emotionLevels !== 'object') {
+      console.error('Ошибка: неверный формат объекта emotionLevels');
+      return;
+    }
+  
     Object.entries(emotionLevels).forEach(([emotion, value]) => {
       const progressElement = document.getElementById(ferMapping[emotion]);
       if (progressElement) {
@@ -80,6 +85,7 @@ function Emotion() {
       }
     });
   };
+  
 
   useEffect(() => {
     runFaceDetectorModel();
