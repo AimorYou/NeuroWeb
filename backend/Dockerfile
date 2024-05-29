@@ -11,6 +11,6 @@ RUN apt update && \
     apt install -y cmake
 
 COPY requirements.txt ./
-RUN pip cache purge && pip install --no-cache-dir --default-timeout=1200 -r requirements.txt
+RUN pip cache purge && pip install --no-cache-dir --default-timeout=1200 -r requirements.txt && alembic upgrade head
 
 COPY . .
