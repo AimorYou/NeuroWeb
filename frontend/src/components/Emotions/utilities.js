@@ -6,25 +6,25 @@ export const drawMesh = (predictions, ctx) => {
 
     let color;
     switch (emotion) {
-      case 'злость':
+      case 'Злость':
         color = 'red';
         break;
-      case 'нейтральный':
+      case 'Нейтральный':
         color = 'lightgreen';
         break;
-      case 'радость':
+      case 'Радость':
         color = 'orange';
         break;
-      case 'страх':
+      case 'Страх':
         color = 'lightblue';
         break;
-      case 'удивление':
+      case 'Удивление':
         color = 'yellow';
         break;
-      case 'грусть':
+      case 'Грусть':
         color = 'gray';
         break;
-      case 'отвращение':
+      case 'Отвращение':
         color = 'pink';
         break;
       default:

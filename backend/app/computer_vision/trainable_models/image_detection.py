@@ -84,7 +84,6 @@ class Detector:
                 params = json.load(f)
             # self.class_names = names
             self.class_names = params["class_names"]
-            self.class_names = names
             self.model_size = model_size
             self.train_size = train_size
             self.batch_size = batch_size

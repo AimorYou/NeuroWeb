@@ -287,7 +287,7 @@ const ImageDetectionForm = () => {
           </div>
           <div className='train-model-card'>
             <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON} disabled={disableButtons}>Обучить модель</button>
+            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
             <div className='horizontal-line' />
             <div className="advanced-options">
               <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>
@@ -395,7 +395,7 @@ const ImageDetectionForm = () => {
                     marginRight: "auto",
                     left: 1060,
                     right: 0,
-                    top: 50,
+                    top: 380,
                     textAlign: "center",
                     zIndex: 9,
                     width: 380,

@@ -62,4 +62,4 @@ def test_json(req: JSONValidation):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888)
+    uvicorn.run("main:app", host="0.0.0.0", reload=True, port=8888, ws_ping_interval=300, ws_ping_timeout=300)

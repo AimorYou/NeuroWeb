@@ -11,13 +11,13 @@ import cv2
 warnings.filterwarnings("ignore")
 detector = FER()
 fer_mapping = {
-    "angry": "злость",
-    "disgust": "отвращение",
-    "fear": "страх",
-    "happy": "радость",
-    "sad": "грусть",
-    "surprise": "удивление",
-    "neutral": "нейтральный"
+    "angry": "Злость",
+    "disgust": "Отвращение",
+    "fear": "Страх",
+    "happy": "Радость",
+    "sad": "Грусть",
+    "surprise": "Удивление",
+    "neutral": "Нейтральный"
 }
 
 

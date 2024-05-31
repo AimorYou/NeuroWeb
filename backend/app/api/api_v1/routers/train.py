@@ -139,8 +139,8 @@ async def train_detection(
         user_id: str = Query(),
         names: list[str] = Query()
 ):
-    _create_directories(user_id, names)
-    _fill_directories(files, user_id, train_size)
+    # _create_directories(user_id, names)
+    # _fill_directories(files, user_id, train_size)
 
     hyperparameters = {
         "model_size": "nano",  # nano/small/medium,
@@ -149,7 +149,7 @@ async def train_detection(
         "n_epochs": 35
     }
 
-    detector = Detector(names=names, uid=user_id, mode="train", **hyperparameters)
+    # detector = Detector(names=names, uid=user_id, mode="train", **hyperparameters)
 
 
 @r.websocket("/ws/detection/predict/{user_id}")

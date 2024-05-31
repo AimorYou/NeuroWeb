@@ -79,7 +79,7 @@ function Emotion() {
     }
   
     Object.entries(emotionLevels).forEach(([emotion, value]) => {
-      const progressElement = document.getElementById(ferMapping[emotion]);
+      const progressElement = document.getElementById(emotion);
       if (progressElement) {
         progressElement.value = Math.round(value * 100);
       }

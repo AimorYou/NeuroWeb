@@ -148,7 +148,7 @@ const FaceRecognitionForm = () => {
         var recognizedPeople = predictions.recognized_people;
 
         if (predictions.recognized_flg && recognizedPeople.length > 0) {
-          setRecognizedPeople(recognizedPeople);
+          setRecognizedPeople(recognizedPeople.sort());
         } else {
           setRecognizedPeople([]);
         }
