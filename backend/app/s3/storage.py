@@ -48,10 +48,3 @@ storage = Storage()
 # get_object_response = s3.get_object(Bucket='neuro-web', Key='rusentitweet_model.pkl')
 # print(get_object_response['Body'].read())
 
-# model = pickle.loads(storage.get_object("test-model"))
-# print(model)
-# model.eval()
-# with open(f"../computer_vision/resources/user_{1}/classification_{1}.sav", "rb") as f:
-#     model = pickle.load(f)
-# obj = pickle.dumps(model)
-# storage.put_object(obj, "test/test-model.pt")
