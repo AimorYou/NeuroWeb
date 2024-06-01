@@ -41,6 +41,7 @@ const FaceRecognitionForm = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modelDownloadUrl, setModelDownloadUrl] = useState('');
+  const [isTraining, setIsTraining] = useState(false);
 
   const hyperParametersDescription = {
     numJitters: `Сколько раз перепробовать лицо при расчете кодирования. (От 1 до 10)`,
@@ -199,7 +200,8 @@ const FaceRecognitionForm = () => {
     // document.body.removeChild(a);
     // URL.revokeObjectURL(url);
 
-    // Send classPhotos to the server or further processing
+    
+    setIsTraining(true);
     console.log(classPhotos);
     const apiUrl = 'http://0.0.0.0:8888/api/cv/train/face-recognition/train-model?user_id=1'; // как посылать uid
 
@@ -223,7 +225,7 @@ const FaceRecognitionForm = () => {
     } catch (error) {
       console.error('Error:', error);
     }
-
+    setIsTraining(false);
 
   };
 
@@ -303,6 +305,8 @@ const FaceRecognitionForm = () => {
   predictions = model.predict(your_data)
     `;
 
+  const shouldShowTrainButton = true
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -321,8 +325,16 @@ const FaceRecognitionForm = () => {
             <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
           </div>
           <div className='train-model-card'>
-            <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
+          <div className='heading'>Обучение</div>
+          {shouldShowTrainButton && (
+        isTraining ? (
+          <div className="loading-indicator">Идет обучение...</div>
+        ) : (
+          <div>
+          <button className='train-model-btn' onClick={sendJSON} >Обучить модель</button>
+          </div>
+        )
+      )}
             <div className='horizontal-line' />
             <div className="advanced-options">
               <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>

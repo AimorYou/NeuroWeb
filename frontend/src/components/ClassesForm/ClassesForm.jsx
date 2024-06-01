@@ -32,6 +32,7 @@ const ClassesForm = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modelDownloadUrl, setModelDownloadUrl] = useState('');
+  const [isTraining, setIsTraining] = useState(false);
 
   const hyperParametersDescription = {
     batchSize: `Размер пакета для обучения. Определяет, сколько примеров данных будет обработано за одну итерацию.
@@ -105,7 +106,7 @@ const ClassesForm = () => {
     console.log("FaceDetection Model is Loaded..")
     setInterval(() => {
       detect("")
-    }, 100);
+    }, 1000);
   };
 
   const detect = async () => {
@@ -162,6 +163,7 @@ const ClassesForm = () => {
 
 
   const sendJSON = async () => {
+    setIsTraining(true);
     const classPhotos = forms.reduce((accumulator, form) => {
       accumulator[form.name] = form.photos;
       return accumulator;
@@ -169,7 +171,7 @@ const ClassesForm = () => {
 
     const hyperparameters = {
       batch_size: batchSize,
-      // n_Epochs: numEpochs,
+      n_Epochs: numEpochs,
       model_size: modelSize,
       train_strategy: trainStrategy,
       augmentation_flg: augmentationFlag,
@@ -182,7 +184,7 @@ const ClassesForm = () => {
 
     console.log(json);
     const apiUrl = 'http://0.0.0.0:8888/api/cv/train/classification/train-model?user_id=1';
-
+    
     try {
       const response = await axios.post(apiUrl, blob, {
         headers: {
@@ -200,6 +202,8 @@ const ClassesForm = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+
+    setIsTraining(false);
   };
 
   useEffect(() => {
@@ -270,6 +274,8 @@ const ClassesForm = () => {
   predictions = model.predict(your_data)
     `;
 
+  const shouldShowTrainButton = true
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -286,8 +292,16 @@ const ClassesForm = () => {
             <button className='add-form-btn' onClick={addForm}>Добавьте класс</button>
           </div>
           <div className='train-model-card'>
-            <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON} >Обучить модель</button>
+          <div className='heading'>Обучение</div>
+          {shouldShowTrainButton && (
+        isTraining ? (
+          <div className="loading-indicator">Идет обучение...</div>
+        ) : (
+          <div>
+          <button className='train-model-btn' onClick={sendJSON} >Обучить модель</button>
+          </div>
+        )
+      )}
             <div className='horizontal-line' />
             <div className="advanced-options">
               <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>

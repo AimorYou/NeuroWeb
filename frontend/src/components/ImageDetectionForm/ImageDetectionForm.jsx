@@ -37,6 +37,7 @@ const ImageDetectionForm = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modelDownloadUrl, setModelDownloadUrl] = useState('');
+  const [isTraining, setIsTraining] = useState(false);
 
   const hyperParametersDescription = {
     batchSize: `Размер пакета для обучения. Определяет, сколько примеров данных будет обработано за одну итерацию.
@@ -158,6 +159,8 @@ const ImageDetectionForm = () => {
 
     const formData = new FormData();
 
+    setIsTraining(true);
+
     uploadedPhotos.forEach((uploadedPhoto) => {
       const blob = dataURItoBlob(uploadedPhoto.photos.src);
       const file = new File([blob], `${uploadedPhoto.photos.name}`, { type: 'image/jpg' });
@@ -200,6 +203,8 @@ const ImageDetectionForm = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+
+    setIsTraining(false);
   };
 
 
@@ -270,6 +275,8 @@ const ImageDetectionForm = () => {
   predictions = model.predict(your_data)
     `;
 
+  const shouldShowTrainButton = true
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -286,8 +293,16 @@ const ImageDetectionForm = () => {
             ))}
           </div>
           <div className='train-model-card'>
-            <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
+          <div className='heading'>Обучение</div>
+          {shouldShowTrainButton && (
+        isTraining ? (
+          <div className="loading-indicator">Идет обучение...</div>
+        ) : (
+          <div>
+          <button className='train-model-btn' onClick={sendJSON} >Обучить модель</button>
+          </div>
+        )
+      )}
             <div className='horizontal-line' />
             <div className="advanced-options">
               <button className="advanced-options-btn" onClick={() => setShowOptions(!showOptions)}>Продвинутые возможности <FontAwesomeIcon icon={showOptions ? faChevronUp : faChevronDown} /></button>

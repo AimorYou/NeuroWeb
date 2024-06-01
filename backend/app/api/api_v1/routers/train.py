@@ -51,8 +51,9 @@ async def get():
 @r.post("/classification/train-model")
 async def train_classification(json_data: dict, user_id: str):
     hyperparameters = json_data.get("hyperparameters", {})
+    max_epochs = hyperparameters.pop("n_Epochs", 10)
     image_clf = ImageClassification(json_data, **hyperparameters)
-    image_clf.fit(max_epochs=10)
+    image_clf.fit(max_epochs=max_epochs)
     with open(f"./app/computer_vision/resources/user_{user_id}/classification_{user_id}.pkl", "wb") as f:
         pickle.dump(image_clf, f)
     # storage.put_object(pickle.dumps(image_clf), f"user_{user_id}/classification/classification_{user_id}.pkl")

@@ -18,12 +18,16 @@ const TextClassificationForm = () => {
   const [socket, setSocket] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modelDownloadUrl, setModelDownloadUrl] = useState('');
+  const [isTraining, setIsTraining] = useState(false);
 
   const [messageHistory, setMessageHistory] = useState([]);
 
-  const [socketUrl, setSocketUrl] = useState('ws://0.0.0.0:8888/api/nlp/train/ws/classification/1');
+  const [socketUrl, setSocketUrl] = useState('');
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+    share: true,
+  });
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -31,7 +35,7 @@ const TextClassificationForm = () => {
     }
   }, [lastMessage, setMessageHistory]);
 
-  const handleClickSendMessage = useCallback(() => sendMessage(inputText), []);
+  const handleClickSendMessage = useCallback(() => sendMessage(inputText), [inputText, sendMessage]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -64,6 +68,7 @@ const TextClassificationForm = () => {
   };
 
   const sendJSON = async () => {
+    setIsTraining(true);
     const formData = new FormData();
     uploadedTxtFiles.forEach((uploadedTxtFile) => {
       const blob = new Blob([uploadedTxtFile.txtFiles.content], { type: 'text/csv' });
@@ -80,21 +85,24 @@ const TextClassificationForm = () => {
       });
       console.log('Response:', response.data);
       setShowCamera(true);
+
+      // Установка URL для веб-сокета после успешного POST запроса
+      setSocketUrl('ws://0.0.0.0:8888/api/nlp/train/ws/classification/1');
+      
     } catch (error) {
       console.error('Error:', error);
     }
+    setIsTraining(false);
   };
 
   const handleClassify = () => {
-    
-      const apiCall = {
-        event: "classify_text",
-        data: {
-          text: inputText,
-        },
-      };
-      socket.send(JSON.stringify(apiCall));
-   
+    const apiCall = {
+      event: "classify_text",
+      data: {
+        text: inputText,
+      },
+    };
+    sendMessage(JSON.stringify(apiCall));
   };
 
   useEffect(() => {
@@ -125,6 +133,8 @@ const TextClassificationForm = () => {
   predictions = model.predict(your_data)
     `;
 
+  const shouldShowTrainButton = true
+
   return (
     <React.Fragment>
       <div className='text-to-show'>
@@ -140,8 +150,16 @@ const TextClassificationForm = () => {
             ))}
           </div>
           <div className='train-model-card'>
-            <div className='heading'>Обучение</div>
-            <button className='train-model-btn' onClick={sendJSON}>Обучить модель</button>
+          <div className='heading'>Обучение</div>
+          {shouldShowTrainButton && (
+        isTraining ? (
+          <div className="loading-indicator">Идет обучение...</div>
+        ) : (
+          <div>
+          <button className='train-model-btn' onClick={sendJSON} >Обучить модель</button>
+          </div>
+        )
+      )}
           </div>
           <div className='preview-model-card'>
             <div className='preview'>Превью

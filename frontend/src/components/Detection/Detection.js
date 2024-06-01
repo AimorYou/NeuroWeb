@@ -17,7 +17,7 @@ function App() {
       console.log("WebSocket connection established.");
       setInterval(() => {
         detect();
-      }, 2000);
+      }, 1000);
     };
 
     socketRef.current.onmessage = (event) => {
