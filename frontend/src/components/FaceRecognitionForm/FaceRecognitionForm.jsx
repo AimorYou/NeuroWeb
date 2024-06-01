@@ -296,13 +296,20 @@ const FaceRecognitionForm = () => {
   const downloadEndpoint = 'http://0.0.0.0:8888/api/download/cv/face-recognition/1';
 
   const codeExample = `
-  import tensorflow as tf
-  
-  # Load the model
-  model = tf.keras.models.load_model('path/to/your/model')
-  
-  # Use the model for predictions
-  predictions = model.predict(your_data)
+  import pickle
+
+  # Загружаем модель
+  with open("path_to_model", "rb") as f:
+      model = pickle.load(f.read())
+
+  # Открываем изображение
+  with open(path_to_image), "rb") as f:
+    raw_img = f.read()
+  img_b64 = base64.b64encode(raw_img)
+
+  # Вызываем метод для предсказания результата
+  result = model.recognize(img_b64)
+  print(result)
     `;
 
   const shouldShowTrainButton = true

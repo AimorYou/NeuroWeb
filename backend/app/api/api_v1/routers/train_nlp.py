@@ -6,6 +6,7 @@ from io import StringIO
 import pandas as pd
 import pickle
 import json
+import os
 
 train_nlp_router = r = APIRouter()
 
@@ -46,7 +47,7 @@ async def train(
     data = StringIO(s)
     df = pd.read_csv(data)
 
-    text_clf = TextClassification(gpu_flg=True, language="EN")
+    text_clf = TextClassification(gpu_flg=True, language="RU")
     X_train, X_test, y_train, y_test = text_clf.prepare_data(df,
                                                              text_col="text",
                                                              target_col="label",
@@ -54,6 +55,8 @@ async def train(
     test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test)
     print(test_accuracy)
     # storage.put_object(pickle.dumps(text_clf), f"user_{user_id}/text_clf.pt")
+    if not os.path.exists(f"./app/natural_language_processing/resources/user_{user_id}/"):
+        os.mkdir(f"./app/natural_language_processing/resources/user_{user_id}/")
     with open(f"./app/natural_language_processing/resources/user_{user_id}/text_clf.pt", "wb") as f:
         pickle.dump(text_clf, f)
 

@@ -20,30 +20,6 @@ const TextClassificationForm = () => {
   const [modelDownloadUrl, setModelDownloadUrl] = useState('');
   const [isTraining, setIsTraining] = useState(false);
 
-  const [messageHistory, setMessageHistory] = useState([]);
-
-  const [socketUrl, setSocketUrl] = useState('');
-
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
-    shouldReconnect: (closeEvent) => true,
-    share: true,
-  });
-
-  useEffect(() => {
-    if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
-    }
-  }, [lastMessage, setMessageHistory]);
-
-  const handleClickSendMessage = useCallback(() => sendMessage(inputText), [inputText, sendMessage]);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
 
   useEffect(() => {
     if (socket) {
@@ -85,9 +61,6 @@ const TextClassificationForm = () => {
       });
       console.log('Response:', response.data);
       setShowCamera(true);
-
-      // Установка URL для веб-сокета после успешного POST запроса
-      setSocketUrl('ws://0.0.0.0:8888/api/nlp/train/ws/classification/1');
       
     } catch (error) {
       console.error('Error:', error);
@@ -95,23 +68,22 @@ const TextClassificationForm = () => {
     setIsTraining(false);
   };
 
-  const handleClassify = () => {
+  const handleClassify = async () => {
     const apiCall = {
-      event: "classify_text",
-      data: {
-        text: inputText,
-      },
+      text: inputText,
     };
-    sendMessage(JSON.stringify(apiCall));
+  
+    try {
+      const response = await axios.post('http://0.0.0.0:8888/api/nlp/train/classification/predict?user_id=1', apiCall, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      setClassificationResult(response.data.result);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
-
-  useEffect(() => {
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
-  }, [socket]);
 
   const handleExportModel = () => {
     const downloadUrl = 'http://example.com/path_to_model';
@@ -124,13 +96,17 @@ const TextClassificationForm = () => {
   };
 
   const codeExample = `
-  import tensorflow as tf
-  
-  # Load the model
-  model = tf.keras.models.load_model('path/to/your/model')
-  
-  # Use the model for predictions
-  predictions = model.predict(your_data)
+  import pickle
+
+  # Загружаем модель
+  with open("path_to_model", "rb") as f:
+      model = pickle.load(f.read())
+
+  text = "some text"
+
+  # Вызываем метод для предсказания результата
+  result = model.predict(text)
+  print(result)
     `;
 
   const shouldShowTrainButton = true
@@ -174,7 +150,7 @@ const TextClassificationForm = () => {
                   value={inputText}
                   onChange={handleTextChange}
                 />
-                <button className='classify-btn' onClick={handleClickSendMessage}>Классифицировать</button>
+                <button className='classify-btn' onClick={handleClassify}>Классифицировать</button>
                 {classificationResult && (
                   <div className='result'>Результат классификации: {classificationResult}</div>
                 )}

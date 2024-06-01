@@ -68,7 +68,7 @@ if choice == "Моделирование":
         num_features = st.multiselect("Укажите вещественные признаки", df.columns, key="num_features",
                                       placeholder="Выберите опцию")
         cat_features = st.multiselect("Укажите категориальные признаки", list(set(df.columns) - set(num_features)),
-                                      key="cat_features")
+                                      key="cat_features", placeholder="Выберите опцию")
         date_features = st.multiselect("Укажите признаки с датой", list(set(df.columns) - set(num_features) -
                                                                         set(cat_features)),
                                        key="date_features", placeholder="Выберите опцию")
