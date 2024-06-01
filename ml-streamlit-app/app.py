@@ -10,30 +10,39 @@ from pycaret.clustering import ClusteringExperiment
 from pycaret.regression import RegressionExperiment
 from pycaret.classification import ClassificationExperiment
 
+imputation_strategy_mapping = {
+    "Удаление": "drop",
+    "Среднее": "mean",
+    "Медиана": "median",
+    "Мода": "mode",
+    "KNN": "knn"
+}
+
 if os.path.exists("data/dataset.csv"):
     df = pd.read_csv("data/dataset.csv", index_col=None)
 
 with st.sidebar:
     st.title("NeuroWeb")
-    choice = st.radio("Navigation", ["Upload", "Profiling", "Modelling", "Download"])
-    st.info("This project is part of NeuroWeb platform that allows you receive the best machine learning model")
+    choice = st.radio("Навигация", ["Загрузка датасета", "Анализ датасета", "Моделирование", "Экспорт"])
+    st.info(
+        "Данный проект является частью платформы NeuroWeb, которая позволяет построить оптимальные модели машинного обучения")
 
-if choice == "Upload":
-    st.title("Upload Your Dataset")
-    file = st.file_uploader("Upload Your Dataset")
+if choice == "Загрузка датасета":
+    st.title("Загрузка датасета")
+    file = st.file_uploader("Загрузите свой датасет")
     if file:
         df = pd.read_csv(file, index_col=None)
         df.to_csv("data/dataset.csv", index=None)
         st.dataframe(df)
 
-if choice == "Profiling":
-    st.title("Exploratory Data Analysis")
-    profile_df = ProfileReport(df, title="Profiling Report")
+if choice == "Анализ датасета":
+    st.title("Анализ датасета")
+    profile_df = ProfileReport(df, title="Аналитический отчет по вашему датасету")
     st_profile_report(profile_df)
 
-if choice == "Modelling":
-    mdl = st.selectbox("Choose Modelling Type : ", ["Classification", "Regression", "Clustering"])
-    if mdl == "Clustering":
+if choice == "Моделирование":
+    mdl = st.selectbox("Выберите задачу: ", ["Классификация", "Регрессия", "Кластеризация"])
+    if mdl == "Кластеризация":
         clustering_models = {
             "K-Means Clustering": "kmeans",
             "Affinity Propagation": "ap",
@@ -45,77 +54,90 @@ if choice == "Modelling":
             "Birch Clustering": "birch",
             "K-Modes Clustering": "kmodes"
         }
-        clustering_model = st.selectbox("Select model for clustering",
+        clustering_model = st.selectbox("Выберите модель для кластеризации",
                                         clustering_models.keys(), key="clustering_model")
     else:
-        chosen_target = st.selectbox("Choose the Target Column : ", df.columns)
+        chosen_target = st.selectbox("Выберите целевую переменную: ", df.columns, placeholder="Выберите опцию")
 
-    configure_flg = st.toggle("Start Configuring", key="configure_flg")
+    configure_flg = st.toggle("Расширенные настройки", key="configure_flg")
 
     if configure_flg:
-        train_size = st.select_slider(label="Select train size", options=np.arange(0.00, 1.0, 0.01), value=0.65)
+        train_size = st.select_slider(label="Выберите размер обучающей выборки", options=np.arange(0.00, 1.0, 0.01),
+                                      value=0.65)
 
-        num_features = st.multiselect("Select numerical features", df.columns, key="num_features")
-        cat_features = st.multiselect("Select categorical features", list(set(df.columns) - set(num_features)),
+        num_features = st.multiselect("Укажите вещественные признаки", df.columns, key="num_features",
+                                      placeholder="Выберите опцию")
+        cat_features = st.multiselect("Укажите категориальные признаки", list(set(df.columns) - set(num_features)),
                                       key="cat_features")
-        date_features = st.multiselect("Select date type features", list(set(df.columns) - set(num_features) -
-                                                                         set(cat_features)),
-                                       key="date_features")
-        text_features = st.multiselect("Select text features", list(set(df.columns) - set(num_features) -
-                                                                    set(cat_features) - set(date_features)),
-                                       key="text_features")
+        date_features = st.multiselect("Укажите признаки с датой", list(set(df.columns) - set(num_features) -
+                                                                        set(cat_features)),
+                                       key="date_features", placeholder="Выберите опцию")
+        text_features = st.multiselect("Укажите текстовые признаки", list(set(df.columns) - set(num_features) -
+                                                                          set(cat_features) - set(date_features)),
+                                       key="text_features", placeholder="Выберите опцию")
 
-        keep_features = st.multiselect("Select features that never would dropped", df.columns, key="keep_features")
-        ignore_features = st.multiselect("Select features that would ignored",
-                                         list(set(df.columns) - set(keep_features)), key="ignore_features")
+        keep_features = st.multiselect("Укажите признаки, которые нельзя исключать", df.columns, key="keep_features",
+                                       placeholder="Выберите опцию")
+        ignore_features = st.multiselect("Укажите признаки, которые необходимо исключить",
+                                         list(set(df.columns) - set(keep_features)), key="ignore_features",
+                                         placeholder="Выберите опцию")
 
-        numeric_imputation = st.selectbox("Select imputing strategy for numerical columns.",
-                                          ["mean", "drop", "median", "mode",
-                                           "knn", "custom_value"], key="numeric_imputation")
+        numeric_imputation = st.selectbox("Выберите стратегию заполнения пропусков для числовых столбцов",
+                                          ["Среднее", "Удаление", "Медиана", "Мода",
+                                           "KNN", "Ввести свое значение"], key="numeric_imputation",
+                                          placeholder="Выберите опцию")
+        numeric_imputation = imputation_strategy_mapping.get(numeric_imputation, "Ввести свое значение")
+
         numeric_imputation_custom_value = None
-        if numeric_imputation == "custom_value":
-            numeric_imputation_custom_value = st.text_input("Type value for numerical fillna", "NaN",
-                                                            key="numeric_imputation_custom_value")
+        if numeric_imputation == "Ввести свое значение":
+            numeric_imputation_custom_value = st.number_input(
+                "Введите значение, которым будут заполнены пропуски в числовых столбцах", -999,
+                key="numeric_imputation_custom_value")
 
-        categorical_imputation = st.selectbox("Select imputing strategy for categorical columns.",
-                                              ["mode", "drop", "custom_value"], key="categorical_imputation")
+        categorical_imputation = st.selectbox("Выберите стратегию заполнения пропусков для категориальных столбцов",
+                                              ["Мода", "Удаление", "Ввести свое значение"],
+                                              key="categorical_imputation", placeholder="Выберите опцию")
+        categorical_imputation = imputation_strategy_mapping.get(categorical_imputation, "Ввести свое значение")
+
         categorical_imputation_custom_value = None
-        if categorical_imputation == "custom_value":
-            categorical_imputation_custom_value = st.text_input("Type value for categorical fillna", "NaN",
-                                                                key="categorical_imputation_custom_value")
+        if categorical_imputation == "Ввести свое значение":
+            categorical_imputation_custom_value = st.text_input(
+                "Введите значение, которым будут заполнены пропуски в категориальных столбцах", "NaN",
+                key="categorical_imputation_custom_value", placeholder="Выберите опцию")
 
-        polynomial_features = st.checkbox("Flag of using features that derived using existing numeric features",
+        polynomial_features = st.checkbox("Флаг использования полиномиальных признаков",
                                           key="polynomial_features")
         polynomial_degree = 2
         if polynomial_features:
-            polynomial_degree = st.number_input("Select degree of polynomial features", 2,
+            polynomial_degree = st.number_input("Введите степень полиномиальных признаков", 2,
                                                 key="polynomial_degree")
 
-        remove_multicollinearity = st.checkbox("Flag of removing features with multicollinearity",
+        remove_multicollinearity = st.checkbox("Флаг удаления признаков с мультиколлинеарностью",
                                                key="remove_multicollinearity")
         multicollinearity_threshold = 2
         if remove_multicollinearity:
-            multicollinearity_threshold = st.select_slider(label="multicollinearity_threshold",
+            multicollinearity_threshold = st.select_slider(label="Введите порог мультиколлинеарности",
                                                            options=np.arange(0.00, 1.0, 0.01), value=0.9,
                                                            key="multicollinearity_threshold")
 
-        transformation = st.checkbox("Flag of using Gaussian-like transformation", key="transformation")
-        normalize = st.checkbox("Flag of using normalization", key="normalize")
+        transformation = st.checkbox("Флаг использования преобразования Гаусса", key="transformation")
+        normalize = st.checkbox("Флаг использования нормализации", key="normalize")
         normalize_method = 2
         if normalize:
-            normalize_method = st.selectbox("Select imputing strategy for categorical columns.",
-                                            ["minmax", "maxabs", "robust"], key="normalize_method")
+            normalize_method = st.selectbox("Выберите вид нормализации",
+                                            ["MinMax", "MaxAbs", "Robust"], key="normalize_method")
+            normalize_method = normalize_method.lower()
 
-        pca = st.checkbox("Flag of using pca", key="pca")
-        feature_selection = st.checkbox("Flag of using feature_selection", key="feature_selection")
+        pca = st.checkbox("Флаг использования PCA", key="pca")
+        feature_selection = st.checkbox("Флаг использования отбора признаков", key="feature_selection")
         n_features_to_select = 0.9
         if feature_selection:
-            n_features_to_select = st.select_slider(label="The maximum number of features to select",
+            n_features_to_select = st.select_slider(label="Максимальное количество признаков, которые нужно оставить",
                                                     options=np.arange(0.00, 1.0, 0.01), value=0.9,
                                                     key="n_features_to_select")
 
-    if st.button("Start Modelling"):
-        if mdl == "Classification":
+    if st.button("Начать моделирование"):
+        if mdl == "Классификация":
             s = ClassificationExperiment()
 
             if configure_flg:
@@ -129,8 +151,8 @@ if choice == "Modelling":
                         text_features=text_features,
                         keep_features=keep_features,
                         ignore_features=ignore_features,
-                        numeric_imputation=numeric_imputation if numeric_imputation != "custom_value" else numeric_imputation_custom_value,
-                        categorical_imputation=categorical_imputation if categorical_imputation != "custom_value" else categorical_imputation_custom_value,
+                        numeric_imputation=numeric_imputation if numeric_imputation != "Ввести свое значение" else numeric_imputation_custom_value,
+                        categorical_imputation=categorical_imputation if categorical_imputation != "Ввести свое значение" else categorical_imputation_custom_value,
                         polynomial_features=polynomial_features,
                         polynomial_degree=polynomial_degree,
                         remove_multicollinearity=remove_multicollinearity,
@@ -152,7 +174,7 @@ if choice == "Modelling":
             st.dataframe(compare_df)
             s.save_model(best_model, "best_model")
 
-        if mdl == "Regression":
+        if mdl == "Регрессия":
             s = RegressionExperiment()
 
             if configure_flg:
@@ -166,8 +188,8 @@ if choice == "Modelling":
                         text_features=text_features,
                         keep_features=keep_features,
                         ignore_features=ignore_features,
-                        numeric_imputation=numeric_imputation if numeric_imputation != "custom_value" else numeric_imputation_custom_value,
-                        categorical_imputation=categorical_imputation if categorical_imputation != "custom_value" else categorical_imputation_custom_value,
+                        numeric_imputation=numeric_imputation if numeric_imputation != "Ввести свое значение" else numeric_imputation_custom_value,
+                        categorical_imputation=categorical_imputation if categorical_imputation != "Ввести свое значение" else categorical_imputation_custom_value,
                         polynomial_features=polynomial_features,
                         polynomial_degree=polynomial_degree,
                         remove_multicollinearity=remove_multicollinearity,
@@ -189,7 +211,7 @@ if choice == "Modelling":
             st.dataframe(compare_df)
             s.save_model(best_model, "best_model")
 
-        elif mdl == "Clustering":
+        elif mdl == "Кластеризация":
             s = ClusteringExperiment()
 
             if configure_flg:
@@ -201,8 +223,8 @@ if choice == "Modelling":
                         text_features=text_features,
                         keep_features=keep_features,
                         ignore_features=ignore_features,
-                        numeric_imputation=numeric_imputation if numeric_imputation != "custom_value" else numeric_imputation_custom_value,
-                        categorical_imputation=categorical_imputation if categorical_imputation != "custom_value" else categorical_imputation_custom_value,
+                        numeric_imputation=numeric_imputation if numeric_imputation != "Ввести свое значение" else numeric_imputation_custom_value,
+                        categorical_imputation=categorical_imputation if categorical_imputation != "Ввести свое значение" else categorical_imputation_custom_value,
                         polynomial_features=polynomial_features,
                         polynomial_degree=polynomial_degree,
                         remove_multicollinearity=remove_multicollinearity,
@@ -217,6 +239,7 @@ if choice == "Modelling":
             created_clustering_model = s.create_model(clustering_models[clustering_model])
             results = s.assign_model(created_clustering_model)
             st.dataframe(results)
+
             s.plot_model(created_clustering_model, plot="cluster", display_format="streamlit")
             s.plot_model(created_clustering_model, plot="tsne", display_format="streamlit")
             s.plot_model(created_clustering_model, plot="elbow", display_format="streamlit")
@@ -224,6 +247,6 @@ if choice == "Modelling":
             s.plot_model(created_clustering_model, plot="distance", display_format="streamlit")
             s.plot_model(created_clustering_model, plot="distribution", display_format="streamlit")
 
-if choice == "Download":
+if choice == "Экспорт":
     with open("data/best_model.pkl", "rb") as f:
         st.download_button("Download Model", f, file_name="data/best_model.pkl")
