@@ -53,7 +53,9 @@ async def train(
                                                              train_size=0.2)
     test_accuracy = text_clf.fit(X_train, X_test, y_train, y_test)
     print(test_accuracy)
-    storage.put_object(pickle.dumps(text_clf), f"user_{user_id}/text_clf.pt")
+    # storage.put_object(pickle.dumps(text_clf), f"user_{user_id}/text_clf.pt")
+    with open(f"./app/natural_language_processing/resources/user_{user_id}/text_clf.pt", "wb") as f:
+        pickle.dump(text_clf, f)
 
     return {
         200: "OK",
@@ -64,7 +66,9 @@ async def train(
 @r.post("/classification/predict")
 async def predict_classification(json_data: dict, user_id: str):
     txt = json_data["text"]
-    text_clf = pickle.loads(storage.get_object(f"user_{user_id}/text_clf.pt"))
+    # text_clf = pickle.loads(storage.get_object(f"user_{user_id}/text_clf.pt"))
+    with open(f"./app/natural_language_processing/resources/user_{user_id}/text_clf.pt", "rb") as f:
+        text_clf = pickle.load(f)
     prediction = text_clf.predict(txt)
     print(prediction)
     return {
