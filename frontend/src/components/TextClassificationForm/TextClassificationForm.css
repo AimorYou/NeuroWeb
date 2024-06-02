@@ -1,0 +1,244 @@
+.add-form-btn {
+  border-radius: 15px ;
+  padding: 10px;
+  width: 500px;
+  height: auto;
+  min-height: 95px;
+  margin-left: 5%;
+  margin-top: 2%;
+  border-color: #7258e9;
+  color: #fff;
+  font-size: 16px;
+  background: #101021;
+  align-items: center;
+  text-align: center;
+  border-style: dashed;
+}
+
+.train-model-card {
+  display: inline-table;
+  border-radius: 15px ;
+  padding: 10px;
+  width: 260px;
+  height: auto;
+  min-height: 140px;
+  align-items: center;
+  text-align: center;
+  margin-left: 5%;
+  margin-top: 3%;
+  background: #7258e9;
+}
+
+.preview-model-card {
+display: inline-table;
+border-radius: 15px ;
+padding: 10px;
+width: 350px;
+height: auto;
+min-height: 140px;
+align-items: center;
+text-align: center;
+margin-left: 5%;
+margin-top: 3%;
+background: #7258e9;
+}
+
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+@media (max-width: 430px){
+.hide {
+  display: none;
+}
+
+.text-to-show {
+  color: white;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  padding: 20px;
+}
+}
+
+@media (min-width: 431px) {
+.text-to-show {
+  display: none;
+}
+}
+
+.heading {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.preview {
+display: flex;
+flex-direction: row;
+color: #fff;
+font-size: 20px;
+font-weight: 700;
+text-align: center;
+margin: 10px;
+}
+
+.classify-btn,
+.train-model-btn {
+  display: inline-flex;
+  background-color: #6C58E9;
+  border: 1.5px solid #fff;
+  border-radius: 8px;
+  border-style: 1px solid #fff;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  width: 170px;
+  height: 30px;
+  padding: 20px;
+  margin: 30px;
+  list-style: none;
+  text-align: center;
+  align-items: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  justify-content: space-evenly;
+}
+
+.export-model-btn {
+  display: inline-flex;
+  background-color: #6C58E9;
+  border: 1.5px solid #fff;
+  border-radius: 8px;
+  border-style: 1px solid #fff;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  width: 250px;
+  height: 30px;
+  padding: 20px;
+  margin-left: 20px;
+  list-style: none;
+  text-align: center;
+  align-items: center;
+  text-decoration: none;
+  transition: color 100ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  justify-content: space-evenly;
+}
+
+.classify-btn:hover,
+.train-model-btn:hover,
+.export-model-btn:hover
+{
+opacity: 0.7;
+}
+
+.horizontal-line {
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  margin-top: 9%;
+  margin-bottom: 3%;
+}
+
+.class-text {
+  color: #fff;
+  font-size: 12px;
+  margin-bottom:  -20px;
+  text-align: left;
+}
+
+.names-text {
+  color: #fff;
+  font-size: 14px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.preview-text {
+color: #fff;
+font-size: 14px;
+margin-bottom:  -20px;
+text-align: left;
+margin: 10px;
+}
+
+*,
+*:before,
+*:after {
+box-sizing: border-box;
+}
+
+body {
+font-family: -apple-system, ".SFNSText-Regular", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+}
+
+
+.text-classification-form {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-input {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
+
+.result {
+  font-size: 16px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #fff; /* Цвет рамки */
+  border-radius: 4px;
+  background-color: #7258e9; /* Цвет фона */
+  color: #fff; /* Цвет текста */
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #fff;
+}
+
+.loading-indicator::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

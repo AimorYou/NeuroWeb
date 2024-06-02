@@ -20,7 +20,6 @@ const DetectionPage = () => {
     
   return (
     <div className='App'>
-      <MenuBar />
       <Navbar toggle={toggle} />
       <Detection />
       <Footer />

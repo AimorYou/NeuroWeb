@@ -5,9 +5,9 @@ import { GiCrystalBars } from 'react-icons/gi';
 import { GiCutDiamond, GiRock } from 'react-icons/gi';
 import { GiFloatingCrystal } from 'react-icons/gi';
 import { IconContext } from 'react-icons/lib';
-import Classify from '../../assets/images/classify.JPG'
-import Emotion from '../../assets/images/emotion.JPG'
-import Detect from '../../assets/images/detect.JPG'
+import Classify from '../../assets/images/images.jpg'
+import Emotion from '../../assets/images/texts.jpg'
+import Detect from '../../assets/images/tablesStreamlit.jpg'
 import {
   AdvantagesSection,
   PricingWrapper,
@@ -28,32 +28,32 @@ function Pricing() {
     <IconContext.Provider value={{ color: '#a9b3c1', size: 64 }}>
       <AdvantagesSection>
         <PricingWrapper>
-          <PricingHeading>Выберите модель</PricingHeading>
+          <PricingHeading>Выберите область работы</PricingHeading>
           <PricingContainer>
-            <PricingCard to='/classification'>
+            <PricingCard to='/cv-models'>
               <PricingCardInfo>
               <PricingCardIcon src={Classify} />
-                <PricingCardPlan>Классификация изображений</PricingCardPlan>
+                <PricingCardPlan>Работа с изображениями</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель идентифицирует и классифицирует объекты на основе их характеристик, обучаясь на размеченных данных</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/emotions'>
+            <PricingCard to='/nlp-models'>
               <PricingCardInfo>
               <PricingCardIcon src={Emotion} />
-                <PricingCardPlan>Распознование эмоций</PricingCardPlan>
+                <PricingCardPlan>Работа с естественным языком</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель анализирует лицевые выражения, определяя эмоциональное состояние на основе распознанных паттернов</PricingCardFeature>
                 </PricingCardFeatures>
                 <Button primary>Выбрать</Button>
               </PricingCardInfo>
             </PricingCard>
-            <PricingCard to='/detection'>
+            <PricingCard to='/tables'>
               <PricingCardInfo>
               <PricingCardIcon src={Detect} />
-                <PricingCardPlan>Детекция</PricingCardPlan>
+                <PricingCardPlan>Работа с таблицами</PricingCardPlan>
                 <PricingCardFeatures>
                   <PricingCardFeature>Модель обнаруживает и локализует объекты на изображениях, позволяя идентифицировать их положение и границы</PricingCardFeature>
                 </PricingCardFeatures>

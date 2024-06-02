@@ -20,7 +20,6 @@ const SigninPage = () => {
   return (
     <div className='App'>
       <UserProvider>
-      <MenuBar />
       <Navbar toggle={toggle} />
       <Register />
       <Footer />

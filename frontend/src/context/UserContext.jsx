@@ -1,33 +1,31 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-export const UserContext = createContext();
+const UserContext = createContext(null);
 
-export const UserProvider = (props) => {
-    const [token, setToken] = useState(localStorage.getItem("hello"));
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const requestOptions = {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Autherization: "Bearer " + token,
-                },
-            };
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-//             const response = await fetch("http://0.0.0.0:8888/api/v1/users/me", requestOptions);
-//             if (!response.ok) {
-//                 setToken(null);
-//             }
-//             localStorage.setItem("hello", token);
-        };  
-        // fetchUser();
-    }, [token]);
-    
-    return (
-        <UserContext.Provider value={[token, setToken]}>
-            {props.children}
-        </UserContext.Provider>
-    )
+  const setUserContext = (user) => {
+    setUser(user);
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  };
 
+  return (
+    <UserContext.Provider value={{ user, setUser: setUserContext }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
+
+export const useUser = () => useContext(UserContext);

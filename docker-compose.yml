@@ -36,7 +36,7 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
-    command: bash -c "alembic upgrade head && python app/main.py"
+    command: bash -c "pip install --no-cache-dir --default-timeout=900 -r requirements.txt && python app/main.py"
     tty: true
     volumes:
       - ./backend:/app/:cached
@@ -49,16 +49,29 @@ services:
     depends_on:
       - "postgres"
 
-#  frontend:
-#    build:
-#      context: frontend
-#      dockerfile: Dockerfile
-#    stdin_open: true
-#    volumes:
-#      - './frontend:/app:cached'
-#      - './frontend/node_modules:/app/node_modules:cached'
-#    environment:
-#      - NODE_ENV=development
+  ml-streamlit-app:
+    build:
+      context: ml-streamlit-app
+      dockerfile: Dockerfile
+    environment:
+      PYTHONPATH: .
+    ports:
+      - 8501:8501
+    depends_on:
+      - "backend"
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - './frontend:/app:cached'
+      - './frontend/node_modules:/app/node_modules:cached'
+    environment:
+      - NODE_ENV=development
 
 
 volumes:

@@ -20,7 +20,6 @@ const ClassificationPage = () => {
     
   return (
     <div className='App'>
-      <MenuBar />
       <Navbar toggle={toggle} />
       <Classification />
       <Footer />
